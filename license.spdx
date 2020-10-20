@@ -1,0 +1,1720 @@
+##
+## Document Creation Information
+##
+
+SPDXVersion: SPDX-2.2
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: cpfloat-0.1.0
+DocumentNamespace: https://raw.githubusercontent.com/mfasi/cpfloat/master/license.spdx
+Creator: Person: Massimiliano Fasi (massimiliano.fasi@manchester.ac.uk)
+Creator: Person: Mantas Mikaitis (mantas.mikaitis@manchester.ac.uk)
+Created: 2020-09-17T00:00:00Z
+
+
+
+##
+## Package Information
+##
+
+PackageName: cpfloat
+SPDXID: SPDXRef-1
+PackageVersion: 0.1.0
+PackageDownloadLocation: git://github.com/mfasi/cpfloat
+PackageVerificationCode:  (excludes: ./license.spdx)
+PackageHomePage: https://github.com/mfasi/cpfloat
+PackageLicenseConcluded: LGPL-2.1-or-later
+PackageLicenseInfoFromFiles: LGPL-2.1-or-later
+PackageLicenseDeclared: LGPL-2.1-or-later
+PackageCopyrightText: <text>Copyright 2020 Massimiliano Fasi and Mantas Mikaitis</text>
+PackageSummary:<text>Custom Precision Floating-point numbers.</text>
+
+
+
+##
+## File Information
+##
+
+FileName: ./test/cpfloat_test.ts
+SPDXID: SPDXRef-1-1
+FileType: SOURCE
+FileChecksum: SHA1: a4e126bcca5749153bb655a2706cbbea2798c6cc
+FileChecksum: MD5: 5e64eb58b0787df60a3bdff0bdce2d0b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./test/cpfloat_test.m
+SPDXID: SPDXRef-1-2
+FileType: SOURCE
+FileChecksum: SHA1: 14b42d574d7325b795ea949c0a24f7dd750fd376
+FileChecksum: MD5: 6c12f356e3a5d8f162e3f66811662f2c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./LICENSES/GPL-2.0-or-later.txt
+SPDXID: SPDXRef-1-3
+FileType: TEXT
+FileChecksum: SHA1: dfa82738d28c394b96cd90118bb0c714dbe01d71
+FileChecksum: MD5: b6475d7c597fd98dbe377b66195dec2a
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./LICENSES/LGPL-2.1-or-later.txt
+SPDXID: SPDXRef-1-4
+FileType: TEXT
+FileChecksum: SHA1: ff1d4242ef8b02ddb96de463a216affe8b423db3
+FileChecksum: MD5: 35757bf842a5e1a2b8ce9c074597b5f5
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./Makefile
+SPDXID: SPDXRef-1-5
+FileType: OTHER
+FileChecksum: SHA1: 4ccc91281d2cd85a3ede5b2e06b3434a262dd8fb
+FileChecksum: MD5: a3e71ceeda46501558ab0ac073233f1b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_comp_floatp.m
+SPDXID: SPDXRef-1-6
+FileType: SOURCE
+FileChecksum: SHA1: a8412fc1e0a380b59424d623f469886b0dce1552
+FileChecksum: MD5: cf994ff07363c2927a22071f038d3bf3
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_comp_chop.m
+SPDXID: SPDXRef-1-7
+FileType: SOURCE
+FileChecksum: SHA1: 136838bef745c901810adff09064476248f2f606
+FileChecksum: MD5: 8eeb5d7eb573b9f2eb5e5ac93f8a63a0
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_comp_cpfloat.c
+SPDXID: SPDXRef-1-8
+FileType: SOURCE
+FileChecksum: SHA1: 651745adba6ee049c763a01245cf1bf7887f74df
+FileChecksum: MD5: 221ecfa8eab3213be35b9ec41b0d1ea0
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_comp_mpfr.c
+SPDXID: SPDXRef-1-9
+FileType: SOURCE
+FileChecksum: SHA1: 5370dd3b3bb46dcc5ace02aa97be15219688c594
+FileChecksum: MD5: 82d3e5a2ebf76dd4f64c2f53ab358479
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_openmp.c
+SPDXID: SPDXRef-1-10
+FileType: SOURCE
+FileChecksum: SHA1: d9abae27a1d0ae50f778c97afe25bfb46cdbe7ab
+FileChecksum: MD5: 6cfe1573685adb5783f25ebf45c230c9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/run_exps.m
+SPDXID: SPDXRef-1-11
+FileType: SOURCE
+FileChecksum: SHA1: 99dd921e06dff4d433a2f2235ece4d13d4c6bf4e
+FileChecksum: MD5: 5e82760f682f1b2e77e3d8867364b2b5
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_timing.c
+SPDXID: SPDXRef-1-12
+FileType: SOURCE
+FileChecksum: SHA1: 150f9b207530d74d6dd06b54e421363999634567
+FileChecksum: MD5: 37be2a7e1497db7164d61a0bfce60f04
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/test_normal_subnormal.m
+SPDXID: SPDXRef-1-13
+FileType: SOURCE
+FileChecksum: SHA1: d24281c1326a94f75eca72e57788cd89148de025
+FileChecksum: MD5: f12f12576de67b9f677c8b8e3d6fd043
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_overhead.c
+SPDXID: SPDXRef-1-14
+FileType: SOURCE
+FileChecksum: SHA1: e5c4e02a7581f756522746345b587818a36d1a81
+FileChecksum: MD5: 7a8580c6c3383c28f63a2d5a6d9f9544
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/run_exps.sh
+SPDXID: SPDXRef-1-15
+FileChecksum: SHA1: a1334a1f04909e4656417dd3f4e92d9e1c7280dd
+FileChecksum: MD5: 23a0b39bdb5d9a92f8ebaea1eddda40a
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./experiments/exp_overhead.m
+SPDXID: SPDXRef-1-16
+FileType: SOURCE
+FileChecksum: SHA1: 13ce53353e6484b5d2d4c282fd71284d52e421a3
+FileChecksum: MD5: 06e6e260370ce82851e04b144719c850
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_lu.m
+SPDXID: SPDXRef-1-17
+FileType: SOURCE
+FileChecksum: SHA1: 4432fdc52681e84463acf87bb933bfd1f82883ab
+FileChecksum: MD5: 2bf73a79fc18a1fa50a7827215e426d0
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/lu_chop.m
+SPDXID: SPDXRef-1-18
+FileType: SOURCE
+FileChecksum: SHA1: 51dbb1a34a541bacde5ad615e9c8906badf5755c
+FileChecksum: MD5: e6a33b2bd66871b0b371f90e5d9611a0
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_comp_floatx.cpp
+SPDXID: SPDXRef-1-19
+FileType: SOURCE
+FileChecksum: SHA1: 5fc1e844cdfac7180f9f82db8cd7e664e0d83f37
+FileChecksum: MD5: 8ee2fa416feb56181207a905a01d3988
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/timing_fun.h
+SPDXID: SPDXRef-1-20
+FileType: SOURCE
+FileChecksum: SHA1: 7423cf5ba982d251878ede945d26064d0ad63f18
+FileChecksum: MD5: ec13fcef26a01ec1fd304125047bb61f
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./experiments/exp_normal_subnormal.m
+SPDXID: SPDXRef-1-21
+FileType: SOURCE
+FileChecksum: SHA1: ae0285c0dd8009c895b4c8d41ffd5369bebf8430
+FileChecksum: MD5: 0295f54caaa554b4641463deca43082e
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./generate_spdx.sh
+SPDXID: SPDXRef-1-22
+FileChecksum: SHA1: 5d8fca6c71ab651eb91bfb0c8e050fe3f999d7e5
+FileChecksum: MD5: 58e68f3679e76cb14c690a29705fee63
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: $file
+
+FileName: ./README.md
+SPDXID: SPDXRef-1-23
+FileType: TEXT
+FileChecksum: SHA1: c22d00fafef4738cefd183179528db175812d879
+FileChecksum: MD5: cfcc948db4e6adc0c83731934038e6a3
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./examples/example_manuscript.c
+SPDXID: SPDXRef-1-24
+FileType: SOURCE
+FileChecksum: SHA1: 2a49dbf6310c0328a200eadd913779d9ac8fedcd
+FileChecksum: MD5: 3243357cb5081e89efc3be99c50ffc73
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./deploy_repository.sh
+SPDXID: SPDXRef-1-25
+FileChecksum: SHA1: 3e907e394db196c8ee7acb9fd1df90d00b26ccfe
+FileChecksum: MD5: 5fac39ce37e644299b510f3d287e5715
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./add_license_information.sh
+SPDXID: SPDXRef-1-26
+FileChecksum: SHA1: 9a5df4c7d6adf08b139b177ccd30ec81683b7394
+FileChecksum: MD5: 9e773d8968bbabcadfedf5e055bc6952
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-laterLGPL-2.1-or-later'LGPL-2.1-or-later\
+
+FileName: ./license.spdx
+SPDXID: SPDXRef-1-27
+FileType: SPDX
+FileChecksum: SHA1: b47eb197dbe0eb97cc4c7f99df7c7e7650d505a3
+FileChecksum: MD5: 8432782ee921ce5c1c91fc244d3201fb
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./doc/Doxyfile
+SPDXID: SPDXRef-1-28
+FileType: DOCUMENTATION
+FileChecksum: SHA1: 07905de9809e17e1c2cac2be92b244a29fe57eb6
+FileChecksum: MD5: 72de56058d036875ea62d6873e3dd98f
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/61/699b64c12aa9d73b613cb57c5e1238dc7542ac
+SPDXID: SPDXRef-1-29
+FileType: OTHER
+FileChecksum: SHA1: 3faf478d2387b587e289d1be334d435f23127af9
+FileChecksum: MD5: 432539cfdf5f5b88e3dc265289208746
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/66/669a95b3c02ae93e3aa0f124573c7744b1cbd0
+SPDXID: SPDXRef-1-30
+FileType: OTHER
+FileChecksum: SHA1: 697e5a0c7d379d62c1479236c839d7ba49bd34d9
+FileChecksum: MD5: d79faeae394f289d9a19bea3329e1aa1
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/68/534f18cae22bf68b6f98a200034cf554a8b385
+SPDXID: SPDXRef-1-31
+FileType: OTHER
+FileChecksum: SHA1: de95837af3ef8c6d674702dac6045ca5b028b5b8
+FileChecksum: MD5: 07d8088c8ded0539af94427b3e51d041
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/68/61bdc32568a8d383d740486d51e194332fa906
+SPDXID: SPDXRef-1-32
+FileType: OTHER
+FileChecksum: SHA1: 9650c089300482e88d8168aae59794ac83049363
+FileChecksum: MD5: f757356236e9e26aedbb5553563b83e7
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/68/2b04438326fab427f733197d321f3c6eb0d214
+SPDXID: SPDXRef-1-33
+FileType: OTHER
+FileChecksum: SHA1: 17828bda4fabd9e37475c4b882cd01c14bda9afc
+FileChecksum: MD5: 8e1ca1acd047555b93c8117ca9d55eaf
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/34/1cebb1422038e13f786ee14a709f90ccb9dc42
+SPDXID: SPDXRef-1-34
+FileType: OTHER
+FileChecksum: SHA1: 8df4e2e2cfe011a66098fdcddb4453dea5de1397
+FileChecksum: MD5: b183e75957e09cc9841ece38c505820a
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/b5/7d9e5cd980ff9470d6dbce53c8e9401fdbcf96
+SPDXID: SPDXRef-1-35
+FileType: OTHER
+FileChecksum: SHA1: 8c638f6c83d4d4fa8f247291c41f8f96d69aa2d7
+FileChecksum: MD5: 2b325f57eff5a070a1fa6c1181383b40
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/be/1f4fb003fcbb7a589fa0d36ca2f72288157fc7
+SPDXID: SPDXRef-1-36
+FileType: OTHER
+FileChecksum: SHA1: 7f762b5a3f1278b49710a7941b7f8460be10441f
+FileChecksum: MD5: 122aa494371a796d4bdf6112c36949c3
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/df/793634086f1e7d76a6eee9256a34dfa2fd8b7b
+SPDXID: SPDXRef-1-37
+FileType: OTHER
+FileChecksum: SHA1: e55ce7114005899467a82630cee7fefd5172c2c8
+FileChecksum: MD5: 09dbba1ed0ca2fcccddd0b61b1ef776c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/b4/3714140e20b01ffecf188c72bfa3a1ba6120a4
+SPDXID: SPDXRef-1-38
+FileType: OTHER
+FileChecksum: SHA1: f7a89a98ecc77677cdb681ff40481bef6d569ba6
+FileChecksum: MD5: 399178f9dcc710f77549a4b06dbde23c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/a2/f4e76b840f5a15a1460c823fe4841049331490
+SPDXID: SPDXRef-1-39
+FileType: OTHER
+FileChecksum: SHA1: ce8c35f4a2e755d975e33b8bf35ee9e8c8d97583
+FileChecksum: MD5: 5bc032139d7894dd6d0a355ffaa363c3
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/a5/a56088ffb8178b403e8e3e6300c7ee2a036dd3
+SPDXID: SPDXRef-1-40
+FileType: OTHER
+FileChecksum: SHA1: 3d9f78bdd6df80a985733e63cd4c9a268b1ee41c
+FileChecksum: MD5: 1a00d508affb807912848dc5ad3a00a8
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/bd/a9a88e31200bffe752b8d51dbbee5201ae779e
+SPDXID: SPDXRef-1-41
+FileType: OTHER
+FileChecksum: SHA1: 42588c1fba7e664292263f614a131672017512d2
+FileChecksum: MD5: ec17200cee0fe065215a3d7d340ef2a4
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/bc/697903c27fc2bd25f94e10978355167e67c223
+SPDXID: SPDXRef-1-42
+FileType: OTHER
+FileChecksum: SHA1: abeb84be88fa19818161c349dc8c73b0dfaf808c
+FileChecksum: MD5: 0e8acefaae9e351e38dbf1dc5a0104c6
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/d8/fad3ad604072912d4fb76c8325b2cdd76a6675
+SPDXID: SPDXRef-1-43
+FileType: OTHER
+FileChecksum: SHA1: d1a12fd3510a5ca33bc8a4bf8e609e9890dda5d4
+FileChecksum: MD5: 5292c06fcd7554a88dea29a8fcb6fc53
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/e5/eb80fbef82354cdb63cb0ede4696e2cd18135a
+SPDXID: SPDXRef-1-44
+FileType: OTHER
+FileChecksum: SHA1: fea541b9e2f8f1c390bf7be5722d97975b540e34
+FileChecksum: MD5: 85a434c9036ec1b9454f538282b12e7d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/e2/5f723fabdd51272200e5da7c65039ecbd4f9b0
+SPDXID: SPDXRef-1-45
+FileType: OTHER
+FileChecksum: SHA1: 59e26ff7595e0279abf5171307dbd16574549720
+FileChecksum: MD5: 455c9e20d7a04dab60c41b3264543970
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/f4/e9fe13611c326eed2d4d540f5a23acbffbb9e5
+SPDXID: SPDXRef-1-46
+FileType: OTHER
+FileChecksum: SHA1: 65768dffc4a730168efc5e2e5574fa0a668c10d4
+FileChecksum: MD5: 167d98d5dabc4b349727867a2a6e201d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/f3/900d44b593a30b22400310aa6fd63aa8c8dc78
+SPDXID: SPDXRef-1-47
+FileType: OTHER
+FileChecksum: SHA1: f1a2fa6d26f81e65d3673e9d7ec7104c20e3af22
+FileChecksum: MD5: ff80df4322cb0202ee1626b95b0a406c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/c0/98b9c27cc4a482e202129401fe61eb06145586
+SPDXID: SPDXRef-1-48
+FileType: OTHER
+FileChecksum: SHA1: f61770e1fc4eaa107226b799dce2ef13bb3f0b04
+FileChecksum: MD5: 7d43513ed0ba35c72b3dcf220aa07d38
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/f5/3cf1447c62a64a0b7ba942f230344c85885bde
+SPDXID: SPDXRef-1-49
+FileType: OTHER
+FileChecksum: SHA1: 346742d91669c0026f4bd38f643b876812badfbb
+FileChecksum: MD5: 67bb8235331d55e966280e25f43baac6
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/ca/f5d10be5ca1146649efa0d3852e2e0fb85ddbd
+SPDXID: SPDXRef-1-50
+FileType: OTHER
+FileChecksum: SHA1: d3f78f56882edf0a63d5df03939913574aec52b6
+FileChecksum: MD5: 5c5ba6bf3f77e5662c6ae362dd249f77
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/20/a8446e48977affe27c0c8dcb4c7ae70a286924
+SPDXID: SPDXRef-1-51
+FileType: OTHER
+FileChecksum: SHA1: 8b5532f6e7f505ace7053c33b8554c8ad18f9ff7
+FileChecksum: MD5: f4093a3b8f5ca49be01a444c1974130b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/11/18d67135a9f634ae98c1756c82fe7d46fda5ed
+SPDXID: SPDXRef-1-52
+FileType: OTHER
+FileChecksum: SHA1: ad30fef2c670510e41bd2c8bd3f68a112e2d3438
+FileChecksum: MD5: 1db415221c2ebb10bf7da3fd05d76dfb
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/89/8b8c28523a9cd5185218ec8e381111275eff86
+SPDXID: SPDXRef-1-53
+FileType: OTHER
+FileChecksum: SHA1: f81af208fc6f8f9179397050e05df162391f477a
+FileChecksum: MD5: 389c2ac96c0827c82578a9ac1cf75f48
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/28/bd21d9b05014afeee92f559997b9b89a5fc404
+SPDXID: SPDXRef-1-54
+FileType: OTHER
+FileChecksum: SHA1: 35592d527e78e3b23771751368779f64c1faa011
+FileChecksum: MD5: a669ada169270c000b92a8f0a424e72f
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/75/722cf20475a2d8b4a4896149af9a968dd53396
+SPDXID: SPDXRef-1-55
+FileType: OTHER
+FileChecksum: SHA1: 90591a76b1449334f0f63be23fd78640f21c95e8
+FileChecksum: MD5: 665edcc80c2591b8d767e6d7d0cf6c02
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/86/0faba030ac92531c2168500d935c29dc775949
+SPDXID: SPDXRef-1-56
+FileType: OTHER
+FileChecksum: SHA1: 998a8a5a74cbd2b41a048323a4010f88ecdc6ad7
+FileChecksum: MD5: 0d43305a1dceb5af8d557aa7f87f004d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/2a/7edc58c4a469b31cb3599c5eb242c72205299b
+SPDXID: SPDXRef-1-57
+FileType: OTHER
+FileChecksum: SHA1: 331fe0a2330273c94e07cea2a0753c48349564d2
+FileChecksum: MD5: c5306f1e5b2b76e82e57323656d9cd55
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/2a/dfab7e794af729ad3ec176f57dd4cf8b65b516
+SPDXID: SPDXRef-1-58
+FileType: OTHER
+FileChecksum: SHA1: d8b96ff86431b465ed380524bbe8a6cb6f799319
+FileChecksum: MD5: 5ede4440159fefd605f92b4ad6330324
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/9a/d776eca9380b97f997fe1269893a3deb32e721
+SPDXID: SPDXRef-1-59
+FileType: OTHER
+FileChecksum: SHA1: dc959d102d17d82d298102e8e6f317ede91adc4d
+FileChecksum: MD5: 02c50c5dd08fd4c86eb66f1cb1756621
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/97/8a45c4560efa24bc6bc02250870e8ab7e5bf75
+SPDXID: SPDXRef-1-60
+FileType: OTHER
+FileChecksum: SHA1: 231dd1843323b7575d622a8909803567ea0ee6b1
+FileChecksum: MD5: 6b81ed0bd9dfbbbae95709d25c00032e
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/ba/3f5fc7458507fbcce43889b52beaef5063d607
+SPDXID: SPDXRef-1-61
+FileType: OTHER
+FileChecksum: SHA1: 08bf1559a2a641f3873cb0d1b1863c5d8d061286
+FileChecksum: MD5: 3203be38d5e38c3818cd6ff36e759a98
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/a0/f1c46983d45e23a212fe07d17662a1b898a546
+SPDXID: SPDXRef-1-62
+FileType: OTHER
+FileChecksum: SHA1: f9f00227854227836b2807e9786146a7bde02111
+FileChecksum: MD5: b1fdccd100d75a105b73c292fec62c82
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/a7/7cbc19ff1f9b8499843f1548be3dc47203ffb2
+SPDXID: SPDXRef-1-63
+FileType: OTHER
+FileChecksum: SHA1: ab35ec0517e1604d6f1443ec7c4456c31f9cbef5
+FileChecksum: MD5: 496e8851653b324ed7cc71dc3045ffa9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/b1/a2869025f9a3f6105ff18df995c60112737f29
+SPDXID: SPDXRef-1-64
+FileType: OTHER
+FileChecksum: SHA1: fea08383861fc01cdb2bd70790fdc3fee8fe775d
+FileChecksum: MD5: 58b919db643f0b948aa21f5afc698c4b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/d5/dd79cbe9e93ce25b9f4d74fb186824f4b3306f
+SPDXID: SPDXRef-1-65
+FileType: OTHER
+FileChecksum: SHA1: 9fe8648710e83725809ce9d7099432849e6670e6
+FileChecksum: MD5: bc821b658462fa533551b08eb331def1
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/af/13dac85a1c4d8dbd38073594498f60d6b9e246
+SPDXID: SPDXRef-1-66
+FileType: OTHER
+FileChecksum: SHA1: 052553f7be9d2e13c9b0234d1d92e3224e06cd20
+FileChecksum: MD5: c942935cf87168e50b8819e128fe952a
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/af/d241025a7d05b4476c1e27946e4e1fbbac3d16
+SPDXID: SPDXRef-1-67
+FileType: OTHER
+FileChecksum: SHA1: 22b73b41bf3c66103a434de8ffdaa9c707b403f0
+FileChecksum: MD5: 6da541768ab4f7bd2d800dedc29a153d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/a8/b4192dccd82dfbc3f193a5dcd7989e9ff2ce7d
+SPDXID: SPDXRef-1-68
+FileType: OTHER
+FileChecksum: SHA1: e5870448b2660317b09aa6f2c1fcd08695f5159f
+FileChecksum: MD5: 400c630989b6a2ddb77b224466472b3d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/e1/e522e3ee184bf569ec3e910a55df4e08fda62a
+SPDXID: SPDXRef-1-69
+FileType: OTHER
+FileChecksum: SHA1: 63c5c2537f64521d39508e5afe3162b6335ee190
+FileChecksum: MD5: 025414f50a4517576e1a16274e2b0e7b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/e6/c2231953e67b77983c0c822d20782feef11a8a
+SPDXID: SPDXRef-1-70
+FileType: OTHER
+FileChecksum: SHA1: 8a5755f9ef3b517e5f0440303ed4923881cc7b04
+FileChecksum: MD5: 17bee705cb085bc163204573bd0318c5
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/ce/d78fdefe269e7216f1608d72f8bd7bf06659fa
+SPDXID: SPDXRef-1-71
+FileType: OTHER
+FileChecksum: SHA1: 988a2df7a4da16f0f68ad2cd9e0d338711c20bfa
+FileChecksum: MD5: 105f6a0fba12dd70d70d4711cf221d18
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/2c/0a7d379ef20aa6cf0aeb77cbbe7f12538ccb9f
+SPDXID: SPDXRef-1-72
+FileType: OTHER
+FileChecksum: SHA1: 9e80ef891f0ca46e4dfc114f7a9f78a294106e0f
+FileChecksum: MD5: 0a3dd90cc38cec6d2f1a1d6f8554bdc1
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/41/ddb9ab9eae921650ac46e7472b9548f83dd69f
+SPDXID: SPDXRef-1-73
+FileType: OTHER
+FileChecksum: SHA1: ab6563dc8566761e9fa0ac7350f06547ad8cd94a
+FileChecksum: MD5: bfbe7f9c57facdb6411638e574d798e7
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/77/53393048d1c1151af806fdf719487faacca759
+SPDXID: SPDXRef-1-74
+FileType: OTHER
+FileChecksum: SHA1: b0154a6d1ce7b46e96466057006b4b0f4b68baeb
+FileChecksum: MD5: 78c91d55e1db19d577e322663421b920
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/4f/e3bcaed205e48c879d9484fd8779e75af0ed9e
+SPDXID: SPDXRef-1-75
+FileType: OTHER
+FileChecksum: SHA1: 4d6ddd74ea3f1d3d220182156b849a670f9c67f9
+FileChecksum: MD5: 8ab3a48dd5a16d6a9dc98c0db3f7c00c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/2b/504ce3d9d016c98b7a7571bacda5b260bf1f9d
+SPDXID: SPDXRef-1-76
+FileType: OTHER
+FileChecksum: SHA1: f54d0dfc7e589730de2c71a4cf0aaceb5a57f234
+FileChecksum: MD5: 4f3b5fbbf93740475d96b7facc08e8e8
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/8b/5749e7c02fee54e512b7d265b0a5c1cc1ef6e5
+SPDXID: SPDXRef-1-77
+FileType: OTHER
+FileChecksum: SHA1: 29ef2f590f05163739d6818d0fac5e187b4835c0
+FileChecksum: MD5: 52dbc5f4977b21f43a24c500f1a0058d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/7a/e1a887633698f5e6ad26a2dea00aae97e20bbd
+SPDXID: SPDXRef-1-78
+FileType: OTHER
+FileChecksum: SHA1: 782969c6d0cb804f85f0c2e92ecb84cd8b22ae0c
+FileChecksum: MD5: b07dcd091158c213b6a4360aeee7b2f7
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/objects/25/48a5dc172cbc86f55d7ce33822d1b578788eb2
+SPDXID: SPDXRef-1-79
+FileType: OTHER
+FileChecksum: SHA1: 215f5a9b123dd1c2384b60ca7b5dfec86eed1faf
+FileChecksum: MD5: 636f2a801dd78b50da8ab3b459a4cb94
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/pcg-c/objects/pack/pack-1678e593dcfb9d61ebb62346a84584fc5c161eb4.idx
+SPDXID: SPDXRef-1-80
+FileType: OTHER
+FileChecksum: SHA1: b4086c27e389e8b18945f0c120998caefe51ad43
+FileChecksum: MD5: 880da0d755622ef91a11499e5e4d3344
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/pcg-c/objects/pack/pack-1678e593dcfb9d61ebb62346a84584fc5c161eb4.pack
+SPDXID: SPDXRef-1-81
+FileType: OTHER
+FileChecksum: SHA1: 60c47354076ade5f63ef5480254560f2f7d3bf4d
+FileChecksum: MD5: 2566a470169eb0238d0312f9ca11a904
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/03/3a5e765d7cbf3759cd64bb003ada29fc2db96e
+SPDXID: SPDXRef-1-82
+FileType: OTHER
+FileChecksum: SHA1: 5b90e897181e15e8a789f473a0cab8a766dee02a
+FileChecksum: MD5: 848bfba3dae2c2ae074a8b86fa6aac37
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/35/81bd1335d595a40edc4705f2f1c81de2297fd9
+SPDXID: SPDXRef-1-83
+FileType: OTHER
+FileChecksum: SHA1: 51608dee422b86ba115e7b6d304dffe877a63f88
+FileChecksum: MD5: 5fd0bdcb5980fa2dc6c103abf66279ea
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/5a/36874d1c5caef2c001b9e89b86ebfb1b8a6911
+SPDXID: SPDXRef-1-84
+FileType: OTHER
+FileChecksum: SHA1: c0a73c3b05f7723d8153dc07793354a0ade4983d
+FileChecksum: MD5: 1fa4a5595957a576afba0bcb19b552be
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/33/019058fbd3b705eedca33d6a2c5eb22fe81363
+SPDXID: SPDXRef-1-85
+FileType: OTHER
+FileChecksum: SHA1: 13e5dd07b0d5bcd9bfe84ae7b08af490f41caa8e
+FileChecksum: MD5: dcc5d387258f9f51ba3add472a386cc5
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/05/beb4698e5cac8707ac5372a365f4a2d1dabfa1
+SPDXID: SPDXRef-1-86
+FileType: OTHER
+FileChecksum: SHA1: a23a9fe1bc38c498331ea97762e9fc4a9710ff7b
+FileChecksum: MD5: 02cd33bbe401e1e3af355b9df71a645e
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/05/8618ec000c860bc388d8968999e7c76db6732b
+SPDXID: SPDXRef-1-87
+FileType: OTHER
+FileChecksum: SHA1: 280fdb665c46471d23040a02b9b89870928e007d
+FileChecksum: MD5: 3a11309df4e6dbca4a9d4b28c2859c4a
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/a5/816ded9a7a112f9460bdb267fc44d9e432165d
+SPDXID: SPDXRef-1-88
+FileType: OTHER
+FileChecksum: SHA1: b21ea10dda1f134cb4e0b1154c251ce6bfd2700d
+FileChecksum: MD5: 291eac3f1a75d237c4fbad5ab85037ee
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/d1/7cbd3513e9c34935a134ff7f416341959c421a
+SPDXID: SPDXRef-1-89
+FileType: OTHER
+FileChecksum: SHA1: 9036e3d25000489a82a26ceac7f1fc6bbf7b62e3
+FileChecksum: MD5: c3df08042e8f502d4617e2024d0db17b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/ae/d03c3808148210ba4ef23b420a12617a8958db
+SPDXID: SPDXRef-1-90
+FileType: OTHER
+FileChecksum: SHA1: 2f5d28d89798fc4ad301bfcb4cef287613de48c9
+FileChecksum: MD5: 93abad3450923c923e09d33f8f779df8
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/f3/1b753167e74e9a51b66448fdfda762793c064e
+SPDXID: SPDXRef-1-91
+FileType: OTHER
+FileChecksum: SHA1: 4f40e5ad38eac2cfda813b72107a467492b709cc
+FileChecksum: MD5: 6527d506e5b2ecda30e11282971a3b12
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/c0/ca81f3cda9f39a24c1ae4f9cd2723d26f3b7cf
+SPDXID: SPDXRef-1-92
+FileType: OTHER
+FileChecksum: SHA1: d9c8d6245db26832914c796fc6c85cc06373cd5f
+FileChecksum: MD5: 471f64dbb40c32692f23bd75f04f25c2
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/f5/1100d07db0e406ca07eb8c26b93bbcb1beee4c
+SPDXID: SPDXRef-1-93
+FileType: OTHER
+FileChecksum: SHA1: e62e7bcd30d236b76e00e3fa662e510bdb7ea049
+FileChecksum: MD5: 075fff04fedb25608693da00c92361f3
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/ec/64e4ad53af8a10e3525f731cf43df717af4f1b
+SPDXID: SPDXRef-1-94
+FileType: OTHER
+FileChecksum: SHA1: 15fa65c5f99572cd0131be7f1f9fa77cbb44c8b9
+FileChecksum: MD5: dd67fd1d22846fedaa81037d2caedc9b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/18/d7f2db35f015c6a570c2994430b17e90dcd36f
+SPDXID: SPDXRef-1-95
+FileType: OTHER
+FileChecksum: SHA1: 05354ac176274f239fb189264a179a3ba7521dc8
+FileChecksum: MD5: 291d4f876d70fbad5ed458e6312976eb
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/10/e77f0de07e645585ddf4bac83b40ac39e35e16
+SPDXID: SPDXRef-1-96
+FileType: OTHER
+FileChecksum: SHA1: f63b6510c69e62bd785071ccfd9c9dd1089a575f
+FileChecksum: MD5: d4e1313ef37cb1c844aafdd65e4a95fb
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/4c/8d4a519f5f4649d4b99c38f62472c3574f1b9c
+SPDXID: SPDXRef-1-97
+FileType: OTHER
+FileChecksum: SHA1: 2fa313419e81853f1df8d730f9584e6f6ac781bf
+FileChecksum: MD5: 7b0f5343c0af46bbcae0742016183f44
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/21/8ca8a49fdc5fe23f888bdaa44c4540c45afebc
+SPDXID: SPDXRef-1-98
+FileType: OTHER
+FileChecksum: SHA1: 3162ff077ce1a691fe2c8b5a3f72cb53967e109f
+FileChecksum: MD5: 1a64c35a6b79918d6ca9839196783bbf
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/6e/a4565701abda4c5c587c9b5f2505763df3941d
+SPDXID: SPDXRef-1-99
+FileType: OTHER
+FileChecksum: SHA1: 554c2fc0932988c156ad5b33c7e8585d47fa1e53
+FileChecksum: MD5: 1395880a0e7c2e974edce34fac87c506
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/5d/f9940eba15d368d542f7f3ef19ff93100dc6e3
+SPDXID: SPDXRef-1-100
+FileType: OTHER
+FileChecksum: SHA1: 27299a30468f726b4f62b0c0cc89d4501d62d706
+FileChecksum: MD5: c9d35cc17386f2f0af35e1292f523acd
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/53/9a53d24608a926f5be551cb290ad678b11905e
+SPDXID: SPDXRef-1-101
+FileType: OTHER
+FileChecksum: SHA1: d1cb73876f518495bc9146001b78a3067b61578f
+FileChecksum: MD5: d11d3eaee18b8b72247a6ddaa8415573
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/30/37e6c345747b0463b024c128ec718ddbe97aaf
+SPDXID: SPDXRef-1-102
+FileType: OTHER
+FileChecksum: SHA1: 3ef3d72d25f08ee23e4d696792644cf50679bc36
+FileChecksum: MD5: 01a60bae470d693ab6646a945b159f47
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/af/a5905f145242c749baf6d7a3d451cdbf66dc94
+SPDXID: SPDXRef-1-103
+FileType: OTHER
+FileChecksum: SHA1: feebf030c5970ecfae45baacc4a4410bda03e2a2
+FileChecksum: MD5: ec67e070bc8436cf6d6a03331d067b8a
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/a8/320c6198faa04b32cb1a0add39052f10295a0c
+SPDXID: SPDXRef-1-104
+FileType: OTHER
+FileChecksum: SHA1: 759195c617a758bb2ab02362f5d4b94c7e293807
+FileChecksum: MD5: 73be582dd7a07f82326a0c631f3aea97
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/a8/5d3d6741c34c0d7ca464af8247ebd2fbc6c336
+SPDXID: SPDXRef-1-105
+FileType: OTHER
+FileChecksum: SHA1: 357a282fd8bc71ffb3601266db94f04150961d5f
+FileChecksum: MD5: df3ae139d6e5970ee54a8f62b529bd06
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/ef/2702fb09bd0dfd369d194a7379795431e3d1b2
+SPDXID: SPDXRef-1-106
+FileType: OTHER
+FileChecksum: SHA1: 3465c6e61306bf8b680fc4fbbdb12b0a1123f097
+FileChecksum: MD5: 8799ac4657e6010f5e51b62604d61da6
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/c4/a37e040b8482ee5ce4d00891a2a6362c4faf9a
+SPDXID: SPDXRef-1-107
+FileType: OTHER
+FileChecksum: SHA1: e2df6c63866a1b96ff47079cb225da4bf79d4e62
+FileChecksum: MD5: 0394cb0d0a7ae5dbe3f9291d6173892b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/f1/9cb81d3fe269b33346b7070e7198242c0f0dc3
+SPDXID: SPDXRef-1-108
+FileType: OTHER
+FileChecksum: SHA1: fec5617eb63a8fe99eb6a1b1c4662defab87886b
+FileChecksum: MD5: 60825af1d06e32940ff8c12ae81d65cf
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/2d/7bddfbf4636472fe1c9584bcb7c86f0a79b89b
+SPDXID: SPDXRef-1-109
+FileType: OTHER
+FileChecksum: SHA1: 8d847ebf0348a255dfad84f439fb77bcff7e922a
+FileChecksum: MD5: 3e461c0dbe24f4cb3dce4b62ba08f7c2
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/41/f6b7cec8f729f2f85190912e63bca7cfa6fb0b
+SPDXID: SPDXRef-1-110
+FileType: OTHER
+FileChecksum: SHA1: f9fc60b6dcdca09b26cb0eae68fa4055acbf3186
+FileChecksum: MD5: a8eb5082433884d3abe9dda8eca3b807
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/12/518cfcc1222a62f03868a93ebc4187df38968d
+SPDXID: SPDXRef-1-111
+FileType: OTHER
+FileChecksum: SHA1: 74f4bba9340e24027f5c70ebfb4193083608d835
+FileChecksum: MD5: 6d36cb0c10ebfd4b141338eba24544b9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/8c/60c022a650bfcbc39745f59b9072f0b175c320
+SPDXID: SPDXRef-1-112
+FileType: OTHER
+FileChecksum: SHA1: a2e013cffd79eaf3be2ccd7ac2c233e5c97d94ab
+FileChecksum: MD5: 3c8caa73f8efb6646a102436a0cb43c1
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/float_params/objects/8e/1b3121a306915bc6a1ece3d9aa556e090a2cad
+SPDXID: SPDXRef-1-113
+FileType: OTHER
+FileChecksum: SHA1: beac7dad57ff9a1c75640566397fba98ef821d19
+FileChecksum: MD5: 1762f26bae6764b95847c2bff5d92088
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/chop/objects/pack/pack-d5b489abb0fbe39aacb75472f871a17744d3ceed.idx
+SPDXID: SPDXRef-1-114
+FileType: OTHER
+FileChecksum: SHA1: fa5af8506f95ce362fc80aab068a0407cafc1092
+FileChecksum: MD5: 4287dda19edd7e221650d33f0aae6871
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/chop/objects/pack/pack-d5b489abb0fbe39aacb75472f871a17744d3ceed.pack
+SPDXID: SPDXRef-1-115
+FileType: OTHER
+FileChecksum: SHA1: 546826daa0ee17ff1284b91e96bf39f64f7c61d9
+FileChecksum: MD5: 93b9484d6dc2717b7bd366f1c9ddb7b0
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/0d/f2eff473451c73c18dbfcc510694366c7e4c3d
+SPDXID: SPDXRef-1-116
+FileType: OTHER
+FileChecksum: SHA1: de903a20f9aca62a9cc4ae23768a8c33906747c0
+FileChecksum: MD5: 5629cee36a3748e5146aafbd17a95e32
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/95/efa642f59c92f97463d7d8540dc8ae6fc893ce
+SPDXID: SPDXRef-1-117
+FileType: OTHER
+FileChecksum: SHA1: 5a2bcde6321d08788ec272b73a25456e61b69065
+FileChecksum: MD5: 91078486fb9b738c9391e9cbe7d249d5
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/95/97a44f4867301f28d888cb53299e21b5d1b9e9
+SPDXID: SPDXRef-1-118
+FileType: OTHER
+FileChecksum: SHA1: f834e17a5640607e545c1864f900e9eeff1e77a9
+FileChecksum: MD5: 916349eabee61bf30d431e5897a1f0c1
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/95/170d096aa6be6369bf6bc051f73a51cbcf36a4
+SPDXID: SPDXRef-1-119
+FileType: OTHER
+FileChecksum: SHA1: f2cb8bf8502f540ded48ed7ea8e142a161d5e0ac
+FileChecksum: MD5: 49e08332042e63312102c39307c99b95
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/59/bd7014040b35c7c8870066020d42c4e11412b0
+SPDXID: SPDXRef-1-120
+FileType: OTHER
+FileChecksum: SHA1: 2085e4d2f32de01d65bf790f38f5e99d44072a39
+FileChecksum: MD5: b81db514d9d5bce47f668d2a7a0692eb
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/3e/3c599c56d271378155045f60c27fc813b5bd08
+SPDXID: SPDXRef-1-121
+FileType: OTHER
+FileChecksum: SHA1: 6a2b492b3f74eb49f4d882be03adf5bb3ad978ae
+FileChecksum: MD5: 890306d0bc919d06bb3ad0f7aad569a5
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/50/7e808ec795e59b352079dcea86134ab02e85fe
+SPDXID: SPDXRef-1-122
+FileType: OTHER
+FileChecksum: SHA1: 504e09d4ecf927da6f5baf0efccc3b38a00a026b
+FileChecksum: MD5: 5207d5649c4eafe8cae32374eba0baae
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/68/0a6245020d6d2a5b294843c1ac727f1373bdac
+SPDXID: SPDXRef-1-123
+FileType: OTHER
+FileChecksum: SHA1: b9a5a22230beab1aeba2a89d9a1692e77162ef4c
+FileChecksum: MD5: fe280d0a1272c04556ef8d8c012d53e9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/3b/5580809b0a916ff6d9503ab0d6a3bd95153aa4
+SPDXID: SPDXRef-1-124
+FileType: OTHER
+FileChecksum: SHA1: 7bfd6d3d511b97607ab1c7fd8055485346cb22e5
+FileChecksum: MD5: 103fcfaf827eb705a03da4d94c6e2616
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/9b/cd505145fceda3d41cb88af085f4c5bce1db77
+SPDXID: SPDXRef-1-125
+FileType: OTHER
+FileChecksum: SHA1: d2415d82376e9c4d035c68506cd5a0fc84ba1bf8
+FileChecksum: MD5: a2037324ec899bdc2ccebd009ddf9d90
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/6a/8acb16d44acfa9844c93ba297d16fffbf0d663
+SPDXID: SPDXRef-1-126
+FileType: OTHER
+FileChecksum: SHA1: 4dddcc246e1252839e4a378e4e3c01b5c065ff1d
+FileChecksum: MD5: 5097f5c7cf79244cd0d43eff8d5d9532
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/32/ac3cfaa0d064ee0415719b147c047ff8f9d82d
+SPDXID: SPDXRef-1-127
+FileType: OTHER
+FileChecksum: SHA1: 67f40622d6b65672bb2fdf5e5ab72a80750c14ab
+FileChecksum: MD5: 8c5f82316a248a0d7b5ecc44a28ebc20
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/3c/fe61936aec1b6d050117776d37f9b140c0e494
+SPDXID: SPDXRef-1-128
+FileType: OTHER
+FileChecksum: SHA1: b0504b3c31967708967c0275bc5f12bebecccb03
+FileChecksum: MD5: 5996c7d0a30013db003a9472e0fa0e7a
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/56/4b3068b4a31eea50dcbb09f3898499cc300ed0
+SPDXID: SPDXRef-1-129
+FileType: OTHER
+FileChecksum: SHA1: 31db7ba1be6e2009ba79cf3d05c8a8ca6a72dc14
+FileChecksum: MD5: f59c665e2e26b1d05b71f980d5bba591
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/51/3fdc87ba253e79ce7f886295d04f21d819770a
+SPDXID: SPDXRef-1-130
+FileType: OTHER
+FileChecksum: SHA1: 6cc80bfe00cd7cd4503877b32a2fc96c5847f41f
+FileChecksum: MD5: 9850a440e5681778e0503711416dc7a5
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/58/94e3bcf666917f241af8ceee07754089adb7b4
+SPDXID: SPDXRef-1-131
+FileType: OTHER
+FileChecksum: SHA1: 5b31e29a9fec72fabf4a0cbaa0a194fb59a63c59
+FileChecksum: MD5: d5195dd940c6b89bbc62cc8fcbd90726
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/0b/dc94be48e2f5afcb939ceb6a1b1d0f49a48b33
+SPDXID: SPDXRef-1-132
+FileType: OTHER
+FileChecksum: SHA1: 6c31917f43fd54a2a231f919776222964bbeccaf
+FileChecksum: MD5: c9dbb28370b7096ff8bbff8316cbed6b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/34/c9ab9d307fbb157e559dae02ef8136a6865095
+SPDXID: SPDXRef-1-133
+FileType: OTHER
+FileChecksum: SHA1: bd480a696df335ca48681efe0bfba36d6624a94d
+FileChecksum: MD5: a10c8506cadf5bf598ceaa73b8f700f4
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/5a/e867b16310864a6d7654a0253b0064289cf822
+SPDXID: SPDXRef-1-134
+FileType: OTHER
+FileChecksum: SHA1: fedb16b25039cd418bd0c640cc24b729f2c81627
+FileChecksum: MD5: 9ba73c9da8c74bf86a06d11ea543a699
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/5f/fcf7164f38f84a7c41c3944caa26ba01194e34
+SPDXID: SPDXRef-1-135
+FileType: OTHER
+FileChecksum: SHA1: 8eee42d6985a8aac21a2efc96a20a5591768b171
+FileChecksum: MD5: 87f6560fc5f321e999a1f62bea2fd2be
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/02/a1dc693bdc5e81c9a4ee01d40806d1d8b3a1d7
+SPDXID: SPDXRef-1-136
+FileType: OTHER
+FileChecksum: SHA1: 0bc05facbea91b09e584ff879ff701bf647bfc47
+FileChecksum: MD5: e2c6423acab3a67598e191a365aa6280
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/02/67df98125599de64c339335c23586588b1009c
+SPDXID: SPDXRef-1-137
+FileType: OTHER
+FileChecksum: SHA1: 1ab09027d20dfc072fabdc050e9c556b76f9eaf0
+FileChecksum: MD5: 9a4f06191a80568b1c27e8d88fd63a95
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/ac/377f06edb3860a24b6e275cb720e4fbe791d28
+SPDXID: SPDXRef-1-138
+FileType: OTHER
+FileChecksum: SHA1: 2b32024143f69d93182cb5904824be7b3118f8d4
+FileChecksum: MD5: c82c059f1a294a9197599d7ce93f8f27
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/d7/02765aa785e91f250adb4b0290e793698f851e
+SPDXID: SPDXRef-1-139
+FileType: OTHER
+FileChecksum: SHA1: 4ea7953f19fa1ff4ef447b6f50cdbefb279c0583
+FileChecksum: MD5: 730d790f85eff39457dc370c50f85d1d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/be/fc5906ec76dedd7b37d6c055c31e7b56d5baab
+SPDXID: SPDXRef-1-140
+FileType: OTHER
+FileChecksum: SHA1: c28e17c9c539e0c1782bffe6f30e9ca2c16cebb9
+FileChecksum: MD5: 448dae7b1915d8fd72d68acb8f534313
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/bd/90086d2ff95d70912e58b91e13103bff8be58c
+SPDXID: SPDXRef-1-141
+FileType: OTHER
+FileChecksum: SHA1: 28df32de431bdd012379d745fd18c0b503dcd0a0
+FileChecksum: MD5: 140e290de818b4c7603f5d11ad04d3c6
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/ab/2d5567eec9aef4ffdd16db038e84978386f45e
+SPDXID: SPDXRef-1-142
+FileType: OTHER
+FileChecksum: SHA1: 972702eb4ce3de8717141bf03b162287f43620d8
+FileChecksum: MD5: 0f3ff7189364251f73c0db28da32d309
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/e2/f49c07f3c9bd1163f24d99f0293b85c0a8d046
+SPDXID: SPDXRef-1-143
+FileType: OTHER
+FileChecksum: SHA1: 7a4bf6498d62f5460e02f3b6ed7625e686837761
+FileChecksum: MD5: 46b23fb4bfb7ebf11e4f76fee691f55f
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/f4/e0de5d3fd9f439e3c57f6979076e8becdf0fd4
+SPDXID: SPDXRef-1-144
+FileType: OTHER
+FileChecksum: SHA1: 41f7d801fcc4a963baa485caa074462a3c276c42
+FileChecksum: MD5: 8585cdee4d26a01d35920288469554ec
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/f3/3a4c2d9e65aa11b244d105ea4b766db0c96d55
+SPDXID: SPDXRef-1-145
+FileType: OTHER
+FileChecksum: SHA1: bc70f115dc8ccfe8c4bd7ee5b48ada8bb8571197
+FileChecksum: MD5: 663edda951fd79a372e54067fb023565
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/eb/f00e4dda0c5091bbc22295dad36eca9ac1b78d
+SPDXID: SPDXRef-1-146
+FileType: OTHER
+FileChecksum: SHA1: bb29b95324c5836ba962de3bbaea6af20ab9efe6
+FileChecksum: MD5: 17e36ed644e7ec68b31bbc8ce7b201f3
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/c0/37f9e3946a801c8e83c0f6e39c6c7d88e1265e
+SPDXID: SPDXRef-1-147
+FileType: OTHER
+FileChecksum: SHA1: f29628a25e8ca31619604f6963e50123977ce80f
+FileChecksum: MD5: a6bf48157456f6b260e60c09866ab892
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/c8/9cfb78d9c85969a449befa2ba45e36f7d18a2e
+SPDXID: SPDXRef-1-148
+FileType: OTHER
+FileChecksum: SHA1: a08602f5ff55491bd8e1d165f066f8a3672aba13
+FileChecksum: MD5: 46674012070a00551fbeee4befa71548
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/fb/780152d56690abdc157eb85a3b23cd3c711ac4
+SPDXID: SPDXRef-1-149
+FileType: OTHER
+FileChecksum: SHA1: 83ba642922c086a83b340a9b62fc2cf9e6cc4f2b
+FileChecksum: MD5: b57fbd3920ec9950dfd65985a34a553c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/c6/c65ca8b915ca8766b56c14e2e0896e25ef09cd
+SPDXID: SPDXRef-1-150
+FileType: OTHER
+FileChecksum: SHA1: 4fc736bff5263c8815de1acd46ecabc01893ccc5
+FileChecksum: MD5: cae9a1df9f4379a97441103a0d56d4f4
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/89/f164faf7f71fb52c49079d8d16d6363a663feb
+SPDXID: SPDXRef-1-151
+FileType: OTHER
+FileChecksum: SHA1: f9e53d596eaaafd9dd29cd297d0c7567c964cc20
+FileChecksum: MD5: 650676de5a7f6adf297f480fb94d570c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/17/937e57e1ce814aa2920005194f037383d9e3f0
+SPDXID: SPDXRef-1-152
+FileType: OTHER
+FileChecksum: SHA1: b67678dc68cc1c3314d2490dd00a149abe7f6ee5
+FileChecksum: MD5: e8ad7cd13b06357d429a72bd592d2cf5
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/8f/c093b338c5a12bc07ecc00b8ce46225fec8f22
+SPDXID: SPDXRef-1-153
+FileType: OTHER
+FileChecksum: SHA1: a872eb6c1d85042bd867e5841218f11ddf936660
+FileChecksum: MD5: f15256bbaf34086e2279b31d2c8b830b
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/19/424976e460ab29a6e55cab700e58615b53bfe9
+SPDXID: SPDXRef-1-154
+FileType: OTHER
+FileChecksum: SHA1: 6c8ec44fd3d30347b05531c3b5abdefbc70f2b9b
+FileChecksum: MD5: a65b1798edf1e649a8c2138b064ca85a
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/26/1eeb9e9f8b2b4b0d119366dda99c6fd7d35c64
+SPDXID: SPDXRef-1-155
+FileType: OTHER
+FileChecksum: SHA1: c76f3a90e6fec66273506eefa98780a4e7e33fd7
+FileChecksum: MD5: 36b35938e0c57b26db0cfe487524a192
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/26/f820df767ec540400c3b3d1c7cb7b20dfa547a
+SPDXID: SPDXRef-1-156
+FileType: OTHER
+FileChecksum: SHA1: d85b9c146b1eb5a2ea3dcc9b3a5474e5feb910cb
+FileChecksum: MD5: 6f28cd4d70cda4be79c80cf21bd0bda9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/81/12e4f7bd32e1d1ac3dab1b7d0bbc9eed9159f3
+SPDXID: SPDXRef-1-157
+FileType: OTHER
+FileChecksum: SHA1: af84a8f8341db86eddbbee187603e6168da9d3f6
+FileChecksum: MD5: d93e31ee568d06581f81c5835128f1d9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/86/388d57baf2d0c2f5f7dfc0989b5fb03b0c0fb2
+SPDXID: SPDXRef-1-158
+FileType: OTHER
+FileChecksum: SHA1: 7619a91e58ab3aa74a8ec8983b5c70cbe8df4cc8
+FileChecksum: MD5: fe1c9a22b8ef6993c2c45c4a3fd8c469
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/07/7238723e39372cd927fb9cc1653edfaa6599da
+SPDXID: SPDXRef-1-159
+FileType: OTHER
+FileChecksum: SHA1: ac19ae99c2b9c979450d0ccae9f57f6a5d1d5aa0
+FileChecksum: MD5: a637b50ce81285deb448a6d48d36d2f9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/9a/ff38a5fecb65c2e3a7ca2c2a2bb4e18b5c860f
+SPDXID: SPDXRef-1-160
+FileType: OTHER
+FileChecksum: SHA1: 444c7230e8307024379aa4c2a72ffee8befb249d
+FileChecksum: MD5: bd577ff5cf213a3fa0d4611c33b24c3c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/91/1822163ab0c1485c92378718affca519ec9087
+SPDXID: SPDXRef-1-161
+FileType: OTHER
+FileChecksum: SHA1: 5cbfa1c5cdbd8469fe06c5e9414872193db73498
+FileChecksum: MD5: 5be12577751bf41e29846cdddae051b5
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/3a/ea09ec839f7471aecbd89dc5561cf0993173d0
+SPDXID: SPDXRef-1-162
+FileType: OTHER
+FileChecksum: SHA1: af103f05b1d5b0570961e0e23f01bc7447bc11d4
+FileChecksum: MD5: 72c8dd42d34188b697a24ab2faf86a2e
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/53/4633582421578f02a1ee2d0cfc8e479a5252ee
+SPDXID: SPDXRef-1-163
+FileType: OTHER
+FileChecksum: SHA1: c07f55f3c410ba0b98b62e198ead8541d31d9ed8
+FileChecksum: MD5: eed3d9bc22df251493122eb5db8d9916
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/5e/9229b265d0f8bc7b48646e44536df9f299dfb3
+SPDXID: SPDXRef-1-164
+FileType: OTHER
+FileChecksum: SHA1: b89cf48537a98d039e369346c568f34d7d62d6bc
+FileChecksum: MD5: 0ed12b89445af298b8a50fee36f88455
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/5e/605fade61d52087d0c83471bae6fdd0102963a
+SPDXID: SPDXRef-1-165
+FileType: OTHER
+FileChecksum: SHA1: 612cc8f97581354316b88240b244dd95a47fa295
+FileChecksum: MD5: 0f6b18a3c7b24e72ad465c1fbb19dadb
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/6c/841e2f0335c810dfe342f26e19f92d83b29f2e
+SPDXID: SPDXRef-1-166
+FileType: OTHER
+FileChecksum: SHA1: d32b3e40536967063d6562e716a237a5e5468a4f
+FileChecksum: MD5: f8aeae4b1396196b0ef525c5139cbc4d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/55/d40ceaef4393a6a54b198b44e6d52b00758d92
+SPDXID: SPDXRef-1-167
+FileType: OTHER
+FileChecksum: SHA1: 7e050b9c583f4f1ea9b1c10e64efcdaf7535dcb6
+FileChecksum: MD5: 338542ff2e41c485e981ad781d863262
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/97/652d5a26a55764f02fd9efd4840861b3b383f6
+SPDXID: SPDXRef-1-168
+FileType: OTHER
+FileChecksum: SHA1: 6a74a8c46f5c05370eb33d19fff2457f753157cb
+FileChecksum: MD5: 6126652be0dc0d8a24ced832da90fca4
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/0f/ad247eb6564e77bc473aaa58ad15190442cb67
+SPDXID: SPDXRef-1-169
+FileType: OTHER
+FileChecksum: SHA1: f08bd52ecd4e3698599e96ffda271ac8ea1f4d9c
+FileChecksum: MD5: 65f61ff669ed0f31fff2d9891c775611
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/0a/bbad88f77e08935479e63a4ffe319c57b4e86a
+SPDXID: SPDXRef-1-170
+FileType: OTHER
+FileChecksum: SHA1: 40742bb54a52d97f8ffbad0cccf7f3a2ff09527c
+FileChecksum: MD5: 5c2f16ef4aa07c2d2e9d7d08ccf728d7
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/d4/e83de659bc9b5724d5bcb4d017390d60d353d5
+SPDXID: SPDXRef-1-171
+FileType: OTHER
+FileChecksum: SHA1: 10672f8785192c94fd2f1a181466f5b59c0d93ea
+FileChecksum: MD5: c996137b8a7467aa3ca6ae661f33a472
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/b8/2e340ad7a15ecf231624ee6369019edff1cb62
+SPDXID: SPDXRef-1-172
+FileType: OTHER
+FileChecksum: SHA1: e207552641e3f501330f55aa43dff13ccef7f137
+FileChecksum: MD5: dbd9ce3f920860a5ef476957cdd0cbd6
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/dc/6b981ce0640ed1f25a734f20f18b2c13763fce
+SPDXID: SPDXRef-1-173
+FileType: OTHER
+FileChecksum: SHA1: 835adac3752c6b29a8afa310175bb81e5b40a4fb
+FileChecksum: MD5: 87629b47048b17da2fb54f66ff4b9bdd
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/d2/35111989aef603f34c5eee6ddea06e6dc8fc7a
+SPDXID: SPDXRef-1-174
+FileType: OTHER
+FileChecksum: SHA1: e4c9bcf9207985805f3a552f623bc2ec92f13b7a
+FileChecksum: MD5: 626d882f46c259d4d646b5c50bc38b7f
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/af/4b31d0de43a401bac96e6f4d8b54d8d74bdd6a
+SPDXID: SPDXRef-1-175
+FileType: OTHER
+FileChecksum: SHA1: 0b7a1d26cd200416a35bf9eaaa3b62dd954832a0
+FileChecksum: MD5: 25682f3eec3c9ace17ae94cf364418d4
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/b7/cbc831247339be138098f1f64cb95c1742bdb8
+SPDXID: SPDXRef-1-176
+FileType: OTHER
+FileChecksum: SHA1: 098688b6a4d9813a66b1ad96f444dad040746ba0
+FileChecksum: MD5: 8fd7e8db84a398ae867cdf63b9d1cffa
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/a8/04e5653aa679a80cd0e9ca91ccd50deb3dd36a
+SPDXID: SPDXRef-1-177
+FileType: OTHER
+FileChecksum: SHA1: 66ef64c1a6bc902109f65b2a58c6bad784fd3f3b
+FileChecksum: MD5: 7442f6f61274d523254ccfa7a3ad1e55
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/a6/7318fbedf0cebd5da277f3633275b905a5c12a
+SPDXID: SPDXRef-1-178
+FileType: OTHER
+FileChecksum: SHA1: c01f14f9f2e0dbce45acf470520b117f5004eebf
+FileChecksum: MD5: d99d28df038c42d3ddee8aafc0d5bef9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/a6/2267a0bc98304f4ef43bef3cc9f9abdfdf2ae8
+SPDXID: SPDXRef-1-179
+FileType: OTHER
+FileChecksum: SHA1: 076137834f9b1280a1cae3b4c549ee6de6e244d5
+FileChecksum: MD5: c3cc9aedad1d298f8c379f3bd13356bb
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/a1/98b2e86b98bd392b95e44b76d3a1258e929894
+SPDXID: SPDXRef-1-180
+FileType: OTHER
+FileChecksum: SHA1: 4f681a26ea93b337d02603ca7241c4bc3993d5ec
+FileChecksum: MD5: 280e4b145d8fbc536f95e26be7407f38
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/ea/30f4653e5a0f87006a0210b15250757db97dbf
+SPDXID: SPDXRef-1-181
+FileType: OTHER
+FileChecksum: SHA1: a14abab4870fd1aeb85a0895e9e707344641737c
+FileChecksum: MD5: 4dbde2a27a68499059777c62a9992e96
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/cd/72b7c00d48185165247dcf7eefe1ecae980baa
+SPDXID: SPDXRef-1-182
+FileType: OTHER
+FileChecksum: SHA1: ae67c70f85ba5da2673db0f1ef72be6a5c4fca0b
+FileChecksum: MD5: b3162a8c8c9ad6feabb6d9d2394d1885
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/f9/0ad0dfe1b91f5ab8fad5f5d8d5e81518292f0e
+SPDXID: SPDXRef-1-183
+FileType: OTHER
+FileChecksum: SHA1: d1a154af5c6f52678cbbff3257b85dc0dba0ba9e
+FileChecksum: MD5: 117c1ac3998d8e6a0b962daee4e97dd7
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/f9/feba73f5e0abe6f929ff739e6e021f26fbb6a2
+SPDXID: SPDXRef-1-184
+FileType: OTHER
+FileChecksum: SHA1: 8cae74ed38668bf81f4a4835e349cb112292c111
+FileChecksum: MD5: 443c997679eacf1581ce2bb1cf523664
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/f0/a44fd60877aa63733f38c31180bc87dfd2b6ca
+SPDXID: SPDXRef-1-185
+FileType: OTHER
+FileChecksum: SHA1: fb7806b223a44360b980900ac27fdc7be440daf9
+FileChecksum: MD5: e5c1a8e9d05aca18b75d7a156040ae8c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/f7/0942d11b35c41a346e81ff68befecb192dac49
+SPDXID: SPDXRef-1-186
+FileType: OTHER
+FileChecksum: SHA1: 3fbf1e1871342c1dcec6568344d19d8cb482f8ff
+FileChecksum: MD5: 59d368fda77e8470655235098a0db7f9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/c2/8aafdb0ce8047329ae8eec00f56f50e751ca51
+SPDXID: SPDXRef-1-187
+FileType: OTHER
+FileChecksum: SHA1: 99979e9aaf1fca8e65424a0ff20f677f8be9e639
+FileChecksum: MD5: 5ff8d06ab47c36c8e749551c9f2eb0ea
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/f6/677eaf007a2e0cb0e0d4266ff762a4ffc12110
+SPDXID: SPDXRef-1-188
+FileType: OTHER
+FileChecksum: SHA1: c8501e4e931bf41dfe4b1b020883b10602907e02
+FileChecksum: MD5: e333992983acac8c98f68f9a87c4a369
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/e7/37e62888674fda45a651f1ef94f55c503950a2
+SPDXID: SPDXRef-1-189
+FileType: OTHER
+FileChecksum: SHA1: 475d7bcb0a02f1585a053aa8b681556f246ce944
+FileChecksum: MD5: 30c09c26aaa800fd0792742d7266c989
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/2d/f96240d87ac7a4cb2e8b0bfdeb03b33b6195ed
+SPDXID: SPDXRef-1-190
+FileType: OTHER
+FileChecksum: SHA1: 2e93e1dd2de16d0200cdfd035696be92c1865088
+FileChecksum: MD5: e9f99fd1d7628d0240acfeb991d8911f
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/83/9b52ede8c56bde99c8349c22e5e96b6e330be8
+SPDXID: SPDXRef-1-191
+FileType: OTHER
+FileChecksum: SHA1: 7e6af9363a0133309f78ed4c578f2a9d4b992bec
+FileChecksum: MD5: e0a5cb1a5acaedb97fa530b1e2701b40
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/48/110e3f933b9826c36fc386dde453787bd1d6bd
+SPDXID: SPDXRef-1-192
+FileType: OTHER
+FileChecksum: SHA1: 1cf1bac560b8b571003a47061d9e73b99bef2382
+FileChecksum: MD5: a75d4c732819899941748414484208f3
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/70/9b196fc5de165b88ebfb0404e10606308d4db6
+SPDXID: SPDXRef-1-193
+FileType: OTHER
+FileChecksum: SHA1: 6ee0d12ae1804790cbbbe67a4cf07a807122972e
+FileChecksum: MD5: 00263ee6d088f77b42b315912f5e98fc
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/84/061951a799d400034304a5d7105b49b2aaf8a5
+SPDXID: SPDXRef-1-194
+FileType: OTHER
+FileChecksum: SHA1: 0d5dce6e0c986b987aa89c1a22459e9bea2675dc
+FileChecksum: MD5: 9e17f95a638fbb069d9d94707625ff69
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/23/84775aee8ea0282e5ce23aa9fc4b8552014946
+SPDXID: SPDXRef-1-195
+FileType: OTHER
+FileChecksum: SHA1: a78fb44225ebe9377af44c78e1aa54dee4528a27
+FileChecksum: MD5: a03e30b14e45b2914a7222f1453e8053
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/85/5feff8e7d4d1550ab565915d4bd638df3e9872
+SPDXID: SPDXRef-1-196
+FileType: OTHER
+FileChecksum: SHA1: c3534ae3492faf6c8ca3f9f5c11d38c0d24c2e63
+FileChecksum: MD5: 6bbd9e647ef2f3dd9814dfa452bbbde0
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/82/fa02a631289901f9945e5020b0a5b48780aff3
+SPDXID: SPDXRef-1-197
+FileType: OTHER
+FileChecksum: SHA1: deee90b27cc729e076d067fe65dee27ed47997d2
+FileChecksum: MD5: b859a1432c646bfa087fc8a3a29f5745
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/22/9a256e77164e4bb12b061ceb142d9f552b4380
+SPDXID: SPDXRef-1-198
+FileType: OTHER
+FileChecksum: SHA1: d1e2821da66882f7dffa268ebaf4326eb1204594
+FileChecksum: MD5: f6e16577b2dd76cea089710c5a431de7
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./.git/modules/include/FloatX/objects/25/9148fa18f9fb7ef58563f4ff15fc7b172339fb
+SPDXID: SPDXRef-1-199
+FileType: OTHER
+FileChecksum: SHA1: 0527035893eca944976f873363753b155b44c1ed
+FileChecksum: MD5: 2b33d2e3759c3bc480a0441e2aab8216
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./mex/cpfloat.c
+SPDXID: SPDXRef-1-200
+FileType: SOURCE
+FileChecksum: SHA1: 5f93715f2bae53a2b7cc60373c89c56a89f94081
+FileChecksum: MD5: e8af4698a764370c4875ec94354c10a0
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./mex/cpfloat.m
+SPDXID: SPDXRef-1-201
+FileType: SOURCE
+FileChecksum: SHA1: b025fcfa41784939b137bfc9b83bdcab1367e3fa
+FileChecksum: MD5: 79211183513be9dd2fc70e1578736b50
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./mex/cpfloat_compile.m
+SPDXID: SPDXRef-1-202
+FileType: SOURCE
+FileChecksum: SHA1: c9a129044f60492361ba332b22c7e3ad63e35104
+FileChecksum: MD5: 2e9fab1ccbcd425c9dc0466d036b455e
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./mex/cpfloat_autotune.m
+SPDXID: SPDXRef-1-203
+FileType: SOURCE
+FileChecksum: SHA1: 5702de60c60344986cedec0f8c6d2596b3c0c178
+FileChecksum: MD5: f70dbe6d5927f85057b7babe4798f6d3
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./mex/cpfloat_compile_nomake.m
+SPDXID: SPDXRef-1-204
+FileType: SOURCE
+FileChecksum: SHA1: ca94bb82ee9d381c849e7ca0d2c562ee80616d5f
+FileChecksum: MD5: dd89d34cb824bf97ef29b13962d07e5a
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_binary64.h
+SPDXID: SPDXRef-1-205
+FileType: SOURCE
+FileChecksum: SHA1: 207ade0ed73c41c8f14db8a34f699ddf4b2ba744
+FileChecksum: MD5: bb352ff871c4586842d07b6c5e9f8627
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_threshold_binary32.h
+SPDXID: SPDXRef-1-206
+FileType: SOURCE
+FileChecksum: SHA1: d4edf7975aacebce7fdbabed6b1d04c2a981ab32
+FileChecksum: MD5: 3c09136221dc7f2e9b75f48ac68d9e61
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./src/cpfloat_template.h
+SPDXID: SPDXRef-1-207
+FileType: SOURCE
+FileChecksum: SHA1: 614faed4ecedcf3fde81acbb3b9bc230f5ef0260
+FileChecksum: MD5: c5f754c60c6cfc93668ff4bb4c455b39
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_definitions.h
+SPDXID: SPDXRef-1-208
+FileType: SOURCE
+FileChecksum: SHA1: 2b8e145f9e0125e25ef41aa9812a06cecaca7477
+FileChecksum: MD5: 227f21b36717c998ef78b70ab4c50ed9
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_autotune.c
+SPDXID: SPDXRef-1-209
+FileType: SOURCE
+FileChecksum: SHA1: eeb6b5929b38f32a23adaabdb0bc1c353e641620
+FileChecksum: MD5: 4d7a6293d4b4bf8b424461be5ad154cc
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_threshold_binary64.h
+SPDXID: SPDXRef-1-210
+FileType: SOURCE
+FileChecksum: SHA1: abf1faf686586668cec026ca21aa8e38cc6cbf65
+FileChecksum: MD5: 4c6e1bd0368f5416d8d5880ef964d835
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
+
+FileName: ./src/cpfloat_binary32.h
+SPDXID: SPDXRef-1-211
+FileType: SOURCE
+FileChecksum: SHA1: 5141853720b20c86d0b8ccff5083a5bdbf58a1f9
+FileChecksum: MD5: 2bd2b0ea8683a2a10152e45261803224
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
