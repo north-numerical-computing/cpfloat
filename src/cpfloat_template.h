@@ -2,7 +2,7 @@
 /* SPDX-License-Identifier: LGPL-2.1-or-later                         */
 
 /*
- * This file is part of CPFLoat.
+ * This file is part of CPFloat.
  *
  * The macros and functions defined here require a number of macros be defined
  * before this header is included. This file should never be included directly
@@ -205,7 +205,7 @@ int FUNNAME(FPTYPE *X,
     INITBIT_SINGLE(bitseed);
     #endif /* #ifdef USE_OPENMP */
     switch (round) {
-    case -1: // round-to-zero with ties-to-away
+    case -1: // round-to-nearest with ties-to-away
       #ifdef USE_OPENMP
       #pragma omp for
       #endif /* #ifdef USE_OPENMP */
@@ -231,7 +231,7 @@ int FUNNAME(FPTYPE *X,
       }
       break;
 
-    case 0: // round-to-zero with ties-to-zero
+    case 0: // round-to-nearest with ties-to-zero
       #ifdef USE_OPENMP
       #pragma omp for
       #endif /* #ifdef USE_OPENMP */
@@ -257,7 +257,7 @@ int FUNNAME(FPTYPE *X,
       }
       break;
 
-    case 1: // round-to-zero with ties-to-even
+    case 1: // round-to-nearest with ties-to-even
       #ifdef USE_OPENMP
       #pragma omp for
       #endif /* #ifdef USE_OPENMP */
