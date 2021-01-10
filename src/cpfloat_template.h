@@ -62,13 +62,18 @@ int VALFUNNAME (const optstruct *fpopts) {
   // Set retval to -1 if format is not valid.
   const char *valid_formats [] = {"",
                                   "bfloat", "bf16", "b",
-                                  "binary16", "fp16", "half",
-                                  "binary32", "fp32", "single",
+                                  "binary16", "fp16", "half", "h",
+                                  "TensorFloat-32", "tf32", "t",
+                                  "binary32", "fp32", "single", "s",
                                   #if DEFPREC >= 53
-                                  "binary64", "fp64", "double",
-                                  #endif
+                                  "binary64", "fp64", "double", "d",
+                                  #endif /* #if DEFPREC >= 53 */
                                   "custom", "c"};
-  size_t nformats = 14;
+  #if DEFPREC >= 53
+  size_t nformats = 21;
+  #else /* #if DEFPREC >= 53 */
+  size_t nformats = 17;
+  #endif /* #if DEFPREC >= 53 */
   retval = -1;
   size_t i;
   for (i=0; i<nformats; i++) {
