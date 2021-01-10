@@ -18,7 +18,7 @@
 /** @cond */
 #define FUNSUFFIX
 #define FPTYPE double
-#define INTTYPE unsigned long long int
+#define INTTYPE uint64_t
 #define INTSUFFIX  ULL
 #define DEFPREC    53
 #define DEFEMAX  1023

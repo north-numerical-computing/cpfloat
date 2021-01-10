@@ -15,6 +15,7 @@
 #define _CHOPFAST_DEFINITIONS_
 
 #include <stdlib.h>
+#include <stdint.h>
 
 #include <time.h>
 #include <math.h>

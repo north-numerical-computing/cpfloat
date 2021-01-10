@@ -39,15 +39,15 @@ void fpopts_teardown(void) {
 
 /* Return values of interest */
 static inline
-unsigned long intminnormal_double(optstruct *fpopts) {
+uint64_t intminnormal_double(optstruct *fpopts) {
   double tmp = ldexp(1., 1-fpopts->emax);
-  return *(unsigned long *)&tmp;
+  return *(uint64_t *)&tmp;
 }
 
 static inline
-unsigned int intminnormal_float(optstruct *fpopts) {
+uint32_t intminnormal_float(optstruct *fpopts) {
   float tmp = ldexp(1., 1-fpopts->emax);
-  return *(unsigned int *)&tmp;
+  return *(uint32_t *)&tmp;
 }
 
 static inline
@@ -81,31 +81,31 @@ double maxbound(optstruct *fpopts) {
 
 static inline
 double inf_double() {
-  unsigned long tmp = 0x7ff0000000000000;
+  uint64_t tmp = 0x7ff0000000000000;
   return *(double *)&tmp;
 }
 
 static inline
 float inf_float() {
-  unsigned int tmp = 0x7f800000;
+  uint32_t tmp = 0x7f800000;
   return *(float *)&tmp;
 }
 
 static inline
 double nan_double() {
-  unsigned long tmp = 0x7ff8000000000000;
+  uint64_t tmp = 0x7ff8000000000000;
   return *(double *)&tmp;
 }
 
 static inline
 float nan_float() {
-  unsigned int tmp = 0x7fa00000;
+  uint32_t tmp = 0x7fa00000;
   return *(float *)&tmp;
 }
 
 static inline
-void init_intarray_double(unsigned long *x, size_t n,
-                          unsigned long first, unsigned long step) {
+void init_intarray_double(uint64_t *x, size_t n,
+                          uint64_t first, uint64_t step) {
   x[0] = first;
   size_t i;
   for (i = 1; i < n; i++)
@@ -113,8 +113,8 @@ void init_intarray_double(unsigned long *x, size_t n,
 }
 
 static inline
-void init_intarray_float(unsigned int *x, size_t n,
-                         unsigned int first, unsigned int step) {
+void init_intarray_float(uint32_t *x, size_t n,
+                         uint32_t first, uint32_t step) {
   x[0] = first;
   size_t i;
   for (i = 1; i < n; i++)
@@ -122,8 +122,8 @@ void init_intarray_float(unsigned int *x, size_t n,
 }
 
 static inline
-void init_intarray_rounding_double(unsigned long *x, size_t n,
-                                   unsigned long first, unsigned long step) {
+void init_intarray_rounding_double(uint64_t *x, size_t n,
+                                   uint64_t first, uint64_t step) {
   x[0] = first + 1ul;
   x[1] = first + (step >> 1);
   size_t i;
@@ -136,8 +136,8 @@ void init_intarray_rounding_double(unsigned long *x, size_t n,
 }
 
 static inline
-void init_intarray_rounding_float(unsigned int *x, size_t n,
-                                  unsigned int first, unsigned int step) {
+void init_intarray_rounding_float(uint32_t *x, size_t n,
+                                  uint32_t first, uint32_t step) {
   x[0] = first + 1u;
   x[1] = first + (step >> 1);
   size_t i;
@@ -170,16 +170,16 @@ void init_fparray_float(float *x, size_t n,
 static inline
 void init_fparray_rounding_double(double *x, size_t n,
                                   double first, double step) {
-  unsigned long tmp;
-  tmp = *(unsigned long *)&first + 1lu;
+  uint64_t tmp;
+  tmp = *(uint64_t *)&first + 1lu;
   x[0] = *(double *)&tmp;
   x[1] = first + step/2;
   size_t i;
   for (i = 2; i < n; i+=3) {
     first += step;
-    tmp = *(unsigned long *)&first - 1lu;
+    tmp = *(uint64_t *)&first - 1lu;
     x[i] = *(double *)&tmp;
-    tmp = *(unsigned long *)&first + 1lu;
+    tmp = *(uint64_t *)&first + 1lu;
     x[i+1] = *(double *)&tmp;
     x[i+2] = first + step/2;
   }
@@ -188,24 +188,24 @@ void init_fparray_rounding_double(double *x, size_t n,
 static inline
 void init_fparray_rounding_float(float *x, size_t n,
                                  float first, float step) {
-  unsigned int tmp;
-  tmp = *(unsigned int *)&first + 1u;
+  uint32_t tmp;
+  tmp = *(uint32_t *)&first + 1u;
   x[0] = *(float *)&tmp;
   x[1] = first + step/2;
   size_t i;
   for (i = 2; i < n; i+=3) {
     first += step;
-    tmp = *(unsigned int *)&first - 1u;
+    tmp = *(uint32_t *)&first - 1u;
     x[i] = *(float *)&tmp;
-    tmp = *(unsigned int *)&first + 1u;
+    tmp = *(uint32_t *)&first + 1u;
     x[i+1] = *(float *)&tmp;
     x[i+2] = first + step/2;
   }
 }
 
 static inline
-void init_intarray_rounding_stoc_double(unsigned long *x, size_t n,
-                                        unsigned long first, unsigned long step) {
+void init_intarray_rounding_stoc_double(uint64_t *x, size_t n,
+                                        uint64_t first, uint64_t step) {
   x[0] = first + (step >> 2);
   x[1] = x[0] + (step >> 2);
   x[2] = x[1] + (step >> 2);
@@ -216,8 +216,8 @@ void init_intarray_rounding_stoc_double(unsigned long *x, size_t n,
 }
 
 static inline
-void init_intarray_rounding_stoc_float(unsigned int *x, size_t n,
-                                       unsigned int first, unsigned int step) {
+void init_intarray_rounding_stoc_float(uint32_t *x, size_t n,
+                                       uint32_t first, uint32_t step) {
   x[0] = first + (step >> 2);
   x[1] = x[0] + (step >> 2);
   x[2] = x[1] + (step >> 2);
@@ -253,14 +253,14 @@ void init_fparray_rounding_stoc_float(float *x, size_t n,
 }
 
 static inline
-void csign_intarray_double(unsigned long *x, size_t n) {
+void csign_intarray_double(uint64_t *x, size_t n) {
   size_t i;
   for (i = 0; i < n; i++)
     x[i] = x[i] ^ 0x8000000000000000;
 }
 
 static inline
-void csign_intarray_float(unsigned int *x, size_t n) {
+void csign_intarray_float(uint32_t *x, size_t n) {
   size_t i;
   for (i = 0; i < n; i++)
     x[i] = x[i] ^ 0x80000000;
@@ -575,7 +575,7 @@ for (i = 0; i < nformats; i++) {
   init_fparray_double(xd, n, minsubnormal(fpopts), minsubnormal(fpopts));
   select_tests_det_double(yd, xd, xd, n, fpopts, MINMODE, MAXMODE,
                           i, i, 1, 0);
-  csign_intarray_double((unsigned long *)xd, n);
+  csign_intarray_double((uint64_t *)xd, n);
   select_tests_det_double(yd, xd, xd, n, fpopts, MINMODE, MAXMODE,
                           i, i, 1, 0);
   free(xd);
@@ -585,7 +585,7 @@ for (i = 0; i < nformats; i++) {
   init_fparray_float(xf, n, minsubnormal(fpopts), minsubnormal(fpopts));
   select_tests_det_float(yf, xf, xf, n, fpopts, MINMODE, MAXMODE,
                          i, i, 1, 0);
-  csign_intarray_float((unsigned int *)xf, n);
+  csign_intarray_float((uint32_t *)xf, n);
   select_tests_det_float(yf, xf, xf, n, fpopts, MINMODE, MAXMODE,
                          i, i, 1, 0);
   free(xf);
@@ -600,7 +600,7 @@ for (i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
   fpopts->emax = emax[i];
   size_t n = ldexp(1., fpopts->precision - 1) * (ldexp(1., 5) - 2);
-  unsigned long *xd = malloc(n * sizeof(*xd));
+  uint64_t *xd = malloc(n * sizeof(*xd));
   double *yd = malloc(n * sizeof(*yd));
   init_intarray_double(xd, n, intminnormal_double(fpopts),
                        1ul << (52-fpopts->precision + 1));
@@ -611,7 +611,7 @@ for (i = 0; i < nformats; i++) {
                           MINMODE, MAXMODE, i, i, -1, -1);
   free(xd);
   free(yd);
-  unsigned int *xf = malloc(n * sizeof(*xf));
+  uint32_t *xf = malloc(n * sizeof(*xf));
   float *yf = malloc(n * sizeof(*yf));
   init_intarray_float(xf, n, intminnormal_float(fpopts),
                       1ul << (23-fpopts->precision + 1));
@@ -664,9 +664,9 @@ for (i = 0; i < nformats; i++) {
   select_tests_det_double(yd, xd, refzerod, n, fpopts, 3, 3, i, i, 0, 1);
   select_tests_det_double(yd, xd, refzerod, n, fpopts, 4, 4, i, i, 0, 1);
   select_tests_det_double(yd, xd, refxmind, n, fpopts, 7, 7, i, i, 0, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
-  csign_intarray_double((unsigned long *)refxmind, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
+  csign_intarray_double((uint64_t *)refxmind, n);
   refd[5] = -xmin;
   select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, 0, 1);
   select_tests_det_double(yd, xd, refd, n, fpopts, 1, 1, i, i, 0, 1);
@@ -695,9 +695,9 @@ for (i = 0; i < nformats; i++) {
   select_tests_det_float(yf, xf, refzerof, n, fpopts, 3, 3, i, i, 0, 1);
   select_tests_det_float(yf, xf, refzerof, n, fpopts, 4, 4, i, i, 0, 1);
   select_tests_det_float(yf, xf, refxminf, n, fpopts, 7, 7, i, i, 0, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
-  csign_intarray_float((unsigned int *)refxminf, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
+  csign_intarray_float((uint32_t *)refxminf, n);
   reff[5] = -xmin;
   select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, 0, 1);
   select_tests_det_float(yf, xf, reff, n, fpopts, 1, 1, i, i, 0, 1);
@@ -746,9 +746,9 @@ for (i = 0; i < nformats; i++) {
   select_tests_det_double(yd, xd, refzerod, n, fpopts, 3, 3, i, i, 1, 1);
   select_tests_det_double(yd, xd, refzerod, n, fpopts, 4, 4, i, i, 1, 1);
   select_tests_det_double(yd, xd, refxmind, n, fpopts, 7, 7, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
-  csign_intarray_double((unsigned long *)refxmind, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
+  csign_intarray_double((uint64_t *)refxmind, n);
   refd[2] = -xmin;
   select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, 1, 1);
   refd[2] = 0;
@@ -774,9 +774,9 @@ for (i = 0; i < nformats; i++) {
   select_tests_det_float(yf, xf, refzerof, n, fpopts, 3, 3, i, i, 1, 1);
   select_tests_det_float(yf, xf, refzerof, n, fpopts, 4, 4, i, i, 1, 1);
   select_tests_det_float(yf, xf, refxminf, n, fpopts, 7, 7, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
-  csign_intarray_float((unsigned int *)refxminf, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
+  csign_intarray_float((uint32_t *)refxminf, n);
   reff[2] = -xmin;
   select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, 1, 1);
   reff[2] = 0;
@@ -822,10 +822,10 @@ for (i = 0; i < nformats; i++) {
   select_tests_det_double(yd, xd, refinfd, n, fpopts, 2, 2, i, i, -1, 1);
   select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 3, 4, i, i, -1, 1);
   select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 7, 7, i, i, -1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
-  csign_intarray_double((unsigned long *)refxmaxd, n);
-  csign_intarray_double((unsigned long *)refinfd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
+  csign_intarray_double((uint64_t *)refxmaxd, n);
+  csign_intarray_double((uint64_t *)refinfd, n);
   select_tests_det_double(yd, xd, refd, n, fpopts, -1, 1, i, i, -1, 1);
   select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 2, 2, i, i, -1, 1);
   select_tests_det_double(yd, xd, refinfd, n, fpopts, 3, 3, i, i, -1, 1);
@@ -844,10 +844,10 @@ for (i = 0; i < nformats; i++) {
   select_tests_det_float(yf, xf, refinff, n, fpopts, 2, 2, i, i, -1, 1);
   select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 3, 4, i, i, -1, 1);
   select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 7, 7, i, i, -1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
-  csign_intarray_float((unsigned int *)refxmaxf, n);
-  csign_intarray_float((unsigned int *)refinff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
+  csign_intarray_float((uint32_t *)refxmaxf, n);
+  csign_intarray_float((uint32_t *)refinff, n);
   select_tests_det_float(yf, xf, reff, n, fpopts, -1, 1, i, i, -1, 1);
   select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 2, 2, i, i, -1, 1);
   select_tests_det_float(yf, xf, refinff, n, fpopts, 3, 3, i, i, -1, 1);
@@ -881,60 +881,60 @@ for (i = 0; i < nformats; i++) {
   init_fparray_rounding_double(xd, n, minsubnormal(fpopts), minsubnormal(fpopts));
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           -1, -1, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           -1, -1, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
   for (j = 1; j < n; j+=3)
     refd[j] -= stepd;
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           0, 0, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           0, 0, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
   for (j = 1; j < n; j+=6)
     refd[j] += stepd;
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           1, 1, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           1, 1, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
+  csign_intarray_double((uint64_t *)xd, n);
   refd[0] = 2*stepd;
   for (j = 1; j < n; j++)
     refd[j] = refd[j-1] + ((j % 3 == 0) ? stepd : 0);
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           2, 2, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           3, 3, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
   for (j = 0; j < n; j++)
     refd[j] -= stepd;
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           3, 4, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           2, 2, i, i, 1, 1);
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           4, 4, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
+  csign_intarray_double((uint64_t *)xd, n);
   refd[0] = stepd;
   for (j = 1; j < n; j++)
     refd[j] = refd[j-1] + (((j-3) % 6 == 0) ? 2*stepd : 0);
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           7, 7, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
-  csign_intarray_double((unsigned long *)refd, n);
+  csign_intarray_double((uint64_t *)xd, n);
+  csign_intarray_double((uint64_t *)refd, n);
   select_tests_det_double(yd, (double *)xd, (double *)refd, n, fpopts,
                           7, 7, i, i, 1, 1);
   free(xd);
@@ -951,60 +951,60 @@ for (i = 0; i < nformats; i++) {
   init_fparray_rounding_float(xf, n, minsubnormal(fpopts), minsubnormal(fpopts));
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          -1, -1, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          -1, -1, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
   for (j = 1; j < n; j+=3)
     reff[j] -= stepf;
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          0, 0, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          0, 0, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
   for (j = 1; j < n; j+=6)
     reff[j] += stepf;
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          1, 1, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          1, 1, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
+  csign_intarray_float((uint32_t *)xf, n);
   reff[0] = 2*stepf;
   for (j = 1; j < n; j++)
     reff[j] = reff[j-1] + ((j % 3 == 0) ? stepf : 0);
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          2, 2, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          3, 3, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
   for (j = 0; j < n; j++)
     reff[j] -= stepf;
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          3, 4, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          2, 2, i, i, 1, 1);
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          4, 4, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
+  csign_intarray_float((uint32_t *)xf, n);
   reff[0] = stepf;
   for (j = 1; j < n; j++)
     reff[j] = reff[j-1] + (((j-3) % 6 == 0) ? 2*stepf : 0);
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          7, 7, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
-  csign_intarray_float((unsigned int *)reff, n);
+  csign_intarray_float((uint32_t *)xf, n);
+  csign_intarray_float((uint32_t *)reff, n);
   select_tests_det_float(yf, (float *)xf, (float *)reff, n, fpopts,
                          7, 7, i, i, 1, 1);
   free(xf);
@@ -1019,10 +1019,10 @@ for (i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
   fpopts->emax = emax[i];
   size_t n = 3 * (ldexp(1., fpopts->precision - 1) * (ldexp(1., 5) - 2) - 1);
-  unsigned long *xd = malloc(n * sizeof(*xd));
-  unsigned long *refd = malloc(n * sizeof(*refd));
+  uint64_t *xd = malloc(n * sizeof(*xd));
+  uint64_t *refd = malloc(n * sizeof(*refd));
   double *yd = malloc(n * sizeof(*yd));
-  unsigned long stepd = 1ul << (52-fpopts->precision + 1);
+  uint64_t stepd = 1ul << (52-fpopts->precision + 1);
   init_intarray_rounding_double(xd, n, intminnormal_double(fpopts), stepd);
   refd[0] = intminnormal_double(fpopts);
   refd[1] = intminnormal_double(fpopts) + stepd;
@@ -1089,10 +1089,10 @@ for (i = 0; i < nformats; i++) {
                           7, 7, i, i, -1, -1);
   free(xd);
   free(yd);
-  unsigned int *xf = malloc(n * sizeof(*xf));
-  unsigned int *reff = malloc(n * sizeof(*reff));
+  uint32_t *xf = malloc(n * sizeof(*xf));
+  uint32_t *reff = malloc(n * sizeof(*reff));
   float *yf = malloc(n * sizeof(*yf));
-  unsigned int stepf = 1u << (23-fpopts->precision + 1);
+  uint32_t stepf = 1u << (23-fpopts->precision + 1);
   init_intarray_rounding_float(xf, n, intminnormal_float(fpopts), stepf);
   reff[0] = intminnormal_float(fpopts);
   reff[1] = intminnormal_float(fpopts) + stepf;
@@ -1190,7 +1190,7 @@ for(subnormal = 0; subnormal <= 1; subnormal++) {
                              n, fpopts, 5, i, i, subnormal, 1);
     select_tests_stoc_double(tmpdin, tmpdout, xd, &proundequi,
                              n, fpopts, 6, i, i, subnormal, 1);
-    csign_intarray_double((unsigned long *)xd, n);
+    csign_intarray_double((uint64_t *)xd, n);
     invprob_array_double(proundprop, n);
     select_tests_stoc_double(tmpdin, tmpdout, xd, proundprop,
                              n, fpopts, 5, i, i, subnormal, 1);
@@ -1202,7 +1202,7 @@ for(subnormal = 0; subnormal <= 1; subnormal++) {
                             n, fpopts, 5, i, i, subnormal, 1);
     select_tests_stoc_float(tmpfin, tmpfout, xf, &proundequi,
                             n, fpopts, 6, i, i, subnormal, 1);
-    csign_intarray_float((unsigned int *)xf, n);
+    csign_intarray_float((uint32_t *)xf, n);
     invprob_array_double(proundprop, n);
     select_tests_stoc_float(tmpfin, tmpfout, xf, proundprop,
                             n, fpopts, 5, i, i, subnormal, 1);
@@ -1237,8 +1237,8 @@ for(subnormal = 0; subnormal <= 1; subnormal++) {
                             i, i, 1, 1);
     select_tests_stoc_double(tmpdin, tmpdout, xdin, &proundequi,
                              n, fpopts, 6, i, i, subnormal, 1);
-    csign_intarray_double((unsigned long *)xdin, n);
-    csign_intarray_double((unsigned long *)xdout, n);
+    csign_intarray_double((uint64_t *)xdin, n);
+    csign_intarray_double((uint64_t *)xdout, n);
     select_tests_det_double(yd, xdin, xdout, n, fpopts, 5, 5,
                             i, i, 1, 1);
     select_tests_stoc_double(tmpdin, tmpdout, xdin, &proundequi,
@@ -1251,7 +1251,7 @@ for(subnormal = 0; subnormal <= 1; subnormal++) {
                              n, fpopts, 5, i, i, subnormal, 1);
     select_tests_stoc_double(tmpdin, tmpdout, xd, &proundequi,
                              n, fpopts, 6, i, i, subnormal, 1);
-    csign_intarray_double((unsigned long *)xd, n);
+    csign_intarray_double((uint64_t *)xd, n);
     invprob_array_double(proundprop, n);
     select_tests_stoc_double(tmpdin, tmpdout, xd, proundprop,
                              n, fpopts, 5, i, i, subnormal, 1);
@@ -1266,8 +1266,8 @@ for(subnormal = 0; subnormal <= 1; subnormal++) {
                              i, i, 1, 1);
       select_tests_stoc_float(tmpfin, tmpfout, xfin, &proundequi,
                               n, fpopts, 6, i, i, subnormal, 1);
-      csign_intarray_float((unsigned int *)xfin, n);
-      csign_intarray_float((unsigned int *)xfout, n);
+      csign_intarray_float((uint32_t *)xfin, n);
+      csign_intarray_float((uint32_t *)xfout, n);
       select_tests_det_float(yf, xfin, xfout, n, fpopts, 5, 5,
                              i, i, 1, 1);
       select_tests_stoc_float(tmpfin, tmpfout, xfin, &proundequi,
@@ -1279,7 +1279,7 @@ for(subnormal = 0; subnormal <= 1; subnormal++) {
                               n, fpopts, 5, i, i, subnormal, 1);
       select_tests_stoc_float(tmpfin, tmpfout, xf, &proundequi,
                               n, fpopts, 6, i, i, subnormal, 1);
-      csign_intarray_float((unsigned int *)xf, n);
+      csign_intarray_float((uint32_t *)xf, n);
       invprob_array_double(proundprop, n);
       select_tests_stoc_float(tmpfin, tmpfout, xf, proundprop,
                               n, fpopts, 5, i, i, subnormal, 1);
@@ -1315,7 +1315,7 @@ for (i = 0; i < nformats; i++) {
                            n, fpopts, 5, i, i, 1, 1);
   select_tests_stoc_double(tmpdin, tmpdout, xd, &proundequi,
                            n, fpopts, 6, i, i, 1, 1);
-  csign_intarray_double((unsigned long *)xd, n);
+  csign_intarray_double((uint64_t *)xd, n);
   invprob_array_double(proundprop, 3);
   select_tests_stoc_double(tmpdin, tmpdout, xd, proundprop,
                            n, fpopts, 5, i, i, 1, 1);
@@ -1330,7 +1330,7 @@ for (i = 0; i < nformats; i++) {
                           n, fpopts, 5, i, i, 1, 1);
   select_tests_stoc_float(tmpfin, tmpfout, xf, &proundequi,
                           n, fpopts, 6, i, i, 1, 1);
-  csign_intarray_float((unsigned int *)xf, n);
+  csign_intarray_float((uint32_t *)xf, n);
   invprob_array_double(proundprop, 3);
   select_tests_stoc_float(tmpfin, tmpfout, xf, proundprop,
                           n, fpopts, 5, i, i, 1, 1);
@@ -1358,10 +1358,10 @@ for (subnormal = 0; subnormal <= 1; subnormal++) {
       fpopts->precision = precision[i];
       fpopts->emax = emax[i];
       size_t n = 3 * (ldexp(1., fpopts->precision - 1) * (ldexp(1., 5) - 2) - 1);
-      unsigned long *xd = malloc(n * sizeof(*xd));
+      uint64_t *xd = malloc(n * sizeof(*xd));
       double xmin = minnormal(fpopts);
-      unsigned long stepd = 1ul << (52-fpopts->precision + 1);
-      init_intarray_rounding_stoc_double(xd, n, *(unsigned long *)&xmin, stepd);
+      uint64_t stepd = 1ul << (52-fpopts->precision + 1);
+      init_intarray_rounding_stoc_double(xd, n, *(uint64_t *)&xmin, stepd);
       double proundprop [] = {0.75, 0.50, 0.25};
       select_tests_stoc_double(tmpdin, tmpdout, (double *)xd, proundprop,
                                n, fpopts, 5, i, i, subnormal, explim);
@@ -1375,15 +1375,15 @@ for (subnormal = 0; subnormal <= 1; subnormal++) {
                                n, fpopts, 6, i, i, subnormal, explim);
       invprob_array_double(proundprop, 3);
       free(xd);
-      unsigned int *xf = malloc(n * sizeof(*xf));
-      unsigned int stepf = 1ul << (23-fpopts->precision + 1);
+      uint32_t *xf = malloc(n * sizeof(*xf));
+      uint32_t stepf = 1ul << (23-fpopts->precision + 1);
       float xminf = minnormal(fpopts);
-      init_intarray_rounding_stoc_float(xf, n, *(unsigned int *)&xminf, stepf);
+      init_intarray_rounding_stoc_float(xf, n, *(uint32_t *)&xminf, stepf);
       select_tests_stoc_float(tmpfin, tmpfout, (float *)xf, proundprop,
                               n, fpopts, 5, i, i, subnormal, explim);
       select_tests_stoc_float(tmpfin, tmpfout, (float *)xf, &proundequi,
                               n, fpopts, 6, i, i, subnormal, explim);
-      csign_intarray_float((unsigned int *)xf, n);
+      csign_intarray_float((uint32_t *)xf, n);
       invprob_array_double(proundprop, 3);
       select_tests_stoc_float(tmpfin, tmpfout, (float *)xf, proundprop,
                               n, fpopts, 5, i, i, subnormal, explim);

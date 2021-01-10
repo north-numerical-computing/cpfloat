@@ -19,7 +19,7 @@
 /** @cond */
 #define FUNSUFFIX f
 #define FPTYPE float
-#define INTTYPE unsigned int
+#define INTTYPE uint32_t
 #define INTSUFFIX  U
 #define DEFPREC   24
 #define DEFEMAX  127
