@@ -818,7 +818,11 @@ for (i = 0; i < nformats; i++) {
     refxmaxd[j] = xmax;
     refinfd[j] = inf_double();
   }
-  select_tests_det_double(yd, xd, refd, n, fpopts, -1, 1, i, i, -1, 1);
+  select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, -1, 1);
+  select_tests_det_double(yd, xd, refd, n, fpopts, 1, 1, i, i, -1, 1);
+  refd[2] = xmax;
+  select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, -1, 1);
+  refd[2] = inf_double();
   select_tests_det_double(yd, xd, refinfd, n, fpopts, 2, 2, i, i, -1, 1);
   select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 3, 4, i, i, -1, 1);
   select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 7, 7, i, i, -1, 1);
@@ -826,7 +830,10 @@ for (i = 0; i < nformats; i++) {
   csign_intarray_double((uint64_t *)refd, n);
   csign_intarray_double((uint64_t *)refxmaxd, n);
   csign_intarray_double((uint64_t *)refinfd, n);
-  select_tests_det_double(yd, xd, refd, n, fpopts, -1, 1, i, i, -1, 1);
+  select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, -1, 1);
+  select_tests_det_double(yd, xd, refd, n, fpopts, 1, 1, i, i, -1, 1);
+  refd[2] = -xmax;
+  select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, -1, 1);
   select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 2, 2, i, i, -1, 1);
   select_tests_det_double(yd, xd, refinfd, n, fpopts, 3, 3, i, i, -1, 1);
   select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 4, 4, i, i, -1, 1);
@@ -840,7 +847,11 @@ for (i = 0; i < nformats; i++) {
     refxmaxf[j] = xmax;
     refinff[j] = inf_float();
   }
-  select_tests_det_float(yf, xf, reff, n, fpopts, -1, 1, i, i, -1, 1);
+  select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, -1, 1);
+  select_tests_det_float(yf, xf, reff, n, fpopts, 1, 1, i, i, -1, 1);
+  reff[2] = xmax;
+  select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, -1, 1);
+  reff[2] = inf_float();
   select_tests_det_float(yf, xf, refinff, n, fpopts, 2, 2, i, i, -1, 1);
   select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 3, 4, i, i, -1, 1);
   select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 7, 7, i, i, -1, 1);
@@ -848,7 +859,10 @@ for (i = 0; i < nformats; i++) {
   csign_intarray_float((uint32_t *)reff, n);
   csign_intarray_float((uint32_t *)refxmaxf, n);
   csign_intarray_float((uint32_t *)refinff, n);
-  select_tests_det_float(yf, xf, reff, n, fpopts, -1, 1, i, i, -1, 1);
+  select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, -1, 1);
+  select_tests_det_float(yf, xf, reff, n, fpopts, 1, 1, i, i, -1, 1);
+  reff[2] = -xmax;
+  select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, -1, 1);
   select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 2, 2, i, i, -1, 1);
   select_tests_det_float(yf, xf, refinff, n, fpopts, 3, 3, i, i, -1, 1);
   select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 4, 4, i, i, -1, 1);

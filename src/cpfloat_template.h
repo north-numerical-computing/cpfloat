@@ -249,7 +249,7 @@ int FUNNAME(FPTYPE *X,
           X[i] = FPOF(((INTOF(A+i) & ABSMASK)
                        + (loctrailmask>>1)) & locleadmask);
           // Overflow.
-          if (ABS(A+i) >= xbnd)
+          if (ABS(A+i) > xbnd)
             X[i] = INFINITY;
           // Restore sign.
           X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
