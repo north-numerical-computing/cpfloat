@@ -33,6 +33,12 @@ void fpopts_teardown(void) {
   free(fpopts);
 }
 
+#define INTOFd(x)(((fpint)((double)(x))).intval)
+#define FPOFd(x)(((fpint)((uint64_t)(x))).fpval)
+
+#define INTOFf(x)(((fpintf)((float)(x))).intval)
+#define FPOFf(x)(((fpintf)((uint32_t)(x))).fpval)
+
 /***********************
  * Auxiliary functions *
  ***********************/
@@ -40,14 +46,12 @@ void fpopts_teardown(void) {
 /* Return values of interest */
 static inline
 uint64_t intminnormal_double(optstruct *fpopts) {
-  double tmp = ldexp(1., 1-fpopts->emax);
-  return *(uint64_t *)&tmp;
+  return INTOFd(ldexp(1., 1-fpopts->emax));
 }
 
 static inline
 uint32_t intminnormal_float(optstruct *fpopts) {
-  float tmp = ldexp(1., 1-fpopts->emax);
-  return *(uint32_t *)&tmp;
+  return INTOFf(ldexp(1., 1-fpopts->emax));
 }
 
 static inline
@@ -81,26 +85,22 @@ double maxbound(optstruct *fpopts) {
 
 static inline
 double inf_double() {
-  uint64_t tmp = 0x7ff0000000000000;
-  return *(double *)&tmp;
+  return FPOFd(0x7ff0000000000000);
 }
 
 static inline
 float inf_float() {
-  uint32_t tmp = 0x7f800000;
-  return *(float *)&tmp;
+  return FPOFf(0x7f800000);
 }
 
 static inline
 double nan_double() {
-  uint64_t tmp = 0x7ff8000000000000;
-  return *(double *)&tmp;
+  return FPOFd(0x7ff8000000000000);
 }
 
 static inline
 float nan_float() {
-  uint32_t tmp = 0x7fa00000;
-  return *(float *)&tmp;
+  return FPOFf(0x7fa00000);
 }
 
 static inline
@@ -170,17 +170,13 @@ void init_fparray_float(float *x, size_t n,
 static inline
 void init_fparray_rounding_double(double *x, size_t n,
                                   double first, double step) {
-  uint64_t tmp;
-  tmp = *(uint64_t *)&first + 1lu;
-  x[0] = *(double *)&tmp;
+  x[0] = FPOFd(INTOFd(first) + 1lu);
   x[1] = first + step/2;
   size_t i;
   for (i = 2; i < n; i+=3) {
     first += step;
-    tmp = *(uint64_t *)&first - 1lu;
-    x[i] = *(double *)&tmp;
-    tmp = *(uint64_t *)&first + 1lu;
-    x[i+1] = *(double *)&tmp;
+    x[i] = FPOFd(INTOFd(first) - 1lu);
+    x[i+1] = FPOFd(INTOFd(first) + 1lu);
     x[i+2] = first + step/2;
   }
 }
@@ -188,17 +184,13 @@ void init_fparray_rounding_double(double *x, size_t n,
 static inline
 void init_fparray_rounding_float(float *x, size_t n,
                                  float first, float step) {
-  uint32_t tmp;
-  tmp = *(uint32_t *)&first + 1u;
-  x[0] = *(float *)&tmp;
+  x[0] = FPOFf(INTOFf(first) + 1lu);
   x[1] = first + step/2;
   size_t i;
   for (i = 2; i < n; i+=3) {
     first += step;
-    tmp = *(uint32_t *)&first - 1u;
-    x[i] = *(float *)&tmp;
-    tmp = *(uint32_t *)&first + 1u;
-    x[i+1] = *(float *)&tmp;
+    x[i] = FPOFf(INTOFf(first) - 1lu);
+    x[i+1] = FPOFf(INTOFf(first) + 1lu);
     x[i+2] = first + step/2;
   }
 }
@@ -316,7 +308,8 @@ void check_array_stoc_double(double *tmpin, double *tmpout,
       tmpin[j] = x[i];
     cpfloat(tmpout, tmpin, NREPS, fpopts);
     double counter [] = {0, 0};
-    double xup, xdown;
+    double xup = 0;
+    double xdown = 0;
     fpopts->round = 2;
     cpfloat(&xup, x+i, 1, fpopts);
     fpopts->round = 3;
@@ -327,7 +320,7 @@ void check_array_stoc_double(double *tmpin, double *tmpout,
       else if (tmpout[j] == xdown)
         counter[0]++;
       else
-        ck_abort_msg("Not rounding to either closest number ");
+        ck_abort_msg("Not rounding to either closest number.");
     fpopts->round = mode;
     if (fabs(counter[0]/NREPS - prounddown[i % 3]) > 0.1) {
       ck_abort_msg("Error in stochasting rounding.");
@@ -346,7 +339,8 @@ void check_array_stoc_float(float *tmpin, float *tmpout,
       tmpin[j] = x[i];
     cpfloatf(tmpout, tmpin, NREPS, fpopts);
     double counter [] = {0, 0};
-    float xup, xdown;
+    float xup = 0;
+    float xdown = 0;
     fpopts->round = 2;
     cpfloatf(&xup, x+i, 1, fpopts);
     fpopts->round = 3;
@@ -357,7 +351,7 @@ void check_array_stoc_float(float *tmpin, float *tmpout,
       else if (tmpout[j] == xdown)
         counter[0]++;
       else
-        ck_abort_msg("Not rounding to either closest number ");
+        ck_abort_msg("Not rounding to either closest number.");
     fpopts->round = mode;
     if (fabs(counter[0]/(double)NREPS - prounddown[i % 3]) > 0.1) {
       ck_abort_msg("Error in stochasting rounding.");
@@ -553,13 +547,11 @@ double xd [] = {0, -0, inf_double(), -inf_double(), nan_double()};
 double *yd = malloc(n * sizeof(*yd));
 select_tests_det_double(yd, xd, xd, n, fpopts,
                         MINMODE, MAXMODE, 0, 2, -1, -1);
-/* all_combinations_double(yd, xd, xd, n, fpopts); */
 free(yd);
 float xf [] = {0, -0, inf_float(), -inf_float(), nan_float()};
 float *yf = malloc(n * sizeof(*yf));
 select_tests_det_float(yf, xf, xf, n, fpopts,
                        MINMODE, MAXMODE, 0, 2, -1, -1);
-/* all_combinations_float(yf, xf, xf, n, fpopts); */
 free(yf);
 
 /* Exactly representable subnormals. */
@@ -1375,7 +1367,7 @@ for (subnormal = 0; subnormal <= 1; subnormal++) {
       uint64_t *xd = malloc(n * sizeof(*xd));
       double xmin = minnormal(fpopts);
       uint64_t stepd = 1ul << (52-fpopts->precision + 1);
-      init_intarray_rounding_stoc_double(xd, n, *(uint64_t *)&xmin, stepd);
+      init_intarray_rounding_stoc_double(xd, n, INTOFd(xmin), stepd);
       double proundprop [] = {0.75, 0.50, 0.25};
       select_tests_stoc_double(tmpdin, tmpdout, (double *)xd, proundprop,
                                n, fpopts, 5, i, i, subnormal, explim);
@@ -1392,7 +1384,7 @@ for (subnormal = 0; subnormal <= 1; subnormal++) {
       uint32_t *xf = malloc(n * sizeof(*xf));
       uint32_t stepf = 1ul << (23-fpopts->precision + 1);
       float xminf = minnormal(fpopts);
-      init_intarray_rounding_stoc_float(xf, n, *(uint32_t *)&xminf, stepf);
+      init_intarray_rounding_stoc_float(xf, n, INTOFf(xminf), stepf);
       select_tests_stoc_float(tmpfin, tmpfout, (float *)xf, proundprop,
                               n, fpopts, 5, i, i, subnormal, explim);
       select_tests_stoc_float(tmpfin, tmpfout, (float *)xf, &proundequi,
