@@ -28,6 +28,7 @@ typedef union {
 #define INTCONST(x) CONCATENATE(x, INTSUFFIX)
 
 #define INTOF(x)(((STRUCTNAME *)(x))->intval)
+#define INTOFCONST(x)(((STRUCTNAME)((FPTYPE)x)).intval)
 #define FPOF(x)(((STRUCTNAME)((INTTYPE)(x))).fpval)
 
 #define SIGN(x)(SIGNMASK & INTOF(x))
@@ -40,9 +41,9 @@ typedef union {
   pcg32_srandom_r(&seed,                        \
                   time(NULL),                   \
                   (intptr_t)&seed)
-#define INITBIT_MULTI(seed)                                   \
-  pcg32_srandom_r(&seed,                                       \
-                  omp_get_thread_num() * 13254 + time(NULL),   \
+#define INITBIT_MULTI(seed)                                     \
+  pcg32_srandom_r(&seed,                                        \
+                  omp_get_thread_num() * 13254 + time(NULL),    \
                   (intptr_t)&seed)
 #define GENBIT(seed) (pcg32_random_r(&seed) & (1U << 31))
 #else /* #ifdef PCG_VARIANTS_H_INCLUDED */
@@ -204,6 +205,7 @@ int FUNNAME(FPTYPE *X,
     INITRAND_SINGLE(seed);
     INITBIT_SINGLE(bitseed);
     #endif /* #ifdef USE_OPENMP */
+
     switch (round) {
     case -1: // round-to-nearest with ties-to-away
       #ifdef USE_OPENMP
@@ -214,19 +216,16 @@ int FUNNAME(FPTYPE *X,
                     leadmask, leadmaskwos, trailmask,
                     &locprec, &locleadmask,
                     &locleadmaskwos, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) {
+        if (ABS(A+i) < ftzthreshold) { // Underflow.
           if (ABS(A+i) < ftzthreshold/2)
             X[i] = 0;
           else
-            X[i] = FPOF(INTOF(&ftzthreshold) | SIGN(A+i));
+            X[i] = FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
+        } else if (ABS(A+i) >= xbnd) { // Overflow.
+          X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
         } else {
-          X[i] = FPOF(((INTOF(A+i) & ABSMASK)
-                       + (INTCONST(1) << (DEFPREC-1-locprec))) & locleadmask);
-          // Overflow.
-          if (X[i] >= xbnd)
-            X[i] = INFINITY;
-          // Restore sign.
-          X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
+          X[i] = FPOF((INTOF(A+i) +
+                       (INTCONST(1) << (DEFPREC-1-locprec))) & locleadmask);
         }
       }
       break;
@@ -240,19 +239,15 @@ int FUNNAME(FPTYPE *X,
                     leadmask, leadmaskwos, trailmask,
                     &locprec, &locleadmask,
                     &locleadmaskwos, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) {
+        if (ABS(A+i) < ftzthreshold) { // Underflow.
           if (ABS(A+i) <= ftzthreshold/2)
             X[i] = 0;
           else
-            X[i] = FPOF(INTOF(&ftzthreshold) | SIGN(A+i));
+            X[i] = FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
+        } else if (ABS(A+i) > xbnd) { // Overflow.
+          X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
         } else {
-          X[i] = FPOF(((INTOF(A+i) & ABSMASK)
-                       + (loctrailmask>>1)) & locleadmask);
-          // Overflow.
-          if (ABS(A+i) > xbnd)
-            X[i] = INFINITY;
-          // Restore sign.
-          X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
+          X[i] = FPOF((INTOF(A+i) + (loctrailmask>>1)) & locleadmask);
         }
       }
       break;
@@ -266,22 +261,19 @@ int FUNNAME(FPTYPE *X,
                     leadmask, leadmaskwos, trailmask,
                     &locprec, &locleadmask,
                     &locleadmaskwos, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) {
+        if (ABS(A+i) < ftzthreshold) { // Underflow.
           if (ABS(A+i) < ftzthreshold/2
               || (ABS(A+i) == ftzthreshold/2 && fpopts->subnormal))
             X[i] = 0;
           else
-            X[i] = FPOF(INTOF(&ftzthreshold));
-        } else if (ABS(A+i) >= xbnd) {
-          X[i] = INFINITY;
+            X[i] = FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
+        } else if (ABS(A+i) >= xbnd) { // Overflow.
+          X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
         } else {
-          INTTYPE absval = INTOF(A+i) & ABSMASK;
-          INTTYPE LSB = ((absval >> (DEFPREC-locprec)) & INTCONST(1))
+          INTTYPE LSB = ((INTOF(A+i) >> (DEFPREC-locprec)) & INTCONST(1))
             | (locprec == 1 && DEFEMAX != emax); // Hidden bit is one.
-          X[i] = FPOF((absval + ((loctrailmask >> 1) + LSB)) & locleadmask);
+          X[i] = FPOF((INTOF(A+i) + ((loctrailmask >> 1) + LSB)) & locleadmask);
         }
-        // Restore sign.
-        X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
       }
       break;
 
@@ -294,17 +286,19 @@ int FUNNAME(FPTYPE *X,
                     leadmask, leadmaskwos, trailmask,
                     &locprec, &locleadmask,
                     &locleadmaskwos, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) {
+        if (ABS(A+i) < ftzthreshold) { // Underflow.
           X[i] = A[i] > 0 ? ftzthreshold : 0;
+        } else if (ABS(A+i) > xmax) { // Overflow.
+          if (A[i] > xmax)
+            X[i] = INFINITY;
+          else if (A[i] < -xmax && A[i] != -INFINITY)
+            X[i] = -xmax;
+          else // A[i] == -INFINITY
+            X[i] = -INFINITY;
         } else {
           X[i] = FPOF(INTOF(A+i) & locleadmask);
           if (SIGN(A+i) == 0) // Add ulp if x is positive.
             X[i] = FPOF((INTOF(A+i) + loctrailmask) & locleadmask);
-          // Overflow.
-          if (X[i] > xmax)
-            X[i] = INFINITY;
-          else if (X[i] < -xmax && X[i] != - INFINITY)
-            X[i] = -xmax;
         }
       }
       break;
@@ -318,17 +312,19 @@ int FUNNAME(FPTYPE *X,
                     leadmask, leadmaskwos, trailmask,
                     &locprec, &locleadmask,
                     &locleadmaskwos, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold)
+        if (ABS(A+i) < ftzthreshold) { // Underflow.
           X[i] = A[i] >= 0 ? 0 : -ftzthreshold;
-        else {
+        } else if (ABS(A+i) > xmax) { // Overflow.
+          if (A[i] < -xmax)
+            X[i] = -INFINITY;
+          else if (A[i] > xmax && A[i] != INFINITY)
+            X[i] = xmax;
+          else // A[i] == INFINITY
+            X[i] = INFINITY;
+        } else {
           X[i] = FPOF(INTOF(A+i) & locleadmask);
           if (SIGN(A+i)) // Subtract ulp if x is positive.
             X[i] = FPOF((INTOF(A+i) + loctrailmask) & locleadmask);
-          // Overflow.
-          if (X[i] > xmax && X[i] != INFINITY)
-            X[i] = xmax;
-          else if (X[i] < -xmax)
-            X[i] = -INFINITY;
         }
       }
       break;
@@ -342,15 +338,12 @@ int FUNNAME(FPTYPE *X,
                     leadmask, leadmaskwos, trailmask,
                     &locprec, &locleadmask,
                     &locleadmaskwos, &loctrailmask);
-        X[i] = FPOF(INTOF(A+i) & locleadmaskwos);
-        // Underflow and overflow.
-        if (ABS(A+i) < ftzthreshold)
+        if (ABS(A+i) < ftzthreshold) { // Underflow.
           X[i] = 0;
-        else {
-          if (X[i] > xmax && X[i] != INFINITY)
-            X[i] = xmax;
-          // Restore sign.
-          X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
+        } else if (ABS(A+i) > xmax && ABS(A+i) != INFINITY) { // Overflow.
+          X[i] = FPOF(SIGN(A+i) | INTOFCONST(xmax));
+        } else {
+          X[i] = FPOF(INTOF(A+i) & locleadmask);
         }
       }
       break;
@@ -364,9 +357,8 @@ int FUNNAME(FPTYPE *X,
                     leadmask, leadmaskwos, trailmask,
                     &locprec, &locleadmask,
                     &locleadmaskwos, &loctrailmask);
-        // Underflow and overflow.
-        X[i] = ABS(A+i);
-        if (X[i] < ftzthreshold){
+        X[i] = A[i];
+        if (ABS(A+i) < ftzthreshold){ // Underflow.
           int expx = ((EXPMASK & INTOF(A+i)) >> (DEFPREC - 1)) - DEFEMAX;
           INTTYPE trailfrac = (INTOF(A+i) & (FULLMASK >> NLEADBITS));
           if (expx == -DEFEMAX) { // No implicit bit (x is subnormal).
@@ -384,24 +376,21 @@ int FUNNAME(FPTYPE *X,
           else
             trailfrac >>= expdiff - (NLEADBITS - 1);
           if (trailfrac > rnd) {
-            X[i] = ftzthreshold;
+            X[i] = FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
           } else {
             X[i] = 0;
             continue;
           }
-        } else if (X[i] < xbnd) {
+        } else if (ABS(A+i) < xbnd) { // Rounding possibly required.
           rndbuf = GENRAND(seed) & loctrailmask;
-          if (X[i] > xmax) {
+          if (ABS(A+i) > xmax) {
             rndbuf = rndbuf >> 1;
-            locleadmask = locleadmask >> 1;
+            locleadmask = (locleadmask >> 1) | SIGNMASK;
           }
-          X[i] = FPOF(((INTOF(A+i) & ABSMASK) + rndbuf) & locleadmask);
+          X[i] = FPOF((INTOF(A+i) + rndbuf) & locleadmask);
         }
-        //Overflow.
-        if (X[i] >= xbnd)
-          X[i] = INFINITY;
-        // Restore sign.
-        X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
+        if (ABS(X+i) >= xbnd) // Overflow.
+          X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
       }
       break;
 
@@ -414,23 +403,20 @@ int FUNNAME(FPTYPE *X,
                     leadmask, leadmaskwos, trailmask,
                     &locprec, &locleadmask,
                     &locleadmaskwos, &loctrailmask);
-        // Underflow and overflow.
-        if (ABS(A+i) < ftzthreshold && A[i] != 0) {
+        if (ABS(A+i) < ftzthreshold && A[i] != 0) { // Underflow.
           randombit = GENBIT(bitseed);
           X[i] = randombit ? ftzthreshold : 0;
-          X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
-        } else if (ABS(A+i) > xmax && ABS(A+i) != INFINITY) {
+          X[i] = FPOF(SIGN(A+i) | INTOF(X+i));
+        } else if (ABS(A+i) > xmax && ABS(A+i) != INFINITY) { // Overflow.
           randombit = GENBIT(bitseed);
           X[i] = randombit ? INFINITY  : xmax;
-          X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
+          X[i] = FPOF(SIGN(A+i) | INTOF(X+i));
         } else if ((INTOF(A+i) & loctrailmask)) { // Not exactly representable.
           randombit = GENBIT(bitseed);
-          X[i] = FPOF(INTOF(A+i) & locleadmaskwos);
+          X[i] = FPOF(INTOF(A+i) & locleadmask);
           if (randombit)
             X[i] = FPOF(INTOF(X+i) + (INTCONST(1) << (DEFPREC-locprec)));
-          // Restore sign.
-          X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
-        } else
+        } else // A[i] exactly representable, no rounding necessary
           X[i] = A[i];
       }
       break;
@@ -444,20 +430,16 @@ int FUNNAME(FPTYPE *X,
                     leadmask, leadmaskwos, trailmask,
                     &locprec, &locleadmask,
                     &locleadmaskwos, &loctrailmask);
-        // Underflow.
-        if (ABS(A+i) < ftzthreshold && A[i] != 0)
-          X[i] = ftzthreshold;
-        else {
-          X[i] = FPOF(INTOF(A+i) & locleadmaskwos);
+        if (ABS(A+i) < ftzthreshold && A[i] != 0) { // Underflow.
+          X[i] =  FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
+        } else if (ABS(A+i) > xmax && ABS(A+i) != INFINITY) { // Overflow.
+            X[i] = FPOF(SIGN(A+i) | INTOFCONST(xmax));
+        } else {
+          X[i] = FPOF(INTOF(A+i) & locleadmask);
           if ((loctrailmask & INTOF(A+i)) // Not exactly representable.
               && (locprec > 1)) // Set the last bit to one if stored explicitly.
             X[i] = FPOF(INTOF(X+i) | (INTCONST(1) << (DEFPREC-locprec)));
-          // Overflow.
-          if (X[i] > xmax && X[i] != INFINITY)
-            X[i] = xmax;
         }
-        // Restore sign.
-        X[i] = FPOF(INTOF(X+i) | SIGN(A+i));
       }
       break;
 
@@ -527,7 +509,8 @@ int ADDSUFFIXTO(MAINFUNNAME)(FPTYPE *X,
 #undef INTCONST
 
 #undef INTOF
-#undef FPOP
+#undef INTOFCONST
+#undef FPOF
 
 #undef SIGN
 #undef ABS
