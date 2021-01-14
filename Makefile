@@ -25,6 +25,8 @@ UNZIP:=unzip
 CHECKMK:=checkmk
 CC:=gcc
 CXX:=g++
+CCOV:=gcov
+
 DOXYGEN:=doxygen
 GIT:=git
 MATLAB:=matlab -nodesktop -nosplash
@@ -37,6 +39,7 @@ CFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=gnu99 -I $(SRCDIR) \
 	-include $(PCG_HEADER)
 CXXFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=c++11 -I $(INCDIR) -I $(INCDIR)FloatX/src/
 COPTIM=-O3 -mfma
+CCOVFLAGS=-Og -g -fprofile-arcs -ftest-coverage
 CLIBS=-lm -fopenmp
 
 .PRECIOUS: %.o
