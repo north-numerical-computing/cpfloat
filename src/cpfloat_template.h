@@ -114,11 +114,9 @@ void MASKFUNNAME(const FPTYPE *A,
                  FPTYPE xmin,
                  int emin,
                  INTTYPE leadmask,
-                 INTTYPE leadmaskwos,
                  INTTYPE trailmask,
                  size_t *locprec,
                  INTTYPE *locleadmask,
-                 INTTYPE *locleadmaskwos,
                  INTTYPE *loctrailmask) {
   // Take care of subnormal values
   if (ABS(A+i) < xmin && emin > 1-DEFEMAX) {
@@ -127,12 +125,10 @@ void MASKFUNNAME(const FPTYPE *A,
     *locleadmask = leadmask;
     *locleadmask ^=
       ((INTCONST(1) << (prec - *locprec)) - INTCONST(1)) << (DEFPREC-prec);
-    *locleadmaskwos = *locleadmask & ABSMASK;
-    *loctrailmask = *locleadmaskwos ^ ABSMASK;
+    *loctrailmask = *locleadmask ^ FULLMASK;
   } else {
     *locprec = prec;
     *locleadmask = leadmask;
-    *locleadmaskwos = leadmaskwos;
     *loctrailmask = trailmask;
   }
 }
@@ -181,17 +177,16 @@ int FUNNAME(FPTYPE *X,
     fpopts->subnormal ? smin : xmin; // Flush-to-zero barrier.
 
   const INTTYPE leadmask = FULLMASK << (DEFPREC-prec); // Bits to keep
-  const INTTYPE leadmaskwos = leadmask & ABSMASK; // Bits to keep without sign.
-  const INTTYPE trailmask = leadmaskwos ^ ABSMASK; // Bits to discard.
+  const INTTYPE trailmask = leadmask ^ FULLMASK; // Bits to discard.
 
   INTTYPE rndbuf;
   BITTYPE randombit;
 
   size_t i, locprec;
-  INTTYPE locleadmask, locleadmaskwos, loctrailmask;
+  INTTYPE locleadmask, loctrailmask;
   #ifdef USE_OPENMP
-  #pragma omp parallel                                                  \
-    private (locprec, locleadmask, locleadmaskwos, loctrailmask, rndbuf) \
+  #pragma omp parallel                                          \
+    private (locprec, locleadmask, loctrailmask, rndbuf)        \
     shared(A, X, fpopts)
   #endif /* #ifdef USE_OPENMP */
   {
@@ -213,9 +208,8 @@ int FUNNAME(FPTYPE *X,
       #endif /* #ifdef USE_OPENMP */
       for (i=0; i<numelem; i++){
         MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, leadmaskwos, trailmask,
-                    &locprec, &locleadmask,
-                    &locleadmaskwos, &loctrailmask);
+                    leadmask, trailmask,
+                    &locprec, &locleadmask, &loctrailmask);
         if (ABS(A+i) < ftzthreshold) { // Underflow.
           if (ABS(A+i) < ftzthreshold/2)
             X[i] = 0;
@@ -236,9 +230,8 @@ int FUNNAME(FPTYPE *X,
       #endif /* #ifdef USE_OPENMP */
       for (i=0; i<numelem; i++){
         MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, leadmaskwos, trailmask,
-                    &locprec, &locleadmask,
-                    &locleadmaskwos, &loctrailmask);
+                    leadmask, trailmask,
+                    &locprec, &locleadmask, &loctrailmask);
         if (ABS(A+i) < ftzthreshold) { // Underflow.
           if (ABS(A+i) <= ftzthreshold/2)
             X[i] = 0;
@@ -258,9 +251,8 @@ int FUNNAME(FPTYPE *X,
       #endif /* #ifdef USE_OPENMP */
       for (i=0; i<numelem; i++){
         MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, leadmaskwos, trailmask,
-                    &locprec, &locleadmask,
-                    &locleadmaskwos, &loctrailmask);
+                    leadmask, trailmask,
+                    &locprec, &locleadmask, &loctrailmask);
         if (ABS(A+i) < ftzthreshold) { // Underflow.
           if (ABS(A+i) < ftzthreshold/2
               || (ABS(A+i) == ftzthreshold/2 && fpopts->subnormal))
@@ -283,9 +275,8 @@ int FUNNAME(FPTYPE *X,
       #endif /* #ifdef USE_OPENMP */
       for (i=0; i<numelem; i++){
         MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, leadmaskwos, trailmask,
-                    &locprec, &locleadmask,
-                    &locleadmaskwos, &loctrailmask);
+                    leadmask, trailmask,
+                    &locprec, &locleadmask, &loctrailmask);
         if (ABS(A+i) < ftzthreshold) { // Underflow.
           X[i] = A[i] > 0 ? ftzthreshold : 0;
         } else if (ABS(A+i) > xmax) { // Overflow.
@@ -309,9 +300,8 @@ int FUNNAME(FPTYPE *X,
       #endif /* #ifdef USE_OPENMP */
       for (i=0; i<numelem; i++){
         MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, leadmaskwos, trailmask,
-                    &locprec, &locleadmask,
-                    &locleadmaskwos, &loctrailmask);
+                    leadmask, trailmask,
+                    &locprec, &locleadmask, &loctrailmask);
         if (ABS(A+i) < ftzthreshold) { // Underflow.
           X[i] = A[i] >= 0 ? 0 : -ftzthreshold;
         } else if (ABS(A+i) > xmax) { // Overflow.
@@ -335,9 +325,8 @@ int FUNNAME(FPTYPE *X,
       #endif /* #ifdef USE_OPENMP */
       for (i=0; i<numelem; i++){
         MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, leadmaskwos, trailmask,
-                    &locprec, &locleadmask,
-                    &locleadmaskwos, &loctrailmask);
+                    leadmask, trailmask,
+                    &locprec, &locleadmask, &loctrailmask);
         if (ABS(A+i) < ftzthreshold) { // Underflow.
           X[i] = 0;
         } else if (ABS(A+i) > xmax && ABS(A+i) != INFINITY) { // Overflow.
@@ -354,9 +343,8 @@ int FUNNAME(FPTYPE *X,
       #endif /* #ifdef USE_OPENMP */
       for (i=0; i<numelem; i++){
         MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, leadmaskwos, trailmask,
-                    &locprec, &locleadmask,
-                    &locleadmaskwos, &loctrailmask);
+                    leadmask, trailmask,
+                    &locprec, &locleadmask, &loctrailmask);
         X[i] = A[i];
         if (ABS(A+i) < ftzthreshold){ // Underflow.
           int expx = ((EXPMASK & INTOF(A+i)) >> (DEFPREC - 1)) - DEFEMAX;
@@ -400,9 +388,8 @@ int FUNNAME(FPTYPE *X,
       #endif /* #ifdef USE_OPENMP */
       for (i=0; i<numelem; i++){
         MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, leadmaskwos, trailmask,
-                    &locprec, &locleadmask,
-                    &locleadmaskwos, &loctrailmask);
+                    leadmask, trailmask,
+                    &locprec, &locleadmask, &loctrailmask);
         if (ABS(A+i) < ftzthreshold && A[i] != 0) { // Underflow.
           randombit = GENBIT(bitseed);
           X[i] = randombit ? ftzthreshold : 0;
@@ -427,13 +414,12 @@ int FUNNAME(FPTYPE *X,
       #endif /* #ifdef USE_OPENMP */
       for (i=0; i<numelem; i++){
         MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, leadmaskwos, trailmask,
-                    &locprec, &locleadmask,
-                    &locleadmaskwos, &loctrailmask);
+                    leadmask, trailmask,
+                    &locprec, &locleadmask, &loctrailmask);
         if (ABS(A+i) < ftzthreshold && A[i] != 0) { // Underflow.
           X[i] =  FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
         } else if (ABS(A+i) > xmax && ABS(A+i) != INFINITY) { // Overflow.
-            X[i] = FPOF(SIGN(A+i) | INTOFCONST(xmax));
+          X[i] = FPOF(SIGN(A+i) | INTOFCONST(xmax));
         } else {
           X[i] = FPOF(INTOF(A+i) & locleadmask);
           if ((loctrailmask & INTOF(A+i)) // Not exactly representable.
