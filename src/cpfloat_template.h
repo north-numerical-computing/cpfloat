@@ -15,21 +15,43 @@
 #define CONCATENATE_INNER(arg1, arg2) arg1 ## arg2
 #define CONCATENATE(arg1, arg2) CONCATENATE_INNER(arg1, arg2)
 #define ADDSUFFIXTO(x) CONCATENATE(x, FUNSUFFIX)
-
 #define MAINFUNNAME cpfloat
-#define MASKFUNNAME ADDSUFFIXTO(set_subnormal_masks_)
-#define STRUCTNAME ADDSUFFIXTO(fpint)
 
+/* Struct to reinterpret floating-point values as unsigned integers. */
+#define FPUNION ADDSUFFIXTO(fpint)
 typedef union {
   INTTYPE intval;
   FPTYPE fpval;
-} STRUCTNAME;
+} FPUNION;
+
+/* Relevant parameters of floating-point number system. */
+#define FPPARAMS ADDSUFFIXTO(fpparams)
+typedef struct {
+  const size_t precision;
+  const size_t emax;
+  const int emin;
+  const char subnormal;
+  const FPTYPE ftzthreshold;
+  const FPTYPE xmin;
+  const FPTYPE xmax;
+  const FPTYPE xbnd;
+  const INTTYPE leadmask;
+  const INTTYPE trailmask;
+} FPPARAMS;
+
+/* Parameters used for subnormal numbers. */
+#define LOCPARAMS ADDSUFFIXTO(locparams)
+typedef struct {
+  size_t precision;
+  INTTYPE leadmask;
+  INTTYPE trailmask;
+} LOCPARAMS;
 
 #define INTCONST(x) CONCATENATE(x, INTSUFFIX)
 
-#define INTOF(x)(((STRUCTNAME *)(x))->intval)
-#define INTOFCONST(x)(((STRUCTNAME)((FPTYPE)x)).intval)
-#define FPOF(x)(((STRUCTNAME)((INTTYPE)(x))).fpval)
+#define INTOF(x)(((FPUNION *)(x))->intval)
+#define INTOFCONST(x)(((FPUNION)((FPTYPE)x)).intval)
+#define FPOF(x)(((FPUNION)((INTTYPE)(x))).fpval)
 
 #define SIGN(x)(SIGNMASK & INTOF(x))
 #define ABS(x)(FPOF((INTTYPE)(ABSMASK & INTOF(x))))
@@ -54,10 +76,11 @@ typedef union {
 #define GENBIT(seed) (rand_r(&seed) & (1U << 30))
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
 
-#define VALFUNNAME CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _validate_optstruct)
-
+/* Function to validate floating-point options passed to MAINFUNNAME. */
+#define VALIDATE_INPUT CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _validate_optstruct)
 static inline
-int VALFUNNAME (const optstruct *fpopts) {
+int VALIDATE_INPUT(const optstruct *fpopts) {
+
   int retval;
 
   // Set retval to -1 if format is not valid.
@@ -76,8 +99,7 @@ int VALFUNNAME (const optstruct *fpopts) {
   size_t nformats = 17;
   #endif /* #if DEFPREC >= 53 */
   retval = -1;
-  size_t i;
-  for (i=0; i<nformats; i++) {
+  for (size_t i=0; i<nformats; i++) {
     if (strcmp(fpopts->format, valid_formats[i]))
       retval = 0;
   }
@@ -104,350 +126,439 @@ int VALFUNNAME (const optstruct *fpopts) {
 
   // Return 0 or warning value.
   return retval;
-
 }
 
+/* Compute floating-point parameters required by the rounding functions. */
+#define COMPUTE_GLOBAL_PARAMS ADDSUFFIXTO(compute_golbal_params)
 static inline
-void MASKFUNNAME(const FPTYPE *A,
-                 int i,
-                 size_t prec,
-                 FPTYPE xmin,
-                 int emin,
-                 INTTYPE leadmask,
-                 INTTYPE trailmask,
-                 size_t *locprec,
-                 INTTYPE *locleadmask,
-                 INTTYPE *loctrailmask) {
-  // Take care of subnormal values
-  if (ABS(A+i) < xmin && emin > 1-DEFEMAX) {
-    *locprec = prec - emin - DEFEMAX +
+FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts, int *retval) {
+
+  // Actual precision and exponent range.
+  *retval = 0;
+  size_t precision = fpopts->precision;
+  size_t emax = fpopts->explim ? fpopts->emax : DEFEMAX;
+  if (precision > DEFPREC) {
+    precision = DEFPREC;
+    *retval = 1;
+  }
+  if (emax > DEFEMAX) {
+    emax = DEFEMAX;
+    *retval = 2;
+  }
+
+  // Derived floating point parameters.
+  const int emin = 1-emax;
+  const FPTYPE xmin = ldexp(1., emin);  // Smallest pos. normal.
+  FPTYPE ftzthreshold;
+  if (fpopts->subnormal)
+    ftzthreshold = ldexp(1., emin-precision+1); // Smallest pos. subnormal.
+  else
+    ftzthreshold = xmin;
+  const FPTYPE xmax = ldexp(1., emax) * (2-ldexp(1., 1-precision));
+  const FPTYPE xbnd = ldexp(1., emax) * (2-ldexp(1., -precision));
+
+  // Bitmasks.
+  const INTTYPE leadmask = FULLMASK << (DEFPREC-precision); // Bits to keep
+  const INTTYPE trailmask = leadmask ^ FULLMASK; // Bits to discard.
+
+  FPPARAMS params = {precision, emax, emin, fpopts->subnormal,
+                     ftzthreshold, xmin, xmax, xbnd,
+                     leadmask, trailmask};
+
+  return params;
+}
+
+/* Compute floating point parameters required for rounding subnormals. */
+#define UPDATE_LOCAL_PARAMS ADDSUFFIXTO(update_local_params)
+static inline
+void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
+                         const size_t i,
+                         const FPPARAMS *params,
+                         LOCPARAMS *lparams) {
+  if (ABS(A+i) < params->xmin && params->emin > 1-DEFEMAX) {
+    lparams->precision = params->precision - params->emin - DEFEMAX +
       ((EXPMASK & INTOF(A+i)) >> (DEFPREC - 1));
-    *locleadmask = leadmask;
-    *locleadmask ^=
-      ((INTCONST(1) << (prec - *locprec)) - INTCONST(1)) << (DEFPREC-prec);
-    *loctrailmask = *locleadmask ^ FULLMASK;
+    INTTYPE leadmask = params->leadmask;
+    leadmask ^= (((INTCONST(1) <<
+                   (params->precision - lparams->precision)) -
+                  INTCONST(1))
+                 << (DEFPREC-params->precision));
+    lparams->leadmask = leadmask;
+    lparams->trailmask = leadmask ^ FULLMASK;
   } else {
-    *locprec = prec;
-    *locleadmask = leadmask;
-    *loctrailmask = trailmask;
+    lparams->precision = params->precision;
+    lparams->leadmask = params->leadmask;
+    lparams->trailmask = params->trailmask;
   }
 }
+
 #endif /* #ifndef CONCATENATE_INNER */
 
 #ifdef SINGLE_THREADED
-#define FUNNAME CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _sequential)
+#define MAINFUN CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _sequential)
 #else /* #ifdef SINGLE_THREADED */
-#define FUNNAME CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _parallel)
+#define MAINFUN CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _parallel)
 #define USE_OPENMP
 #endif /* #ifdef SINGLE_THREADED */
 
-/*  Rounding function */
+/*  Rounding functions. */
+#ifdef USE_OPENMP
+#define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _parallel)
+#define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _parallel)
+#define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _parallel)
+#define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _parallel)
+#define RD_TWD_MINF CONCATENATE(ADDSUFFIXTO(rd_minf), _parallel)
+#define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _parallel)
+#define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _parallel)
+#define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _parallel)
+#define RO CONCATENATE(ADDSUFFIXTO(ro), _parallel)
+#else /* #ifdef USE_OPENMP */
+#define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _sequential)
+#define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _sequential)
+#define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _sequential)
+#define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _sequential)
+#define RD_TWD_MINF CONCATENATE(ADDSUFFIXTO(rd_minf), _sequential)
+#define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _sequential)
+#define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _sequential)
+#define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _sequential)
+#define RO CONCATENATE(ADDSUFFIXTO(ro), _sequential)
+#endif /* #ifdef USE_OPENMP */
+
 static inline
-int FUNNAME(FPTYPE *X,
+void RN_TIES_TO_AWAY (FPTYPE *X,
+                      const FPTYPE *A,
+                      const size_t numelem,
+                      const FPPARAMS *p) {
+  LOCPARAMS lp;
+  #ifdef USE_OPENMP
+  #pragma omp for
+  #endif /* #ifdef USE_OPENMP */
+  for (size_t i=0; i<numelem; i++){
+    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    if (ABS(A+i) < p->ftzthreshold) { // Underflow.
+      if (ABS(A+i) < p->ftzthreshold/2)
+        X[i] = 0;
+      else
+        X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
+    } else if (ABS(A+i) >= p->xbnd) { // Overflow.
+      X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
+    } else {
+      X[i] = FPOF((INTOF(A+i) +
+                   (INTCONST(1) << (DEFPREC-1-lp.precision))) & lp.leadmask);
+    }
+  }
+}
+
+static inline
+void RN_TIES_TO_ZERO (FPTYPE *X,
+                      const FPTYPE *A,
+                      const size_t numelem,
+                      const FPPARAMS *p) {
+  LOCPARAMS lp;
+  #ifdef USE_OPENMP
+  #pragma omp for
+  #endif /* #ifdef USE_OPENMP */
+  for (size_t i=0; i<numelem; i++){
+    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    if (ABS(A+i) < p->ftzthreshold) { // Underflow.
+      if (ABS(A+i) <= p->ftzthreshold/2)
+        X[i] = 0;
+      else
+        X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
+    } else if (ABS(A+i) > p->xbnd) { // Overflow.
+      X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
+    } else {
+      X[i] = FPOF((INTOF(A+i) + (lp.trailmask>>1)) & lp.leadmask);
+    }
+  }
+}
+
+static inline
+void RN_TIES_TO_EVEN (FPTYPE *X,
+                      const FPTYPE *A,
+                      const size_t numelem,
+                      const FPPARAMS *p) {
+  LOCPARAMS lp;
+  #ifdef USE_OPENMP
+  #pragma omp for
+  #endif /* #ifdef USE_OPENMP */
+  for (size_t i=0; i<numelem; i++){
+    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    if (ABS(A+i) < p->ftzthreshold) { // Underflow.
+      if (ABS(A+i) < p->ftzthreshold/2
+          || (ABS(A+i) == p->ftzthreshold/2 && p->subnormal))
+        X[i] = 0;
+      else
+        X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
+    } else if (ABS(A+i) >= p->xbnd) { // Overflow.
+      X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
+    } else {
+      INTTYPE LSB = ((INTOF(A+i) >> (DEFPREC-lp.precision)) & INTCONST(1))
+        | (lp.precision == 1 && DEFEMAX != p->emax); // Hidden bit is one.
+      X[i] = FPOF((INTOF(A+i) + ((lp.trailmask >> 1) + LSB)) & lp.leadmask);
+    }
+  }
+}
+
+static inline
+void RD_TWD_PINF (FPTYPE *X,
+                  const FPTYPE *A,
+                  const size_t numelem,
+                  const FPPARAMS *p) {
+  LOCPARAMS lp;
+  #ifdef USE_OPENMP
+  #pragma omp for
+  #endif /* #ifdef USE_OPENMP */
+  for (size_t i=0; i<numelem; i++){
+    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    if (ABS(A+i) < p->ftzthreshold) { // Underflow.
+      X[i] = A[i] > 0 ? p->ftzthreshold : 0;
+    } else if (ABS(A+i) > p->xmax) { // Overflow.
+      if (A[i] > p->xmax)
+        X[i] = INFINITY;
+      else if (A[i] < -p->xmax && A[i] != -INFINITY)
+        X[i] = -p->xmax;
+      else // A[i] == -INFINITY
+        X[i] = -INFINITY;
+    } else {
+      X[i] = FPOF(INTOF(A+i) & lp.leadmask);
+      if (SIGN(A+i) == 0) // Add ulp if x is positive.
+        X[i] = FPOF((INTOF(A+i) + lp.trailmask) & lp.leadmask);
+    }
+  }
+}
+
+static inline
+void RD_TWD_MINF (FPTYPE *X,
+                  const FPTYPE *A,
+                  const size_t numelem,
+                  const FPPARAMS *p) {
+  LOCPARAMS lp;
+  #ifdef USE_OPENMP
+  #pragma omp for
+  #endif /* #ifdef USE_OPENMP */
+  for (size_t i=0; i<numelem; i++){
+    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    if (ABS(A+i) < p->ftzthreshold) { // Underflow.
+      X[i] = A[i] >= 0 ? 0 : -p->ftzthreshold;
+    } else if (ABS(A+i) > p->xmax) { // Overflow.
+      if (A[i] < -p->xmax)
+        X[i] = -INFINITY;
+      else if (A[i] > p->xmax && A[i] != INFINITY)
+        X[i] = p->xmax;
+      else // A[i] == INFINITY
+        X[i] = INFINITY;
+    } else {
+      X[i] = FPOF(INTOF(A+i) & lp.leadmask);
+      if (SIGN(A+i)) // Subtract ulp if x is positive.
+        X[i] = FPOF((INTOF(A+i) + lp.trailmask) & lp.leadmask);
+    }
+  }
+}
+
+static inline
+void RD_TWD_ZERO (FPTYPE *X,
+                  const FPTYPE *A,
+                  const size_t numelem,
+                  const FPPARAMS *p) {
+  LOCPARAMS lp;
+  #ifdef USE_OPENMP
+  #pragma omp for
+  #endif /* #ifdef USE_OPENMP */
+  for (size_t i=0; i<numelem; i++){
+    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    if (ABS(A+i) < p->ftzthreshold) { // Underflow.
+      X[i] = 0;
+    } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
+      X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmax));
+    } else {
+      X[i] = FPOF(INTOF(A+i) & lp.leadmask);
+    }
+  }
+}
+
+static inline
+void RS_PROP(FPTYPE *X,
+             const FPTYPE *A,
+             const size_t numelem,
+             const FPPARAMS *p) {
+  LOCPARAMS lp;
+  SEEDTYPE seed;
+  #ifdef USE_OPENMP
+  INITRAND_MULTI(seed);
+  #pragma omp for
+  #else /* #ifdef USE_OPENMP */
+  INITRAND_SINGLE(seed);
+  #endif /* #ifdef USE_OPENMP */
+  for (size_t i=0; i<numelem; i++){
+    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    X[i] = A[i];
+    if (ABS(A+i) < p->ftzthreshold){ // Underflow.
+      int expx = ((EXPMASK & INTOF(A+i)) >> (DEFPREC - 1)) - DEFEMAX;
+      INTTYPE trailfrac = (INTOF(A+i) & (FULLMASK >> NLEADBITS));
+      if (expx == -DEFEMAX) { // No implicit bit (x is subnormal).
+        expx += 1;
+      } else { // Make implicit bit explicit (x is normal).
+        trailfrac = (INTOF(A+i) & (FULLMASK >> NLEADBITS))
+          | (INTCONST(1) << (DEFPREC-1));
+      }
+      int localemin = p->subnormal ? p->emin - (int)p->precision + 1: p->emin;
+      int expdiff = localemin - expx;
+      INTTYPE rnd = GENRAND(seed) >> 1;
+      // Shift fraction of A[i] left or right as needed.
+      if (expdiff <= NLEADBITS - 1)
+        trailfrac <<= NLEADBITS - 1 - expdiff;
+      else
+        trailfrac >>= expdiff - (NLEADBITS - 1);
+      if (trailfrac > rnd) {
+        X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
+      } else {
+        X[i] = 0;
+        continue;
+      }
+    } else if (ABS(A+i) < p->xbnd) { // Rounding possibly required.
+      INTTYPE rndbuf = GENRAND(seed) & lp.trailmask;
+      if (ABS(A+i) > p->xmax) {
+        rndbuf = rndbuf >> 1;
+        lp.leadmask = (lp.leadmask >> 1) | SIGNMASK;
+      }
+      X[i] = FPOF((INTOF(A+i) + rndbuf) & lp.leadmask);
+    }
+    if (ABS(X+i) >= p->xbnd) // Overflow.
+      X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
+  }
+}
+
+static inline
+void RS_EQUI(FPTYPE *X,
+             const FPTYPE *A,
+             const size_t numelem,
+             const FPPARAMS *p) {
+  LOCPARAMS lp;
+  BITSEEDTYPE bitseed;
+  #ifdef USE_OPENMP
+  INITBIT_MULTI(bitseed);
+  #pragma omp for
+  #else /* #ifdef USE_OPENMP */
+  INITBIT_SINGLE(bitseed);
+  #endif /* #ifdef USE_OPENMP */
+  for (size_t i=0; i<numelem; i++){
+    BITTYPE randombit;
+    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    if (ABS(A+i) < p->ftzthreshold && A[i] != 0) { // Underflow.
+      randombit = GENBIT(bitseed);
+      X[i] = randombit ? p->ftzthreshold : 0;
+      X[i] = FPOF(SIGN(A+i) | INTOF(X+i));
+    } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
+      randombit = GENBIT(bitseed);
+      X[i] = randombit ? INFINITY  : p->xmax;
+      X[i] = FPOF(SIGN(A+i) | INTOF(X+i));
+    } else if ((INTOF(A+i) & lp.trailmask)) { // Not exactly representable.
+      randombit = GENBIT(bitseed);
+      X[i] = FPOF(INTOF(A+i) & lp.leadmask);
+      if (randombit)
+        X[i] = FPOF(INTOF(X+i) + (INTCONST(1) << (DEFPREC-lp.precision)));
+    } else // A[i] exactly representable, no rounding necessary
+      X[i] = A[i];
+  }
+}
+
+static inline
+void RO(FPTYPE *X,
+        const FPTYPE *A,
+        const size_t numelem,
+        const FPPARAMS *p) {
+  LOCPARAMS lp;
+  #ifdef USE_OPENMP
+  #pragma omp for
+  #endif /* #ifdef USE_OPENMP */
+  for (size_t i=0; i<numelem; i++){
+    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    if (ABS(A+i) < p->ftzthreshold && A[i] != 0) { // Underflow.
+      X[i] =  FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
+    } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
+      X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmax));
+    } else {
+      X[i] = FPOF(INTOF(A+i) & lp.leadmask);
+      if ((lp.trailmask & INTOF(A+i)) // Not exactly representable.
+          && (lp.precision > 1)) // Set the last bit to one if stored explicitly.
+        X[i] = FPOF(INTOF(X+i) | (INTCONST(1) << (DEFPREC-lp.precision)));
+    }
+  }
+}
+
+
+
+static inline
+int MAINFUN(FPTYPE *X,
             const FPTYPE *A,
             const size_t numelem,
             const optstruct *fpopts) {
 
   int retval = 0;
+  const FPPARAMS p = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);
 
-  size_t prec = fpopts->precision;
-  size_t emax = fpopts->explim ? fpopts->emax : DEFEMAX;
-  const signed char round = fpopts->round;
-
-  if (prec > DEFPREC) {
-    prec = DEFPREC;
-    retval = 1;
-  }
-  if (emax > DEFEMAX) {
-    emax = DEFEMAX;
-    retval = 2;
-  }
-
-  // Derived floating-point parameters.
-  const int emin = 1-emax;
-  const int esmin = emin-prec+1;
-  const FPTYPE xmin = ldexp(1., emin);  // Smallest pos. normal.
-  const FPTYPE smin = ldexp(1., esmin); // Smallest pos. subnormal.
-  const FPTYPE xmax = ldexp(1., emax) * (2-ldexp(1., 1-prec));
-
-  // A point halfway between the maximum representable number and infinity.
-  const FPTYPE xbnd = ldexp(1., emax) * (2-ldexp(1., -prec));
-
-  const FPTYPE ftzthreshold =
-    fpopts->subnormal ? smin : xmin; // Flush-to-zero barrier.
-
-  const INTTYPE leadmask = FULLMASK << (DEFPREC-prec); // Bits to keep
-  const INTTYPE trailmask = leadmask ^ FULLMASK; // Bits to discard.
-
-  INTTYPE rndbuf;
-  BITTYPE randombit;
-
-  size_t i, locprec;
-  INTTYPE locleadmask, loctrailmask;
   #ifdef USE_OPENMP
-  #pragma omp parallel                                          \
-    private (locprec, locleadmask, loctrailmask, rndbuf)        \
-    shared(A, X, fpopts)
+  #pragma omp parallel shared(A, X, fpopts)
   #endif /* #ifdef USE_OPENMP */
   {
-    SEEDTYPE seed;
-    BITSEEDTYPE bitseed;
 
-    #ifdef USE_OPENMP
-    INITRAND_MULTI(seed);
-    INITBIT_MULTI(bitseed);
-    #else /* #ifdef USE_OPENMP */
-    INITRAND_SINGLE(seed);
-    INITBIT_SINGLE(bitseed);
-    #endif /* #ifdef USE_OPENMP */
-
-    switch (round) {
+    switch (fpopts->round) {
     case -1: // round-to-nearest with ties-to-away
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, trailmask,
-                    &locprec, &locleadmask, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) { // Underflow.
-          if (ABS(A+i) < ftzthreshold/2)
-            X[i] = 0;
-          else
-            X[i] = FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
-        } else if (ABS(A+i) >= xbnd) { // Overflow.
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
-        } else {
-          X[i] = FPOF((INTOF(A+i) +
-                       (INTCONST(1) << (DEFPREC-1-locprec))) & locleadmask);
-        }
-      }
+      RN_TIES_TO_AWAY(X, A, numelem, &p);
       break;
 
     case 0: // round-to-nearest with ties-to-zero
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, trailmask,
-                    &locprec, &locleadmask, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) { // Underflow.
-          if (ABS(A+i) <= ftzthreshold/2)
-            X[i] = 0;
-          else
-            X[i] = FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
-        } else if (ABS(A+i) > xbnd) { // Overflow.
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
-        } else {
-          X[i] = FPOF((INTOF(A+i) + (loctrailmask>>1)) & locleadmask);
-        }
-      }
+      RN_TIES_TO_ZERO(X, A, numelem, &p);
       break;
 
     case 1: // round-to-nearest with ties-to-even
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, trailmask,
-                    &locprec, &locleadmask, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) { // Underflow.
-          if (ABS(A+i) < ftzthreshold/2
-              || (ABS(A+i) == ftzthreshold/2 && fpopts->subnormal))
-            X[i] = 0;
-          else
-            X[i] = FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
-        } else if (ABS(A+i) >= xbnd) { // Overflow.
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
-        } else {
-          INTTYPE LSB = ((INTOF(A+i) >> (DEFPREC-locprec)) & INTCONST(1))
-            | (locprec == 1 && DEFEMAX != emax); // Hidden bit is one.
-          X[i] = FPOF((INTOF(A+i) + ((loctrailmask >> 1) + LSB)) & locleadmask);
-        }
-      }
+      RN_TIES_TO_EVEN(X, A, numelem, &p);
       break;
 
     case 2: // round-toward-positive
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, trailmask,
-                    &locprec, &locleadmask, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) { // Underflow.
-          X[i] = A[i] > 0 ? ftzthreshold : 0;
-        } else if (ABS(A+i) > xmax) { // Overflow.
-          if (A[i] > xmax)
-            X[i] = INFINITY;
-          else if (A[i] < -xmax && A[i] != -INFINITY)
-            X[i] = -xmax;
-          else // A[i] == -INFINITY
-            X[i] = -INFINITY;
-        } else {
-          X[i] = FPOF(INTOF(A+i) & locleadmask);
-          if (SIGN(A+i) == 0) // Add ulp if x is positive.
-            X[i] = FPOF((INTOF(A+i) + loctrailmask) & locleadmask);
-        }
-      }
+      RD_TWD_PINF(X, A, numelem, &p);
       break;
 
     case 3: // round-toward-negative
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, trailmask,
-                    &locprec, &locleadmask, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) { // Underflow.
-          X[i] = A[i] >= 0 ? 0 : -ftzthreshold;
-        } else if (ABS(A+i) > xmax) { // Overflow.
-          if (A[i] < -xmax)
-            X[i] = -INFINITY;
-          else if (A[i] > xmax && A[i] != INFINITY)
-            X[i] = xmax;
-          else // A[i] == INFINITY
-            X[i] = INFINITY;
-        } else {
-          X[i] = FPOF(INTOF(A+i) & locleadmask);
-          if (SIGN(A+i)) // Subtract ulp if x is positive.
-            X[i] = FPOF((INTOF(A+i) + loctrailmask) & locleadmask);
-        }
-      }
+      RD_TWD_MINF(X, A, numelem, &p);
       break;
 
     case 4: // round-toward-zero
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, trailmask,
-                    &locprec, &locleadmask, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold) { // Underflow.
-          X[i] = 0;
-        } else if (ABS(A+i) > xmax && ABS(A+i) != INFINITY) { // Overflow.
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(xmax));
-        } else {
-          X[i] = FPOF(INTOF(A+i) & locleadmask);
-        }
-      }
+      RD_TWD_ZERO(X, A, numelem, &p);
       break;
 
     case 5: // stochastic rounding with proportional probabilities
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, trailmask,
-                    &locprec, &locleadmask, &loctrailmask);
-        X[i] = A[i];
-        if (ABS(A+i) < ftzthreshold){ // Underflow.
-          int expx = ((EXPMASK & INTOF(A+i)) >> (DEFPREC - 1)) - DEFEMAX;
-          INTTYPE trailfrac = (INTOF(A+i) & (FULLMASK >> NLEADBITS));
-          if (expx == -DEFEMAX) { // No implicit bit (x is subnormal).
-            expx += 1;
-          } else { // Make implicit bit explicit (x is normal).
-            trailfrac = (INTOF(A+i) & (FULLMASK >> NLEADBITS))
-              | (INTCONST(1) << (DEFPREC-1));
-          }
-          int localemin = fpopts->subnormal ? emin - (int)prec + 1: emin;
-          int expdiff = localemin - expx;
-          INTTYPE rnd = GENRAND(seed) >> 1;
-          // Shift fraction of A[i] left or right as needed.
-          if (expdiff <= NLEADBITS - 1)
-            trailfrac <<= NLEADBITS - 1 - expdiff;
-          else
-            trailfrac >>= expdiff - (NLEADBITS - 1);
-          if (trailfrac > rnd) {
-            X[i] = FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
-          } else {
-            X[i] = 0;
-            continue;
-          }
-        } else if (ABS(A+i) < xbnd) { // Rounding possibly required.
-          rndbuf = GENRAND(seed) & loctrailmask;
-          if (ABS(A+i) > xmax) {
-            rndbuf = rndbuf >> 1;
-            locleadmask = (locleadmask >> 1) | SIGNMASK;
-          }
-          X[i] = FPOF((INTOF(A+i) + rndbuf) & locleadmask);
-        }
-        if (ABS(X+i) >= xbnd) // Overflow.
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
-      }
+      RS_PROP(X, A, numelem, &p);
       break;
 
     case 6: // stochastic rounding with equal probabilities
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, trailmask,
-                    &locprec, &locleadmask, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold && A[i] != 0) { // Underflow.
-          randombit = GENBIT(bitseed);
-          X[i] = randombit ? ftzthreshold : 0;
-          X[i] = FPOF(SIGN(A+i) | INTOF(X+i));
-        } else if (ABS(A+i) > xmax && ABS(A+i) != INFINITY) { // Overflow.
-          randombit = GENBIT(bitseed);
-          X[i] = randombit ? INFINITY  : xmax;
-          X[i] = FPOF(SIGN(A+i) | INTOF(X+i));
-        } else if ((INTOF(A+i) & loctrailmask)) { // Not exactly representable.
-          randombit = GENBIT(bitseed);
-          X[i] = FPOF(INTOF(A+i) & locleadmask);
-          if (randombit)
-            X[i] = FPOF(INTOF(X+i) + (INTCONST(1) << (DEFPREC-locprec)));
-        } else // A[i] exactly representable, no rounding necessary
-          X[i] = A[i];
-      }
+      RS_EQUI(X, A, numelem, &p);
       break;
 
     case 7: // round-to-odd
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        MASKFUNNAME(A, i, prec, xmin, emin,
-                    leadmask, trailmask,
-                    &locprec, &locleadmask, &loctrailmask);
-        if (ABS(A+i) < ftzthreshold && A[i] != 0) { // Underflow.
-          X[i] =  FPOF(SIGN(A+i) | INTOFCONST(ftzthreshold));
-        } else if (ABS(A+i) > xmax && ABS(A+i) != INFINITY) { // Overflow.
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(xmax));
-        } else {
-          X[i] = FPOF(INTOF(A+i) & locleadmask);
-          if ((loctrailmask & INTOF(A+i)) // Not exactly representable.
-              && (locprec > 1)) // Set the last bit to one if stored explicitly.
-            X[i] = FPOF(INTOF(X+i) | (INTCONST(1) << (DEFPREC-locprec)));
-        }
-      }
+      RO(X, A, numelem, &p);
       break;
 
     default: // No rounding if unknown mode specified.
       #ifdef USE_OPENMP
       #pragma omp for
       #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
+      for (size_t i=0; i<numelem; i++){
         X[i] = A[i];
       }
       break;
     }
+  }
 
-    // Bit flips.
-    if (fpopts->flip) {
-      #ifdef USE_OPENMP
-      #pragma omp for
-      #endif /* #ifdef USE_OPENMP */
-      for (i=0; i<numelem; i++){
-        if (rand() / (FPTYPE)RAND_MAX < fpopts->p) {
-          X[i] = FPOF(INTOF(X+i) ^ (INTCONST(1) << rand() % (DEFPREC - 1)));
-        }
+  // Bit flips.
+  if (fpopts->flip) {
+    #ifdef USE_OPENMP
+    #pragma omp for
+    #endif /* #ifdef USE_OPENMP */
+    for (size_t i=0; i<numelem; i++){
+      if (rand() / (FPTYPE)RAND_MAX < fpopts->p) {
+        X[i] = FPOF(INTOF(X+i) ^ (INTCONST(1) << rand() % (DEFPREC - 1)));
       }
     }
   }
@@ -457,32 +568,41 @@ int FUNNAME(FPTYPE *X,
 
 #ifdef _OPENMP
 #ifndef USE_OPENMP
-#define FUNNAME_SINGLE CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _sequential)
-#define FUNNAME_MULTI  CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _parallel)
-#define FUNNAME_COMBO  ADDSUFFIXTO(MAINFUNNAME)
-int FUNNAME_COMBO(FPTYPE *X,
+#define MAINFUN_SINGLE CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _sequential)
+#define MAINFUN_MULTI  CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _parallel)
+#define MAINFUN_COMBO  ADDSUFFIXTO(MAINFUNNAME)
+int MAINFUN_COMBO(FPTYPE *X,
                   const FPTYPE *A,
                   const size_t numelem,
                   const optstruct *fpopts) {
   if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))
-    return FUNNAME_SINGLE(X, A, numelem, fpopts);
+    return MAINFUN_SINGLE(X, A, numelem, fpopts);
   else
-    return FUNNAME_MULTI(X, A, numelem, fpopts);
+    return MAINFUN_MULTI(X, A, numelem, fpopts);
 }
-#undef FUNNAME_SINGLE
-#undef FUNNAME_MULTI
-#undef FUNNAME_COMBO
+#undef MAINFUN_SINGLE
+#undef MAINFUN_MULTI
+#undef MAINFUN_COMBO
 #endif /*#ifdef USE_OPENMP */
 #else /* #ifdef _OPENMP */
 int ADDSUFFIXTO(MAINFUNNAME)(FPTYPE *X,
                              const FPTYPE *A,
                              const size_t numelem,
                              const optstruct *fpopts) {
-  return FUNNAME(X, A, numelem, fpopts);
+  return MAINFUN(X, A, numelem, fpopts);
 }
 #endif /* #ifdef _OPENMP */
 
-#undef FUNNAME
+#undef RN_TIES_TO_AWAY
+#undef RN_TIES_TO_ZERO
+#undef RN_TIES_TO_EVEN
+#undef RD_TWD_PINF
+#undef RD_TWD_MINF
+#undef RD_TWD_ZERO
+#undef RS_PROP
+#undef RS_EQUI
+#undef RO
+#undef MAINFUN
 
 #ifdef USE_OPENMP
 #undef USE_OPENMP
@@ -501,8 +621,9 @@ int ADDSUFFIXTO(MAINFUNNAME)(FPTYPE *X,
 #undef SIGN
 #undef ABS
 
-#undef MASKFUNNAME
-#undef STRUCTNAME
+#undef COMPUTE_GLOBAL_PARAMS
+#undef UPDATE_LOCAL_PARAMS
+#undef FPUNION
 #undef FUNSUFFIX
 #undef FPTYPE
 #undef INTTYPE
