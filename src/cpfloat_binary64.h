@@ -147,8 +147,8 @@ int cpfloat(double *X,
 static inline
 int cpfloat_sequential(double *X,
                        const double *A,
-                        const size_t numelem,
-                        const optstruct *fpopts);
+                       const size_t numelem,
+                       const optstruct *fpopts);
 /**
  * @brief Round `double` array to lower precision using multiple OpenMP threads.
  *
@@ -171,8 +171,8 @@ int cpfloat_sequential(double *X,
 static inline
 int cpfloat_parallel(double *X,
                      const double *A,
-                      const size_t numelem,
-                      const optstruct *fpopts);
+                     const size_t numelem,
+                     const optstruct *fpopts);
 #include "cpfloat_threshold_binary64.h"
 /** @cond */
 #include "cpfloat_template.h"
