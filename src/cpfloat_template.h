@@ -77,9 +77,8 @@ typedef struct {
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
 
 /* Function to validate floating-point options passed to MAINFUNNAME. */
-#define VALIDATE_INPUT CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _validate_optstruct)
-static inline
-int VALIDATE_INPUT(const optstruct *fpopts) {
+#define VALIDATE_INPUT CONCATENATE(ADDSUFFIXTO(MAINFUNNAME),_validate_optstruct)
+static inline int VALIDATE_INPUT(const optstruct *fpopts) {
 
   int retval;
 
@@ -130,8 +129,8 @@ int VALIDATE_INPUT(const optstruct *fpopts) {
 
 /* Compute floating-point parameters required by the rounding functions. */
 #define COMPUTE_GLOBAL_PARAMS ADDSUFFIXTO(compute_golbal_params)
-static inline
-FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts, int *retval) {
+static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
+                                             int *retval) {
 
   // Actual precision and exponent range.
   *retval = 0;
@@ -170,11 +169,10 @@ FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts, int *retval) {
 
 /* Compute floating point parameters required for rounding subnormals. */
 #define UPDATE_LOCAL_PARAMS ADDSUFFIXTO(update_local_params)
-static inline
-void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
-                         const size_t i,
-                         const FPPARAMS *params,
-                         LOCPARAMS *lparams) {
+static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
+                                       const size_t i,
+                                       const FPPARAMS *params,
+                                       LOCPARAMS *lparams) {
   if (ABS(A+i) < params->xmin && params->emin > 1-DEFEMAX) {
     lparams->precision = params->precision - params->emin - DEFEMAX +
       ((EXPMASK & INTOF(A+i)) >> (DEFPREC - 1));
@@ -193,13 +191,6 @@ void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 }
 
 #endif /* #ifndef CONCATENATE_INNER */
-
-#ifdef SINGLE_THREADED
-#define MAINFUN CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _sequential)
-#else /* #ifdef SINGLE_THREADED */
-#define MAINFUN CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _parallel)
-#define USE_OPENMP
-#endif /* #ifdef SINGLE_THREADED */
 
 /*  Rounding functions. */
 #ifdef USE_OPENMP
@@ -224,11 +215,11 @@ void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define RO CONCATENATE(ADDSUFFIXTO(ro), _sequential)
 #endif /* #ifdef USE_OPENMP */
 
-static inline
-void RN_TIES_TO_AWAY (FPTYPE *X,
-                      const FPTYPE *A,
-                      const size_t numelem,
-                      const FPPARAMS *p) {
+/* Routine for round-to-nearest with ties-to-away. */
+static inline void RN_TIES_TO_AWAY (FPTYPE *X,
+                                    const FPTYPE *A,
+                                    const size_t numelem,
+                                    const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
@@ -265,11 +256,11 @@ void RN_TIES_TO_AWAY (FPTYPE *X,
   }
 }
 
-static inline
-void RN_TIES_TO_ZERO (FPTYPE *X,
-                      const FPTYPE *A,
-                      const size_t numelem,
-                      const FPPARAMS *p) {
+/* Routine for round-to-nearest with ties-to-zero. */
+static inline void RN_TIES_TO_ZERO (FPTYPE *X,
+                                    const FPTYPE *A,
+                                    const size_t numelem,
+                                    const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
@@ -304,11 +295,11 @@ void RN_TIES_TO_ZERO (FPTYPE *X,
   }
 }
 
-static inline
-void RN_TIES_TO_EVEN (FPTYPE *X,
-                      const FPTYPE *A,
-                      const size_t numelem,
-                      const FPPARAMS *p) {
+/* Routine for round-to-nearest with ties-to-even. */
+static inline void RN_TIES_TO_EVEN (FPTYPE *X,
+                                    const FPTYPE *A,
+                                    const size_t numelem,
+                                    const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
@@ -348,11 +339,11 @@ void RN_TIES_TO_EVEN (FPTYPE *X,
   }
 }
 
-static inline
-void RD_TWD_PINF (FPTYPE *X,
-                  const FPTYPE *A,
-                  const size_t numelem,
-                  const FPPARAMS *p) {
+/* Routine for round-to-plus-infinity (also known as round-up). */
+static inline void RD_TWD_PINF (FPTYPE *X,
+                                const FPTYPE *A,
+                                const size_t numelem,
+                                const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
@@ -396,11 +387,11 @@ void RD_TWD_PINF (FPTYPE *X,
   }
 }
 
-static inline
-void RD_TWD_MINF (FPTYPE *X,
-                  const FPTYPE *A,
-                  const size_t numelem,
-                  const FPPARAMS *p) {
+/* Routine for round-to-minus-infinity (also known as round-down). */
+static inline void RD_TWD_MINF (FPTYPE *X,
+                                const FPTYPE *A,
+                                const size_t numelem,
+                                const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
@@ -444,11 +435,11 @@ void RD_TWD_MINF (FPTYPE *X,
   }
 }
 
-static inline
-void RD_TWD_ZERO (FPTYPE *X,
-                  const FPTYPE *A,
-                  const size_t numelem,
-                  const FPPARAMS *p) {
+/* Routine for round-to-zero (also known as truncation). */
+static inline void RD_TWD_ZERO (FPTYPE *X,
+                                const FPTYPE *A,
+                                const size_t numelem,
+                                const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
@@ -477,11 +468,11 @@ void RD_TWD_ZERO (FPTYPE *X,
   }
 }
 
-static inline
-void RS_PROP(FPTYPE *X,
-             const FPTYPE *A,
-             const size_t numelem,
-             const FPPARAMS *p) {
+/* Routine for stochastic rounding with proportional probabilities. */
+static inline void RS_PROP(FPTYPE *X,
+                           const FPTYPE *A,
+                           const size_t numelem,
+                           const FPPARAMS *p) {
   LOCPARAMS lp;
   SEEDTYPE seed;
   #ifdef USE_OPENMP
@@ -530,11 +521,11 @@ void RS_PROP(FPTYPE *X,
   }
 }
 
-static inline
-void RS_EQUI(FPTYPE *X,
-             const FPTYPE *A,
-             const size_t numelem,
-             const FPPARAMS *p) {
+/* Routine for stochastic rounding with equal probabilities. */
+static inline void RS_EQUI(FPTYPE *X,
+                           const FPTYPE *A,
+                           const size_t numelem,
+                           const FPPARAMS *p) {
   LOCPARAMS lp;
   BITSEEDTYPE bitseed;
   BITTYPE randombit;
@@ -562,11 +553,11 @@ void RS_EQUI(FPTYPE *X,
   }
 }
 
-static inline
-void RO(FPTYPE *X,
-        const FPTYPE *A,
-        const size_t numelem,
-        const FPPARAMS *p) {
+/* Routine for round-to-odd. */
+static inline void RO(FPTYPE *X,
+                      const FPTYPE *A,
+                      const size_t numelem,
+                      const FPPARAMS *p) {
   LOCPARAMS lp;
   #ifdef USE_OPENMP
   #pragma omp for
@@ -579,7 +570,7 @@ void RO(FPTYPE *X,
     } else {
       UPDATE_LOCAL_PARAMS(A, i, p, &lp);
       if ((lp.trailmask & INTOF(A+i)) // Not exactly representable.
-          && (lp.precision > 1)) // Set the last bit to one if stored explicitly.
+          && (lp.precision > 1)) // Set the last bit to 1 if stored explicitly.
         X[i] = FPOF((INTOF(A+i) & lp.leadmask) |
                     (INTCONST(1) << (DEFPREC-lp.precision)));
       else
@@ -588,11 +579,29 @@ void RO(FPTYPE *X,
   }
 }
 
-static inline
-int MAINFUN(FPTYPE *X,
-            const FPTYPE *A,
-            const size_t numelem,
-            const optstruct *fpopts) {
+/*
+ * Macros that define the main rounding functions. Either two or three functions
+ * will be generated for each storage format, depending on whether OpenMP is
+ * supported or not.
+ *
+ * 1. When SINGLE_THREADED is defined, the following code generates the
+ *    single-threaded function cpfloatf?_sequential.
+ *
+ * 2. If _OPENMP is defined (i.e., OpenMP support is available), then the
+ *    following code generates the multi-threaded function cpfloatf?_parallel.
+ *
+ * 3. The function cpfloatf? is generated as MAINFUN_COMBO below.
+ */
+#ifdef SINGLE_THREADED
+#define MAINFUN CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _sequential)
+#else /* #ifdef SINGLE_THREADED */
+#define MAINFUN CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _parallel)
+#define USE_OPENMP
+#endif /* #ifdef SINGLE_THREADED */
+static inline int MAINFUN(FPTYPE *X,
+                          const FPTYPE *A,
+                          const size_t numelem,
+                          const optstruct *fpopts) {
 
   int retval = 0;
   const FPPARAMS p = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);
@@ -656,15 +665,15 @@ int MAINFUN(FPTYPE *X,
   return retval;
 }
 
+#define MAINFUN_COMBO ADDSUFFIXTO(MAINFUNNAME)
 #ifdef _OPENMP
 #ifndef USE_OPENMP
 #define MAINFUN_SINGLE CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _sequential)
 #define MAINFUN_MULTI  CONCATENATE(ADDSUFFIXTO(MAINFUNNAME), _parallel)
-#define MAINFUN_COMBO  ADDSUFFIXTO(MAINFUNNAME)
-int MAINFUN_COMBO(FPTYPE *X,
-                  const FPTYPE *A,
-                  const size_t numelem,
-                  const optstruct *fpopts) {
+static inline int MAINFUN_COMBO(FPTYPE *X,
+                                const FPTYPE *A,
+                                const size_t numelem,
+                                const optstruct *fpopts) {
   if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))
     return MAINFUN_SINGLE(X, A, numelem, fpopts);
   else
@@ -675,10 +684,10 @@ int MAINFUN_COMBO(FPTYPE *X,
 #undef MAINFUN_COMBO
 #endif /*#ifdef USE_OPENMP */
 #else /* #ifdef _OPENMP */
-int ADDSUFFIXTO(MAINFUNNAME)(FPTYPE *X,
-                             const FPTYPE *A,
-                             const size_t numelem,
-                             const optstruct *fpopts) {
+static inline int MAINFUN_COMBO(FPTYPE *X,
+                                const FPTYPE *A,
+                                const size_t numelem,
+                                const optstruct *fpopts) {
   return MAINFUN(X, A, numelem, fpopts);
 }
 #endif /* #ifdef _OPENMP */
