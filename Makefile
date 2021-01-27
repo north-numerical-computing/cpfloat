@@ -9,6 +9,7 @@ MEXDIR=$(ROOTDIR)/mex/
 EXAMPLEDIR=$(ROOTDIR)/examples/
 TESTDIR=$(ROOTDIR)/test/
 EXPDIR=$(ROOTDIR)/experiments/
+UTILDIR=$(ROOTDIR)/util/
 BINDIR=$(ROOTDIR)/bin/
 DATDIR=$(ROOTDIR)/datfiles/
 
@@ -48,7 +49,7 @@ CLIBS=-lm -fopenmp
 
 
 
-.PHONY: all init autotune ctest mtest otest test docs
+.PHONY: all init autotune test ctest mtest otest docs
 all: init autotune mexoct mexmat
 
 init: FLOATP_URL:=https://gerard-meurant.pagesperso-orange.fr/floatp.zip
@@ -72,6 +73,8 @@ autotune: init makebin $(SRCDIR)cpfloat_autotune.c
 		$(SRCDIR)cpfloat_autotune.c
 	$(BINDIR)cpfloat_autotune
 	$(MV) cpfloat_threshold_*.h $(SRCDIR)
+
+test: ctest mtest
 
 ctestsrc: $(TESTDIR)cpfloat_test.ts
 	$(CHECKMK) clean_mode=1 $^ > $(TESTDIR)cpfloat_test.c
@@ -121,8 +124,6 @@ otest: OTESTSTRING="pkg install -forge fenv; \
 
 otest: mexoct
 	$(OCTAVE) --eval $(OTESTSTRING)
-
-test: ctest mtest
 
 docs:
 	$(DOXYGEN) doc/Doxyfile
@@ -213,6 +214,10 @@ cleandoc:
 
 cleandat:
 	$(RM) $(DATDIR)*
+
+.PHONY: update-spdx
+update-spdx:
+	$(UTILDIR)generate_spdx.sh > license.spdx
 
 # CPFloat - Custom Precision Floating-point numbers.
 #
