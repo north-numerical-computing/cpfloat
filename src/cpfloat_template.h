@@ -192,18 +192,9 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 #endif /* #ifndef CONCATENATE_INNER */
 
+
 /*  Rounding functions. */
-#ifdef USE_OPENMP
-#define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _parallel)
-#define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _parallel)
-#define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _parallel)
-#define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _parallel)
-#define RD_TWD_MINF CONCATENATE(ADDSUFFIXTO(rd_minf), _parallel)
-#define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _parallel)
-#define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _parallel)
-#define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _parallel)
-#define RO CONCATENATE(ADDSUFFIXTO(ro), _parallel)
-#else /* #ifdef USE_OPENMP */
+#ifdef SINGLE_THREADED
 #define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _sequential)
 #define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _sequential)
 #define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _sequential)
@@ -213,7 +204,17 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _sequential)
 #define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _sequential)
 #define RO CONCATENATE(ADDSUFFIXTO(ro), _sequential)
-#endif /* #ifdef USE_OPENMP */
+#else /* #ifdef SINGLE_THREADED */
+#define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _parallel)
+#define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _parallel)
+#define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _parallel)
+#define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _parallel)
+#define RD_TWD_MINF CONCATENATE(ADDSUFFIXTO(rd_minf), _parallel)
+#define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _parallel)
+#define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _parallel)
+#define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _parallel)
+#define RO CONCATENATE(ADDSUFFIXTO(ro), _parallel)
+#endif /* #ifdef SINGLE_THREADED */
 
 /* Routine for round-to-nearest with ties-to-away. */
 static inline void RN_TIES_TO_AWAY (FPTYPE *X,
