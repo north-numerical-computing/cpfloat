@@ -175,7 +175,9 @@ int cpfloat_parallel(double *X,
                      const optstruct *fpopts);
 #include "cpfloat_threshold_binary64.h"
 /** @cond */
+#define USE_OPENMP
 #include "cpfloat_template.h"
+#undef USE_OPENMP
 /** @endcond */
 #endif /* #ifdef _OPENMP */
 

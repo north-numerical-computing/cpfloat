@@ -704,10 +704,6 @@ static inline int MAINFUN_COMBO(FPTYPE *X,
 #undef RO
 #undef MAINFUN
 
-#ifdef USE_OPENMP
-#undef USE_OPENMP
-#endif /* #ifdef USE_OPENMP */
-
 #ifdef SINGLE_THREADED
 #undef CONCATENATE_INNER
 #undef CONCATENATE
