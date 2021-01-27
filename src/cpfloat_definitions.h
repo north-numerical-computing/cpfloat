@@ -20,7 +20,7 @@
 #include <time.h>
 #include <math.h>
 #include <float.h>
-#include <strings.h>
+#include <string.h>
 
 /* #include "pcg_variants.h" */
 
