@@ -33,7 +33,7 @@ int main() {
   int roundingmodes [] = {-1,0,1,2,3,4,5,6,7};
   size_t nroundings = 9;
   size_t nsizes = 19;
-  size_t *sizes = malloc(nsizes*sizeof(double));
+  size_t *sizes = malloc(nsizes * sizeof(size_t));
   size_t i, j, mult = 10;
   for (i = 1; i<3; i++) {
     mult *= 10;
@@ -64,19 +64,19 @@ int main() {
   struct timespec *end = malloc(sizeof(struct timespec));
   size_t k, n;
   size_t round;
+  double *medtimings = malloc(nsizes * nroundings * sizeof(double));
+  double *timing = malloc(ntests * sizeof(double));
 
   /* Binary32 */
   printf("\n*** BINARY32 ***\n");
   const char outfilefloat [] = "./overhead-clang-single.dat";
   FILE *fidf = fopen(outfilefloat, "w");
-  double *medtimings = malloc(nsizes * nroundings * sizeof(double));
+  float *Xf = malloc(sizes[nsizes-1] * sizes[nsizes-1] * sizeof(float));
+  float *Yf;
   for (i = 0; i < nsizes; i++) {
     n = sizes[i] * sizes[i];
-    float *Xf = malloc(n * sizeof(float));
-    float *Yf;
     for (j=0; j<n; j++) // generate normal numbers
       Xf[j] = fmin + rand() / (float)RAND_MAX;
-    double *timing = malloc(ntests * sizeof(double));
     fprintf(fidf, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
     for (round = 0; round < nroundings; round++) {
@@ -90,29 +90,28 @@ int main() {
         timing[k] = timedifference(start, end);
       }
       qsort(timing, ntests, sizeof(*timing), cmpfun);
-      medtimings[round + nsizes * i] = timing[ntests/2];
+      medtimings[round + nroundings * i] = timing[ntests/2];
       /* for(k=0; k<ntests; k++) */
       /* fprintf(f, "%.5e  ", timing[k]); */
-      fprintf(fidf, " %10.5e", medtimings[round + nsizes * i]);
-      fprintf(stdout, " %10.5e", medtimings[round + nsizes * i]);
+      fprintf(fidf, " %10.5e", medtimings[round + nroundings * i]);
+      fprintf(stdout, " %10.5e", medtimings[round + nroundings * i]);
     }
-    free(Xf);
     fprintf(fidf, "\n");
     fprintf(stdout, "\n");
   }
+  free(Xf);
   fclose(fidf);
 
   /* Binary64 */
   printf("\n*** BINARY64 ***\n");
   const char outfiledouble [] = "./overhead-clang-double.dat";
   FILE *fidd = fopen(outfiledouble, "w");
+  double *Xd = malloc(sizes[nsizes-1] * sizes[nsizes-1] * sizeof(double));
+  double *Yd;
   for (i = 0; i < nsizes; i++) {
     n = sizes[i] * sizes[i];
-    double *Xd = malloc(n * sizeof(double));
-    double *Yd;
     for (j=0; j<n; j++) // generate normal numbers
       Xd[j] = fmin + rand() / (double)RAND_MAX;
-    double *timing = malloc(ntests * sizeof(double));
     fprintf(fidd, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
     for (round = 0; round < nroundings; round++) {
@@ -126,17 +125,20 @@ int main() {
         timing[k] = timedifference(start, end);
       }
       qsort(timing, ntests, sizeof(*timing), cmpfun);
-      medtimings[round + nsizes * i] = timing[ntests/2];
+      medtimings[round + nroundings * i] = timing[ntests/2];
       /* for(k=0; k<ntests; k++) */
       /* fprintf(f, "%.5e  ", timing[k]); */
-      fprintf(fidd, " %10.5e", medtimings[round + nsizes * i]);
-      fprintf(stdout, " %10.5e", medtimings[round + nsizes * i]);
+      fprintf(fidd, " %10.5e", medtimings[round + nroundings * i]);
+      fprintf(stdout, " %10.5e", medtimings[round + nroundings * i]);
     }
-    free(Xd);
     fprintf(fidd, "\n");
     fprintf(stdout, "\n");
   }
+  free(Xd);
   fclose(fidd);
+
+  free(timing);
+  free(medtimings);
 
   return 0;
 }
