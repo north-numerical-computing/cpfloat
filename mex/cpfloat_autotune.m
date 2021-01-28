@@ -62,7 +62,7 @@ function cpfloat_autotune(varargin)
     nmax = nmax * 2;
   end
   nmid = round((nmax + nmin) / 2);
-  while(nmid ~= nmin)
+  while(nmid ~= nmin && nmid ~= nmax)
     if(parfaster(nmid, fpopts, ntests, fpclass))
       nmax = nmid;
     else
@@ -84,7 +84,7 @@ function cpfloat_autotune(varargin)
     nmax = nmax * 2;
   end
   nmid = round((nmax + nmin) / 2);
-  while(nmid ~= nmin)
+  while(nmid ~= nmin && nmid ~= nmax)
     if(parfaster(nmid, fpopts, ntests, fpclass))
       nmax = nmid;
     else

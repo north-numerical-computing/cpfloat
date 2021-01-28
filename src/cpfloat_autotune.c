@@ -2,7 +2,7 @@
 /* SPDX-License-Identifier: LGPL-2.1-or-later                         */
 
 /*
- * This file is part of CPFLoat.
+ * This file is part of CPFloat.
  *
  * Running this program will update the threshold values in
  * cpfloat_threshold_binary32.h and cpfloat_threshold_binary64.h.
@@ -140,7 +140,7 @@ int main() {
                          seqtimings, partimings, ntests))
     nmax *= 2;
   nmid = (nmax + nmin) / 2;
-  while(nmid != nmin) {
+  while(nmid != nmin && nmid != nmax) {
     if(parfaster_float(nmid, fpopts, start, end,
                        seqtimings, partimings, ntests))
       nmax = nmid;
@@ -163,7 +163,7 @@ int main() {
                           seqtimings, partimings, ntests))
     nmax *= 2;
   nmid = (nmax + nmin) / 2;
-  while(nmid != nmin) {
+  while(nmid != nmin && nmid != nmax) {
     /* printf("[%5zu, %5zu, %5zu]\n", nmin, nmid, nmax); */
     if(parfaster_double(nmid, fpopts, start, end,
                         seqtimings, partimings, ntests))
@@ -179,7 +179,6 @@ int main() {
           "cpfloat", "cpfloat", "cpfloat", "cpfloat", "binary64");
   fprintf(fidd, "#define OPENMP_THRESHOLD_double %zu", nmax);
   fclose(fidd);
-
 
   return 0;
 }
