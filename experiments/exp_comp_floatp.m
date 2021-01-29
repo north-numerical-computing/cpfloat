@@ -2,7 +2,6 @@
 % SPDX-License-Identifier: LGPL-2.1-or-later
 
 warning('off', 'all')
-addpath(genpath('./modified-floatp'));
 
 % Parameters
 fasttiming = false;

@@ -1,0 +1,55 @@
+diff -Naur include/floatp/f_d_floatp/d_float_dec2floatp.m include/floatp/f_d_floatp/d_float_dec2floatp.m
+--- include/floatp/f_d_floatp/d_float_dec2floatp.m	2020-05-29 16:21:20.000000000 +0200
++++ include/floatp/f_d_floatp/d_float_dec2floatp.m	2021-01-29 12:48:32.000000000 +0100
+@@ -60,14 +60,19 @@
+  end % if
+  
+  [f,ex] = log2(y); % x = f 2^ex, 0.5 <= f <1, y < 1e308!!
+- [fb,cnext] = f_d_frac2bin(f,2*nbits,sig); 
++ [fb,cnext] = f_d_frac2bin(f,53,sig);
+  ind = find(fb); % find the position of the first 1
+  
+  if ~isempty(ind)
+   I = 1;
+   F = fb(ind(1)+1:end);
+-  [F,cnext] = f_d_round_bin(F,nbits,sig); % round F to nbits 
+   e = ex - ind(1);
++  if (e >= min_expo)
++    [F,cnext] = f_d_round_bin(F,nbits,sig); % round F to nbits
++  elseif e > (min_expo-nbits)
++    [F,cnext] = f_d_round_bin(F,nbits-(min_expo-e),sig); % round F to subnormal
++  end % if
++  e = e + cnext;
+  else
+   F = zeros(1,nbits,'uint8');
+   e = ex;
+@@ -81,7 +86,7 @@
+   I = Inf(1,length(I)); 
+   F = Inf(1,length(F));
+  end % if
+- if e < min_expo % underflow
++ if e < (min_expo-nbits) % underflow
+   I = zeros(1,length(I));
+   F = zeros(1,length(F));
+  end % if
+diff -Naur include/floatp/f_d_floatp/f_d_round_bin.m include/floatp/f_d_floatp/f_d_round_bin.m
+--- include/floatp/f_d_floatp/f_d_round_bin.m	2020-05-30 08:17:38.000000000 +0200
++++ include/floatp/f_d_floatp/f_d_round_bin.m	2021-01-29 12:48:32.000000000 +0100
+@@ -33,7 +33,8 @@
+ % no rounding to do
+ 
+ len = length(bin);
+-if len <= nbits
++binr = bin(nbits+1:len);
++if len <= nbits | binr == 0
+  % do nothing
+  p = bin;
+  cnext = 0;
+@@ -47,7 +48,6 @@
+  % round to nearest
+  
+  bint = bin(1:nbits);
+- binr = bin(nbits+1:len);
+  
+  % we need at least 3 bits in binr to do the rounding to nearest
+  if length(binr) < 3

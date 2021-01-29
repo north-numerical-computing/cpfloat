@@ -20,6 +20,7 @@ CP:=cp
 CURL:=curl
 MKDIR:=mkdir
 MV:=mv
+PATCH:=patch
 RM:=rm -f
 UNZIP:=unzip
 
@@ -60,6 +61,7 @@ init:
 		$(CURL) -o $(INCDIR)floatp.zip \
 			-O $(FLOATP_URL); \
 		$(UNZIP) $(INCDIR)floatp.zip -d $(INCDIR)floatp; \
+		$(PATCH) -p0 < $(INCDIR)floatp.patch; \
 	fi
 
 makebin:
@@ -186,6 +188,7 @@ run_exp_overhead: exp_overhead
 
 run_exp_matlab: EXPSTRING="addpath('$(INCDIR)chop'); \
 		addpath('$(BINDIR)'); \
+		addpath(genpath('$(INCDIR)floatp/')); \
 		cd $(EXPDIR); \
 		datdir = '$(DATDIR)'; \
 		run_exps; \
