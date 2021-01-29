@@ -90,6 +90,7 @@ MEXSTRING="cd $(MEXDIR); \
 		'pcgpath', '$(PCG_HEADER)', \
 		'compilerpath', '$(CC)'); \
 	if retval \
+		rehash(); \
 		cpfloat_autotune('cpfloatdir', '$(SRCDIR)'); \
 		cpfloat_compile('cpfloatdir', '$(SRCDIR)', \
 			'pcgpath', '$(PCG_HEADER)', \
@@ -100,10 +101,12 @@ MEXSTRING="cd $(MEXDIR); \
 mexmat: init makebin
 	$(MATLAB) -r $(MEXSTRING)
 	$(MV) $(MEXDIR)cpfloat.mex* $(BINDIR)
+	$(CP) $(MEXDIR)cpfloat.m $(BINDIR)
 
 mexoct: init makebin
 	$(OCTAVE) --eval $(MEXSTRING)
-	$(MV) $(MEXDIR)cpfloat.mex* $(BINDIR)
+	$(MV) $(MEXDIR)cpfloat.mex $(BINDIR)
+	$(CP) $(MEXDIR)cpfloat.m $(BINDIR)
 
 mtest: MTESTSTRING="addpath('$(INCDIR)/float_params'); \
 		addpath('$(BINDIR)'); \

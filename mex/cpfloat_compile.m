@@ -42,6 +42,7 @@ function retval = cpfloat_compile(varargin)
   if usingoctave
     if ~isempty(compilerpath)
       setenv("CC", compilerpath);
+      setenv("CXX", compilerpath);
       setenv("DL_LD", compilerpath);
     end
     setenv("CFLAGS", coptions_omp);

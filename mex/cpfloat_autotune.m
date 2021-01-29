@@ -32,10 +32,10 @@ function cpfloat_autotune(varargin)
 
   if exist('timeit', 'builtin')
     parfaster = @(n, fpopts, ntests, fpclass)...
-      parfaster_timeit(n, fpopts, ntests, fpclass);
+      parfaster_timeit(n, fpopts, ntests, nthreads, fpclass);
   else
     parfaster = @(n, fpopts, ntests, fpclass)...
-      parfaster_tictoc(n, fpopts, ntests, fpclass);
+      parfaster_tictoc(n, fpopts, ntests, nthreads, fpclass);
   end
 
   docstring =[
@@ -99,7 +99,7 @@ function cpfloat_autotune(varargin)
   fprintf(fid, "#define OPENMP_THRESHOLD_double %d", nmax);
   fclose(fid);
 
-  function res = parfaster_timeit(n, fpopts, ntests, fpclass)
+  function res = parfaster_timeit(n, fpopts, ~, nthreads, fpclass)
     X = rand(n, 1, fpclass);
     funseq = @()(cpfloat(X, fpopts, 1));
     seqtime = timeit(funseq);
@@ -109,10 +109,10 @@ function cpfloat_autotune(varargin)
     fprintf('[%7d]   %.5e   %.5e\n', n, seqtime, partime);
   end
 
-  function res = parfaster_tictoc(n, fpopts, ntests, fpclass)
+  function res = parfaster_tictoc(n, fpopts, ntests, nthreads, fpclass)
     X = rand(n, 1, fpclass);
-    seqtimings = zeros(1,ntests);
-    partimings = zeros(1,ntests);
+    seqtimings = zeros(1, ntests);
+    partimings = zeros(1, ntests);
     for i = 1:ntests
       tic;
       Y = cpfloat(X, fpopts, 1);
