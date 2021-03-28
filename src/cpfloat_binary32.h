@@ -11,8 +11,8 @@
  * cpfloatf_parallel() are also defined.
  */
 
-#ifndef _CHOPFAST_FLOAT_
-#define _CHOPFAST_FLOAT_
+#ifndef _CPFLOAT_BINARY32_
+#define _CPFLOAT_BINARY32_
 
 #include "cpfloat_definitions.h"
 
@@ -187,7 +187,7 @@ int cpfloatf_parallel(float *X,
 /** @endcond */
 #undef SINGLE_THREADED
 
-#endif // _CHOPFAST_FLOAT_
+#endif // _CPFLOAT_BINARY32_
 
 /*
  * CPFloat - Custom Precision Floating-point numbers.

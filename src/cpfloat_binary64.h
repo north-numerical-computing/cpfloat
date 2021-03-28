@@ -10,8 +10,8 @@
  * compile time, the two functions cpfloat_sequential() and
  * cpfloat_parallel() are also defined.
  */
-#ifndef _CHOPFAST_DOUBLE_
-#define _CHOPFAST_DOUBLE_
+#ifndef _CPFLOAT_BINARY64_
+#define _CPFLOAT_BINARY64_
 
 #include "cpfloat_definitions.h"
 
@@ -187,7 +187,7 @@ int cpfloat_parallel(double *X,
 /** @endcond */
 #undef SINGLE_THREADED
 
-#endif // _CHOPFAST_DOUBLE_
+#endif // _CPFLOAT_BINARY64_
 
 /*
  * CPFloat - Custom Precision Floating-point numbers.
