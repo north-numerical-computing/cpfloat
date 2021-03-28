@@ -34,9 +34,9 @@ GIT:=git
 MATLAB:=matlab -nodesktop -nosplash
 OCTAVE:=octave
 
-WFLAGS=-Wall -Wextra
+WFLAGS=-Wall -Wextra -pedantic
 ARCHFLAGS=-mfma -march=native
-CFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=gnu99 -I $(SRCDIR) \
+CFLAGS=$(WFLAGS) $(ARCHFLAGS) -I $(SRCDIR) \
 	-I /usr/local/include -L /usr/local/lib \
 	-include $(PCG_HEADER)
 CXXFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=c++11 -I $(INCDIR) -I $(INCDIR)FloatX/src/

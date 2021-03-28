@@ -33,11 +33,11 @@ void fpopts_teardown(void) {
   free(fpopts);
 }
 
-#define INTOFd(x)(((fpint)((double)(x))).intval)
-#define FPOFd(x)(((fpint)((uint64_t)(x))).fpval)
+#define INTOFd(x)(((fpint){.fpval = (double)(x)}).intval)
+#define FPOFd(x)(((fpint){.intval = (uint64_t)(x)}).fpval)
 
-#define INTOFf(x)(((fpintf)((float)(x))).intval)
-#define FPOFf(x)(((fpintf)((uint32_t)(x))).fpval)
+#define INTOFf(x)(((fpintf){.fpval = (float)(x)}).intval)
+#define FPOFf(x)(((fpintf){.intval = (uint32_t)(x)}).fpval)
 
 /***********************
  * Auxiliary functions *

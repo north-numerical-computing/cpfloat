@@ -50,8 +50,8 @@ typedef struct {
 #define INTCONST(x) CONCATENATE(x, INTSUFFIX)
 
 #define INTOF(x)(((FPUNION *)(x))->intval)
-#define INTOFCONST(x)(((FPUNION)((FPTYPE)x)).intval)
-#define FPOF(x)(((FPUNION)((INTTYPE)(x))).fpval)
+#define INTOFCONST(x)(((FPUNION){.fpval = (FPTYPE)x}).intval)
+#define FPOF(x)(((FPUNION){.intval = (INTTYPE)(x)}).fpval)
 
 #define SIGN(x)(SIGNMASK & INTOF(x))
 #define ABS(x)(FPOF((INTTYPE)(ABSMASK & INTOF(x))))
