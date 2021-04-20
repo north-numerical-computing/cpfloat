@@ -27,10 +27,10 @@ typedef union {
 /* Relevant parameters of floating-point number system. */
 #define FPPARAMS ADDSUFFIXTO(fpparams)
 typedef struct {
-  const size_t precision;
-  const size_t emax;
-  const int emin;
-  const char subnormal;
+  const cpfloat_precision_t precision;
+  const cpfloat_exponent_t emax;
+  const cpfloat_exponent_t emin;
+  const cpfloat_subnormal_t subnormal;
   const FPTYPE ftzthreshold;
   const FPTYPE xmin;
   const FPTYPE xmax;
@@ -42,7 +42,7 @@ typedef struct {
 /* Parameters used for subnormal numbers. */
 #define LOCPARAMS ADDSUFFIXTO(locparams)
 typedef struct {
-  size_t precision;
+  cpfloat_precision_t precision;
   INTTYPE leadmask;
   INTTYPE trailmask;
 } LOCPARAMS;
@@ -116,11 +116,11 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
     return 3;
 
   // Set retval to -4 if rounding mode is set to no rounding.
-  if (fpopts->round < -1 || fpopts->round > 9)
+  if (fpopts->round == CPFLOAT_NO_RND)
     retval = -4;
 
   // Return 5 if p is required but is not a valid probability.
-  if (fpopts->flip && (fpopts->p > 1 || fpopts->p < 0))
+  if (fpopts->flip == CPFLOAT_SOFTERR && (fpopts->p > 1 || fpopts->p < 0))
     return 5;
 
   // Return 0 or warning value.
@@ -134,8 +134,10 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
 
   // Actual precision and exponent range.
   *retval = 0;
-  size_t precision = fpopts->precision;
-  size_t emax = fpopts->explim ? fpopts->emax : DEFEMAX;
+  cpfloat_precision_t precision = fpopts->precision;
+  cpfloat_exponent_t emax = fpopts->explim == CPFLOAT_EXPRANGE_TARG ?
+    fpopts->emax :
+    DEFEMAX;
   if (precision > DEFPREC) {
     precision = DEFPREC;
     *retval = 1;
@@ -149,9 +151,9 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
   const int emin = 1-emax;
   const FPTYPE xmin = ldexp(1., emin);  // Smallest pos. normal.
   FPTYPE ftzthreshold;
-  if (fpopts->subnormal)
+  if (fpopts->subnormal == CPFLOAT_SUBN_USE)
     ftzthreshold = ldexp(1., emin-precision+1); // Smallest pos. subnormal.
-  else
+  else // (fpopts->subnormal == CPFLOAT_SUBN_RND)
     ftzthreshold = xmin;
   const FPTYPE xmax = ldexp(1., emax) * (2-ldexp(1., 1-precision));
   const FPTYPE xbnd = ldexp(1., emax) * (2-ldexp(1., -precision));
@@ -199,7 +201,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _sequential)
 #define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _sequential)
 #define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _sequential)
-#define RD_TWD_MINF CONCATENATE(ADDSUFFIXTO(rd_minf), _sequential)
+#define RD_TWD_NINF CONCATENATE(ADDSUFFIXTO(rd_ninf), _sequential)
 #define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _sequential)
 #define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _sequential)
 #define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _sequential)
@@ -209,7 +211,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _parallel)
 #define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _parallel)
 #define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _parallel)
-#define RD_TWD_MINF CONCATENATE(ADDSUFFIXTO(rd_minf), _parallel)
+#define RD_TWD_NINF CONCATENATE(ADDSUFFIXTO(rd_ninf), _parallel)
 #define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _parallel)
 #define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _parallel)
 #define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _parallel)
@@ -226,7 +228,7 @@ static inline void RN_TIES_TO_AWAY (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (!p->subnormal && ABS(A+i) < p->xmin) {
+      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
         if (ABS(A+i) >= p->xmin/2)
           X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmin));
         else
@@ -267,7 +269,7 @@ static inline void RN_TIES_TO_ZERO (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (!p->subnormal && ABS(A+i) < p->xmin) {
+      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
         if (ABS(A+i) > p->xmin/2)
           X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmin));
         else
@@ -306,7 +308,7 @@ static inline void RN_TIES_TO_EVEN (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (!p->subnormal && ABS(A+i) < p->xmin) {
+      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
         if (ABS(A+i) >= p->xmin/2)
               X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmin));
             else
@@ -324,7 +326,8 @@ static inline void RN_TIES_TO_EVEN (FPTYPE *X,
     for (size_t i=0; i<numelem; i++){
       if (ABS(A+i) < p->ftzthreshold) { // Underflow.
         if (ABS(A+i) < p->ftzthreshold/2
-            || (ABS(A+i) == p->ftzthreshold/2 && p->subnormal))
+            || (ABS(A+i) == p->ftzthreshold/2
+                && p->subnormal == CPFLOAT_SUBN_USE))
           X[i] = 0;
         else
           X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
@@ -350,7 +353,7 @@ static inline void RD_TWD_PINF (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (!p->subnormal && ABS(A+i) < p->xmin) {
+      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
         if(A[i] > 0)
           X[i] = p->xmin;
         else
@@ -389,7 +392,7 @@ static inline void RD_TWD_PINF (FPTYPE *X,
 }
 
 /* Routine for round-to-minus-infinity (also known as round-down). */
-static inline void RD_TWD_MINF (FPTYPE *X,
+static inline void RD_TWD_NINF (FPTYPE *X,
                                 const FPTYPE *A,
                                 const size_t numelem,
                                 const FPPARAMS *p) {
@@ -398,7 +401,7 @@ static inline void RD_TWD_MINF (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (!p->subnormal && ABS(A+i) < p->xmin) {
+      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
         if(A[i] < 0)
           X[i] = -p->xmin;
         else
@@ -446,7 +449,7 @@ static inline void RD_TWD_ZERO (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (!p->subnormal && ABS(A+i) < p->xmin)
+      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin)
         X[i] = 0;
       else
         X[i] = FPOF(INTOF(A+i) & p->leadmask);
@@ -492,7 +495,8 @@ static inline void RS_PROP(FPTYPE *X,
         trailfrac = (INTOF(A+i) & (FULLMASK >> NLEADBITS))
           | (INTCONST(1) << (DEFPREC-1));
       }
-      int localemin = p->subnormal ? p->emin - (int)p->precision + 1: p->emin;
+      int localemin = p->subnormal == CPFLOAT_SUBN_USE ?
+        p->emin - (int)p->precision + 1: p->emin;
       int expdiff = localemin - expx;
       INTTYPE rnd = GENRAND(seed) >> 1;
       // Shift fraction of A[i] left or right as needed.
@@ -613,31 +617,31 @@ static inline int MAINFUN(FPTYPE *X,
   {
 
     switch (fpopts->round) {
-    case -1: // round-to-nearest with ties-to-away
+    case CPFLOAT_RND_NA: // round-to-nearest with ties-to-away
       RN_TIES_TO_AWAY(X, A, numelem, &p);
       break;
-    case 0: // round-to-nearest with ties-to-zero
+    case CPFLOAT_RND_NZ: // round-to-nearest with ties-to-zero
       RN_TIES_TO_ZERO(X, A, numelem, &p);
       break;
-    case 1: // round-to-nearest with ties-to-even
+    case CPFLOAT_RND_NE: // round-to-nearest with ties-to-even
       RN_TIES_TO_EVEN(X, A, numelem, &p);
       break;
-    case 2: // round-toward-positive
+    case CPFLOAT_RND_TP: // round-toward-positive
       RD_TWD_PINF(X, A, numelem, &p);
       break;
-    case 3: // round-toward-negative
-      RD_TWD_MINF(X, A, numelem, &p);
+    case CPFLOAT_RND_TN: // round-toward-negative
+      RD_TWD_NINF(X, A, numelem, &p);
       break;
-    case 4: // round-toward-zero
+    case CPFLOAT_RND_TZ: // round-toward-zero
       RD_TWD_ZERO(X, A, numelem, &p);
       break;
-    case 5: // stochastic rounding with proportional probabilities
+    case CPFLOAT_RND_SP: // stochastic rounding with proportional probabilities
       RS_PROP(X, A, numelem, &p);
       break;
-    case 6: // stochastic rounding with equal probabilities
+    case CPFLOAT_RND_SE: // stochastic rounding with equal probabilities
       RS_EQUI(X, A, numelem, &p);
       break;
-    case 7: // round-to-odd
+    case CPFLOAT_RND_OD: // round-to-odd
       RO(X, A, numelem, &p);
       break;
     default: // No rounding if unknown mode specified.
@@ -652,7 +656,7 @@ static inline int MAINFUN(FPTYPE *X,
   }
 
   // Bit flips.
-  if (fpopts->flip) {
+  if (fpopts->flip == CPFLOAT_SOFTERR) {
     #ifdef USE_OPENMP
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
@@ -697,7 +701,7 @@ static inline int MAINFUN_COMBO(FPTYPE *X,
 #undef RN_TIES_TO_ZERO
 #undef RN_TIES_TO_EVEN
 #undef RD_TWD_PINF
-#undef RD_TWD_MINF
+#undef RD_TWD_NINF
 #undef RD_TWD_ZERO
 #undef RS_PROP
 #undef RS_EQUI

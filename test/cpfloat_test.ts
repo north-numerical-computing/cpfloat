@@ -269,7 +269,7 @@ void check_array_double(double *y, double *x, double *ref,
   for (size_t j = 0; j < n; j++) {
     if (!nan_safe_compare_double(y[j], ref[j])) {
       printf("DOUBLE\n");
-      printf("***\nj = %ld\nx = %.15e\ny = %.15e\nr = %.15e\nr = %d\npr = %ld\ne = %ld\ns = %d\n",
+      printf("***\nj = %ld\nx = %.15e\ny = %.15e\nr = %.15e\nr = %d\npr = %d\ne = %d\ns = %d\n",
              j, x[j], y[j], ref[j],
              fpopts->round, fpopts->precision, fpopts->emax,
              fpopts->subnormal);
@@ -285,7 +285,7 @@ void check_array_float(float *y, float *x, float *ref,
   for (size_t j = 0; j < n; j++) {
     if (!nan_safe_compare_float(y[j], ref[j])) {
       printf("FLOAT\n");
-      printf("***\nj = %ld\nx = %.15e\ny = %.15e\nr = %.15e\nr = %d\npr = %ld\ne = %ld\ns = %d\n",
+      printf("***\nj = %ld\nx = %.15e\ny = %.15e\nr = %.15e\nr = %d\npr = %d\ne = %d\ns = %d\n",
              j, x[j], y[j], ref[j],
              fpopts->round, fpopts->precision, fpopts->emax,
              fpopts->subnormal);

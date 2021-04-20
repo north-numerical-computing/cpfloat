@@ -3,10 +3,17 @@
 
 /**
  * @file cpfloat_definitions.h
- * @brief Definition of @ref optstruct struct.
+ * @brief Definition of CPFloat data types.
  *
  * @details This file includes all the external header files used by CPFloat,
- * and defines the data structure @ref optstruct. It is not necessary to include
+ * and defines the enumerated types
+ *
+ * + @ref cpfloat_subnormal_t,
+ * + @ref cpfloat_explim_t,
+ * + @ref cpfloat_rounding_t,
+ * + @ref cpfloat_softerr_t,
+ *
+ * and the structured data type @ref optstruct. It is not necessary to include
  * this file in order to use CPFloat, as it is already included by @ref
  * cpfloat_binary32.h and by @ref cpfloat_binary64.h.
  */
@@ -27,6 +34,72 @@
 #if defined(_OPENMP)
 #include <omp.h>
 #endif
+
+/**
+ * @brief Data type for specifying number of precision bits in target format.
+ */
+typedef unsigned int cpfloat_precision_t;
+
+/**
+ * @brief Data type for specifying exponents in target format.
+ */
+typedef int cpfloat_exponent_t;
+
+/**
+ * @brief Subnormal support modes available in CPFloat.
+ */
+typedef enum {
+  /** Round subnormal numbers using current rounding mode. */
+  CPFLOAT_SUBN_RND = 0,
+  /** Support storage of subnormal numbers. */
+  CPFLOAT_SUBN_USE = 1
+} cpfloat_subnormal_t;
+
+/**
+ * @brief Extended exponent range modes available in CPFloat.
+ */
+typedef enum {
+  /** Use exponent range of storage format. */
+  CPFLOAT_EXPRANGE_STOR = 0,
+  /** Use exponent range of target format. */
+  CPFLOAT_EXPRANGE_TARG = 1
+} cpfloat_explim_t;
+
+/**
+ * @brief Rounding modes available in CPFloat.
+ */
+typedef enum {
+  /** Use round-to-nearest with ties-to-away. */
+  CPFLOAT_RND_NA = -1,
+  /** Use round-to-nearest with ties-to-zero. */
+  CPFLOAT_RND_NZ =  0,
+  /** Use round-to-nearest with ties-to-even. */
+  CPFLOAT_RND_NE =  1,
+  /** Use round-toward-+&infin;. */
+  CPFLOAT_RND_TP =  2,
+  /** Use round-toward-&minus;&infin;. */
+  CPFLOAT_RND_TN =  3,
+  /** Use round toward zero */
+  CPFLOAT_RND_TZ =  4,
+  /** Stochastic rounding with proportional probabilities. */
+  CPFLOAT_RND_SP =  5,
+  /** Stochastic rounding with equal probabilities. */
+  CPFLOAT_RND_SE =  6,
+  /** Use round-to-odd. */
+  CPFLOAT_RND_OD =  7,
+  /** Do not perform rounding. */
+  CPFLOAT_NO_RND =  8,
+} cpfloat_rounding_t;
+
+/**
+ * @brief Soft fault simulation modes available in CPFloat.
+ */
+typedef enum {
+  /** Do not simulate soft errors. */
+  CPFLOAT_NO_SOFTERR = 0,
+  /** Introduce soft errors after the floating-point conversion. */
+  CPFLOAT_SOFTERR = 1
+} cpfloat_softerr_t;
 
 /**
  * @brief Specify target format, rounding mode, and occurrence of soft faults.
@@ -76,35 +149,37 @@ typedef struct {
    * warning code if the required number of digits is above the maximum allowed
    * by the MEX interface.
    */
-  size_t precision;
+  cpfloat_precision_t precision;
   /**
    * @brief Maximum exponent of target format.
    *
    * @details The maximum values allowed are 127 and 1023 if the storage format
    * is `float` or `double`, respectively. Larger values are reduced to the
    * maximum allowed value without warning. This field is ignored unless
-   * `explim` is set to `0`.
+   * `explim` is set to `CPFLOAT_EXPRANGE_TARG`.
    *
    * The validation functions cpfloatf_validate_optstruct() and
    * cpfloat_validate_optstruct() return an error code if the required maximum
    * exponent is larger than the maximum allowed by the storage format.
    */
-  size_t emax;
+  cpfloat_exponent_t emax;
   /**
    * @brief Support for subnormal numbers in target format.
    *
-   * @details The target format supports subnormals if this field is set to 0,
-   * and does not otherwise.
+   * @details Subnormal numbers are supported if this field is set to
+   * `CPFLOAT_SUBN_USE` and rounded to a normal number using the current
+   * rounding mode if it is set to `CPFLOAT_SUBN_RND`.
    */
-  char subnormal;
+  cpfloat_subnormal_t subnormal;
   /**
    * @brief Support for extended exponents in target format.
    *
    * @details The upper limit of the exponent range is set to `emax` if this
-   * field is set to `0`, and to the upper limit of the exponent range of the
-   * storage format otherwise.
+   * field is set to `CPFLOAT_EXPRANGE_TARG`, and to the upper limit of the
+   * exponent range of the storage format if it is set to
+   * `CPFLOAT_EXPRANGE_STOR`.
    */
-  unsigned char explim;
+  cpfloat_explim_t explim;
   /**
    * @brief Rounding mode to be used for the conversion.
    *
@@ -112,41 +187,43 @@ typedef struct {
    *function `chop`.
    *
    * Possible values are:
-   * + -1 for round-to-nearest with ties-to-away;
-   * + 0 for round-to-nearest with ties-to-zero;
-   * + 1 for round-to-nearest with ties-to-even;
-   * + 2 for round-to-+&infin;
-   * + 3 for round-to-&minus;&infin;
-   * + 4 for round-to-zero;
-   * + 5 for round-stochastic with proportional probabilities;
-   * + 6 for round-stochastic with equal probabilities;
-   * + 7 for round-to-odd; and
-   * + 8 for no rounding.
+   * + CPFLOAT_RND_NA for round-to-nearest with ties-to-away;
+   * + CPFLOAT_RND_NZ for round-to-nearest with ties-to-zero;
+   * + CPFLOAT_RND_NE for round-to-nearest with ties-to-even;
+   * + CPFLOAT_RND_TP for round-to-+&infin;
+   * + CPFLOAT_RND_TN for round-to-&minus;&infin;
+   * + CPFLOAT_RND_TZ for round-to-zero;
+   * + CPFLOAT_RND_SP for stochastic rounding with proportional probabilities;
+   * + CPFLOAT_RND_SE for stochastic rounding with equal probabilities;
+   * + CPFLOAT_RND_OD for round-to-odd; and
+   * + CPFLOAT_NO_RND for no rounding.
    *
    * No rounding is performed if this field is set to any other value.
    *
    * The validation functions cpfloatf_validate_optstruct() and
-   * cpfloat_validate_optstruct() returns a warning code if a value other than
+   * cpfloat_validate_optstruct() return a warning code if a value other than
    * those in the list above is specified.
    */
-  signed char round;
+  cpfloat_rounding_t round;
   /**
    * @brief Support for soft errors.
    *
-   * @details If this field is not set to 0, a single bit flip in the
-   * significand of the rounded result is introduced with probability `p`.
+   * @details If this field is not set to `CPFLOAT_SOFTERR`, a single bit flip
+   * in the significand of the rounded result is introduced with probability
+   * `p`.
    */
-  unsigned char flip;
+  cpfloat_softerr_t flip;
   /**
    * @brief Probability of bit flips.
    *
    * @details The probability of flipping a single bit in the significand of a
    * floating-point number after rounding. This field is ignored if `flip` is
-   * set to `0`.
+   * set to `CPFLOAT_NO_SOFTERR`.
    *
    * The validation functions cpfloatf_validate_optstruct() and
-   * cpfloat_validate_optstruct() return an error code if `flip` is not set
-   * to `0` and this field does not contain a number in the interval [0,1].
+   * cpfloat_validate_optstruct() return an error code if `flip` is set to
+   * `CPFLOAT_SOFTERR` and this field does not contain a number in the interval
+   * [0,1].
    */
   double p;
 } optstruct;
