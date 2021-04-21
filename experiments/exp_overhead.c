@@ -30,7 +30,9 @@ double timedifference(struct timespec *start, struct timespec *end) {
 int main() {
 
   /* Input parameters. */
-  int roundingmodes [] = {-1,0,1,2,3,4,5,6,7};
+  int roundingmodes[] = {CPFLOAT_RND_NA, CPFLOAT_RND_NZ, CPFLOAT_RND_NE,
+                         CPFLOAT_RND_TP, CPFLOAT_RND_TN, CPFLOAT_RND_TZ,
+                         CPFLOAT_RND_SP, CPFLOAT_RND_SE, CPFLOAT_RND_OD};
   size_t nroundings = 9;
   size_t nsizes = 19;
   size_t *sizes = malloc(nsizes * sizeof(size_t));
@@ -52,11 +54,12 @@ int main() {
   strcpy(fpopts->format, "h");
   fpopts->precision = 11; // t
   fpopts->emax = 15; // emax
-  fpopts->subnormal = 1;
-  fpopts->round = 1;
-  fpopts->flip = 0;
+  fpopts->subnormal = CPFLOAT_SUBN_USE;
+  fpopts->explim = CPFLOAT_EXPRANGE_TARG;
+  fpopts->round = CPFLOAT_RND_NE;
+  fpopts->flip = CPFLOAT_NO_SOFTERR;
   fpopts->p = 0.5;
-  fpopts->explim = 1;
+
 
   float fmin = ldexpf(1.,-14);
 

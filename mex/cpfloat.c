@@ -40,11 +40,11 @@ void mexFunction(int nlhs,
     strcpy(fpopts->format, "h");
     fpopts->precision = 11; // t
     fpopts->emax = 15; // emax
-    fpopts->subnormal = 1;
-    fpopts->round = 1;
-    fpopts->flip = 0;
+    fpopts->subnormal = CPFLOAT_SUBN_USE;
+    fpopts->explim = CPFLOAT_EXPRANGE_TARG;
+    fpopts->round = CPFLOAT_RND_NE;
+    fpopts->flip = CPFLOAT_NO_SOFTERR;
     fpopts->p = 0.5;
-    fpopts->explim = 1;
   }
 
   /* Parse second argument and populate fpopts structure. */
@@ -72,9 +72,9 @@ void mexFunction(int nlhs,
       if (!strcmp(fpopts->format, "b") ||
           !strcmp(fpopts->format, "bfloat16") ||
           !strcmp(fpopts->format, "bf16")) {
-        fpopts->precision =   8; // t
+        fpopts->precision = 8;   // t
         fpopts->emax = 127;      // emax
-        fpopts->subnormal =   0; // default for bfloat16
+        fpopts->subnormal = CPFLOAT_SUBN_RND; // default for bfloat16
       } else if (!strcmp(fpopts->format, "h") ||
                  !strcmp(fpopts->format, "half") ||
                  !strcmp(fpopts->format, "binary16") ||
@@ -115,21 +115,28 @@ void mexFunction(int nlhs,
       tmp = mxGetField(prhs[1], 0, "subnormal");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
-          fpopts->subnormal = 1;
+          fpopts->subnormal = CPFLOAT_SUBN_USE;
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->subnormal = *((double *)mxGetData(tmp));
+      }
+      tmp = mxGetField(prhs[1], 0, "explim");
+      if (tmp != NULL) {
+        if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
+          fpopts->explim = 1;
+        else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
+          fpopts->explim = *((double *)mxGetData(tmp));
       }
       tmp = mxGetField(prhs[1], 0, "round");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
-          fpopts->round = 1;
+          fpopts->round = CPFLOAT_RND_NE;
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->round = *((double *)mxGetData(tmp));
       }
       tmp = mxGetField(prhs[1], 0, "flip");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
-          fpopts->flip = 0;
+          fpopts->flip = CPFLOAT_NO_SOFTERR;
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->flip = *((double *)mxGetData(tmp));
       }
@@ -139,13 +146,6 @@ void mexFunction(int nlhs,
           fpopts->p = 0.5;
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->p = *((double *)mxGetData(tmp));
-      }
-      tmp = mxGetField(prhs[1], 0, "explim");
-      if (tmp != NULL) {
-        if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
-          fpopts->explim = 1;
-        else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
-          fpopts->explim = *((double *)mxGetData(tmp));
       }
     }
   }

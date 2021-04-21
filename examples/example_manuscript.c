@@ -11,13 +11,13 @@ int main ()
   fpopts = malloc(sizeof(optstruct));
 
   // Set up the parameters for binary16 target format.
-  fpopts->precision = 11; // Bits in the significand + 1.
-  fpopts->emax = 15;      // The maximum exponent value.
-  fpopts->subnormal = 1;  // Support for subnormals is on.
-  fpopts ->round = 2;     // Round toward +infinity.
-  fpopts->flip = 0;       // Bit flips are off.
-  fpopts->p = 0;          // Bit flip probability (not used here).
-  fpopts->explim = 1;     // Exponent in the target format is limited.
+  fpopts->precision = 11;                 // Bits in the significand + 1.
+  fpopts->emax = 15;                      // The maximum exponent value.
+  fpopts->subnormal = CPFLOAT_SUBN_USE;   // Support for subnormals is on.
+  fpopts ->round = CPFLOAT_RND_TP;        // Round toward +infinity.
+  fpopts->flip = CPFLOAT_NO_SOFTERR;      // Bit flips are off.
+  fpopts->p = 0;                          // Bit flip probability (not used).
+  fpopts->explim = CPFLOAT_EXPRANGE_TARG; // Limited exponent in target format.
 
   // Validate the parameters in fpopts.
   int retval = cpfloat_validate_optstruct(fpopts);

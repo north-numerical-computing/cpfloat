@@ -34,7 +34,9 @@ int main() {
   size_t i, j, k, l, n, r;
   size_t ntests = 100;
 
-  int roundingmodes [] = {-1,0,1,2,3,4,5,6,7};
+  int roundingmodes[] = {CPFLOAT_RND_NA, CPFLOAT_RND_NZ, CPFLOAT_RND_NE,
+                         CPFLOAT_RND_TP, CPFLOAT_RND_TN, CPFLOAT_RND_TZ,
+                         CPFLOAT_RND_SP, CPFLOAT_RND_SE, CPFLOAT_RND_OD};
   size_t nroundings = 9;
 
   size_t nsizes = 28;
@@ -50,10 +52,10 @@ int main() {
   static optstruct *fpopts;
   fpopts = malloc(sizeof(optstruct));
 
-  fpopts->subnormal = 1;
-  fpopts->flip = 0;
+  fpopts->subnormal = CPFLOAT_SUBN_USE;
+  fpopts->explim = CPFLOAT_EXPRANGE_TARG;
+  fpopts->flip = CPFLOAT_NO_SOFTERR;
   fpopts->p = 0.5;
-  fpopts->explim = 1;
 
   float fmin = ldexpf(1.,-14);
 
@@ -67,8 +69,8 @@ int main() {
   {
     numthreads = omp_get_num_threads();
   }
-  size_t precision [] = {11, 8, 11};
-  size_t emax [] = {15, 127, 127};
+  cpfloat_precision_t precision [] = {11, 8, 11};
+  cpfloat_exponent_t emax [] = {15, 127, 127};
   size_t nformats = 3;
 
   /* Binary32 */

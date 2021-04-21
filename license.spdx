@@ -9,7 +9,7 @@ DocumentName: cpfloat-0.1.0
 DocumentNamespace: https://raw.githubusercontent.com/mfasi/cpfloat/master/license.spdx
 Creator: Person: Massimiliano Fasi (massimiliano.fasi@oru.se)
 Creator: Person: Mantas Mikaitis (mantas.mikaitis@manchester.ac.uk)
-Created: 2021-04-20T11:21:38Z
+Created: 2021-04-20T11:47:41Z
 
 
 
@@ -21,7 +21,7 @@ PackageName: cpfloat
 SPDXID: SPDXRef-1
 PackageVersion: 0.1.0
 PackageDownloadLocation: git://github.com/mfasi/cpfloat
-PackageVerificationCode: 3902fe5ad20bfd2e43f3e08e16c0c3b9f8eb7cdd (excludes: ./license.spdx)
+PackageVerificationCode: 2af617080358a46494cf30398f6b211a4e18c938 (excludes: ./license.spdx)
 PackageHomePage: https://github.com/mfasi/cpfloat
 PackageLicenseConcluded: LGPL-2.1-or-later
 PackageLicenseInfoFromFiles: LGPL-2.1-or-later
@@ -101,8 +101,8 @@ LicenseInfoInFile: LGPL-2.1-or-later
 FileName: ./experiments/exp_comp_cpfloat.c
 SPDXID: SPDXRef-1-9
 FileType: SOURCE
-FileChecksum: SHA1: 651745adba6ee049c763a01245cf1bf7887f74df
-FileChecksum: MD5: 221ecfa8eab3213be35b9ec41b0d1ea0
+FileChecksum: SHA1: 18eec6263f7f37acb036a3bee8d31fd8677d0d2b
+FileChecksum: MD5: 5a94f02f1be05cebcbd5db34d9572bd7
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
@@ -117,8 +117,8 @@ LicenseInfoInFile: LGPL-2.1-or-later
 FileName: ./experiments/exp_openmp.c
 SPDXID: SPDXRef-1-11
 FileType: SOURCE
-FileChecksum: SHA1: d9abae27a1d0ae50f778c97afe25bfb46cdbe7ab
-FileChecksum: MD5: 6cfe1573685adb5783f25ebf45c230c9
+FileChecksum: SHA1: ecb0243aeb6ce69fc38749ff37556edcbfa7ba89
+FileChecksum: MD5: 17e1bc471e8ed33311c8dde2bea92181
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
@@ -141,8 +141,8 @@ LicenseInfoInFile: LGPL-2.1-or-later
 FileName: ./experiments/exp_overhead.c
 SPDXID: SPDXRef-1-14
 FileType: SOURCE
-FileChecksum: SHA1: 123ec24fe358092d6c2d516689ca913ae65fbccb
-FileChecksum: MD5: 74ad855d69e10c93ab414260a207e1b7
+FileChecksum: SHA1: 89bf5dcbf33b02dae63bdb08c5b263e601b3db9e
+FileChecksum: MD5: aa7b89d88a63e47313c4de8b5872770a
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
@@ -212,8 +212,8 @@ LicenseInfoInFile: NONE
 FileName: ./examples/example_manuscript.c
 SPDXID: SPDXRef-1-23
 FileType: SOURCE
-FileChecksum: SHA1: 2a49dbf6310c0328a200eadd913779d9ac8fedcd
-FileChecksum: MD5: 3243357cb5081e89efc3be99c50ffc73
+FileChecksum: SHA1: b38d16ea947fd15a21ca1b0aa0203835ffe84c52
+FileChecksum: MD5: 9a2d8cfd3c271c4a24a9b8087aac0832
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
@@ -228,8 +228,8 @@ LicenseInfoInFile: NONE
 FileName: ./mex/cpfloat.c
 SPDXID: SPDXRef-1-25
 FileType: SOURCE
-FileChecksum: SHA1: 5f93715f2bae53a2b7cc60373c89c56a89f94081
-FileChecksum: MD5: e8af4698a764370c4875ec94354c10a0
+FileChecksum: SHA1: 7aa21a0916b72caaf470103567cdefe40a5696e5
+FileChecksum: MD5: a927c8b9f0856b6ca5946c48a1400253
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 

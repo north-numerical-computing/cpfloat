@@ -29,23 +29,17 @@ int main() {
   }
   sizes[9*(i-1)] = mult*10;
 
-  /* size_t sizes [] = {10, 20, 50, */
-  /*                    100, 200, 500, */
-  /*                    1000, 2000, 5000, */
-  /*                    10000}; */
-  /* size_t nsizes = 10; */
-
   static optstruct *fpopts;
   fpopts = malloc(sizeof(optstruct));
 
   strcpy(fpopts->format, "h");
   fpopts->precision = 11; // t
   fpopts->emax = 15; // emax
-  fpopts->subnormal = 1;
-  fpopts->round = 1;
-  fpopts->flip = 0;
+  fpopts->subnormal = CPFLOAT_SUBN_USE;
+  fpopts->explim = CPFLOAT_EXPRANGE_TARG;
+  fpopts->round = CPFLOAT_RND_NE;
+  fpopts->flip = CPFLOAT_NO_SOFTERR;
   fpopts->p = 0.5;
-  fpopts->explim = 1;
 
   float fmin = ldexpf(1.,-14);
 
@@ -86,8 +80,8 @@ int main() {
   /* fclose(fidf); */
 
   /* Binary64 */
-  size_t precision [] = {11, 8, 11};
-  size_t emax [] = {15, 127, 127};
+  cpfloat_precision_t precision [] = {11, 8, 11};
+  cpfloat_exponent_t emax [] = {15, 127, 127};
   size_t nformats = 3;
   printf("\n*** BINARY64 ***\n");
   const char outfilepar [] = "./timing-clang-par.dat";
