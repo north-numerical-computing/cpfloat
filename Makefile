@@ -83,7 +83,8 @@ ctestsrc: $(TESTDIR)cpfloat_test.ts
 
 ctest: init makebin ctestsrc
 	$(CC) $(CFLAGS) $(COPTIM) \
-		-o $(BINDIR)cpfloat_test -lcheck $(TESTDIR)cpfloat_test.c
+		-o $(BINDIR)cpfloat_test $(TESTDIR)cpfloat_test.c \
+		-lcheck -lsubunit -lrt -lm -lpthread
 	$(BINDIR)cpfloat_test
 	$(MV) cpfloat_test.log $(TESTDIR)
 
