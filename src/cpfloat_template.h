@@ -232,7 +232,7 @@ static inline void RN_TIES_TO_AWAY (FPTYPE *X,
         if (ABS(A+i) >= p->xmin/2)
           X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmin));
         else
-          X[i] = 0;
+          X[i] = FPOF(SIGN(A+i));
       } else
         X[i] = FPOF((INTOF(A+i) +
                      (INTCONST(1) << (DEFPREC-1-p->precision))) & p->leadmask);
@@ -245,7 +245,7 @@ static inline void RN_TIES_TO_AWAY (FPTYPE *X,
     for (size_t i=0; i<numelem; i++){
       if (ABS(A+i) < p->ftzthreshold) { // Underflow.
         if (ABS(A+i) < p->ftzthreshold/2)
-          X[i] = 0;
+          X[i] = FPOF(SIGN(A+i));
         else
           X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
       } else if (ABS(A+i) >= p->xbnd) { // Overflow.
@@ -273,7 +273,7 @@ static inline void RN_TIES_TO_ZERO (FPTYPE *X,
         if (ABS(A+i) > p->xmin/2)
           X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmin));
         else
-          X[i] = 0;
+          X[i] = FPOF(SIGN(A+i));
       } else
         X[i] = FPOF((INTOF(A+i) + (p->trailmask>>1)) & p->leadmask);
     }
@@ -287,7 +287,7 @@ static inline void RN_TIES_TO_ZERO (FPTYPE *X,
         if (ABS(A+i) > p->ftzthreshold/2)
           X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
         else
-          X[i] = 0;
+          X[i] = FPOF(SIGN(A+i));
       } else if (ABS(A+i) > p->xbnd) { // Overflow.
         X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
       } else {
@@ -312,7 +312,7 @@ static inline void RN_TIES_TO_EVEN (FPTYPE *X,
         if (ABS(A+i) >= p->xmin/2)
               X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmin));
             else
-              X[i] = 0;
+              X[i] = FPOF(SIGN(A+i));
       } else {
         INTTYPE LSB = (INTOF(A+i) >> (DEFPREC-p->precision)) & INTCONST(1);
         X[i] = FPOF((INTOF(A+i) + (p->trailmask >> 1) + LSB) & p->leadmask);
@@ -328,7 +328,7 @@ static inline void RN_TIES_TO_EVEN (FPTYPE *X,
         if (ABS(A+i) < p->ftzthreshold/2
             || (ABS(A+i) == p->ftzthreshold/2
                 && p->subnormal == CPFLOAT_SUBN_USE))
-          X[i] = 0;
+          X[i] = FPOF(SIGN(A+i));
         else
           X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
       } else if (ABS(A+i) >= p->xbnd) { // Overflow.
@@ -357,7 +357,7 @@ static inline void RD_TWD_PINF (FPTYPE *X,
         if(A[i] > 0)
           X[i] = p->xmin;
         else
-          X[i] = 0;
+          X[i] = FPOF(SIGN(A+i));
       } else {
         if (A[i] > 0) // Add ulp if x is positive finite.
           X[i] = FPOF((INTOF(A+i) + p->trailmask) & p->leadmask);
@@ -405,7 +405,7 @@ static inline void RD_TWD_NINF (FPTYPE *X,
         if(A[i] < 0)
           X[i] = -p->xmin;
         else
-          X[i] = 0;
+          X[i] = FPOF(SIGN(A+i));
       } else {
         if (A[i] < 0) // Subtract ulp if x is positive finite.
           X[i] = FPOF((INTOF(A+i) + p->trailmask) & p->leadmask);
@@ -450,7 +450,7 @@ static inline void RD_TWD_ZERO (FPTYPE *X,
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
       if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin)
-        X[i] = 0;
+        X[i] = FPOF(SIGN(A+i));
       else
         X[i] = FPOF(INTOF(A+i) & p->leadmask);
     }
@@ -461,7 +461,7 @@ static inline void RD_TWD_ZERO (FPTYPE *X,
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
       if (ABS(A+i) < p->ftzthreshold) { // Underflow.
-        X[i] = 0;
+        X[i] = FPOF(SIGN(A+i));
       } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
         X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmax));
       } else {
@@ -507,7 +507,7 @@ static inline void RS_PROP(FPTYPE *X,
       if (trailfrac > rnd) {
         X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
       } else {
-        X[i] = 0;
+        X[i] = FPOF(SIGN(A+i));
         continue;
       }
     } else if (ABS(A+i) < p->xbnd) { // Rounding possibly required.
