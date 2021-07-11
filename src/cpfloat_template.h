@@ -176,12 +176,12 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                                        const FPPARAMS *params,
                                        LOCPARAMS *lparams) {
   if (ABS(A+i) < params->xmin && params->emin > 1-DEFEMAX) {
-    lparams->precision = params->precision - params->emin - DEFEMAX +
+    int ndigits = params->precision - params->emin - DEFEMAX +
       ((EXPMASK & INTOF(A+i)) >> (DEFPREC - 1));
+    lparams->precision = ndigits > 0 ? ndigits : 0;
     INTTYPE leadmask = params->leadmask;
     leadmask ^= (((INTCONST(1) <<
-                   (params->precision - lparams->precision)) -
-                  INTCONST(1))
+                   (params->precision - lparams->precision)) - INTCONST(1))
                  << (DEFPREC-params->precision));
     lparams->leadmask = leadmask;
     lparams->trailmask = leadmask ^ FULLMASK;
@@ -502,8 +502,12 @@ static inline void RS_PROP(FPTYPE *X,
       // Shift fraction of A[i] left or right as needed.
       if (expdiff <= NLEADBITS - 1)
         trailfrac <<= NLEADBITS - 1 - expdiff;
-      else
-        trailfrac >>= expdiff - (NLEADBITS - 1);
+      else {
+        if (expdiff - (NLEADBITS - 1) >= NBITS)
+          trailfrac = 0;
+        else
+          trailfrac >>= (expdiff - (NLEADBITS - 1));
+      }
       if (trailfrac > rnd) {
         X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
       } else {
