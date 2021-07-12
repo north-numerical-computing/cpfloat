@@ -11,6 +11,11 @@
  * file multiple times handling the definition of macros correctly.
  */
 
+/**************************************
+ **************************************
+ * MACROS DEFINED ONLY ONCE PER TYPE. *
+ **************************************
+ **************************************/
 #ifndef CONCATENATE_INNER
 #define CONCATENATE_INNER(arg1, arg2) arg1 ## arg2
 #define CONCATENATE(arg1, arg2) CONCATENATE_INNER(arg1, arg2)
@@ -172,12 +177,11 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
 /* Compute floating point parameters required for rounding subnormals. */
 #define UPDATE_LOCAL_PARAMS ADDSUFFIXTO(update_local_params)
 static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
-                                       const size_t i,
                                        const FPPARAMS *params,
                                        LOCPARAMS *lparams) {
-  if (ABS(A+i) < params->xmin && params->emin > 1-DEFEMAX) {
+  if (ABS(A) < params->xmin && params->emin > 1-DEFEMAX) {
     int ndigits = params->precision - params->emin - DEFEMAX +
-      ((EXPMASK & INTOF(A+i)) >> (DEFPREC - 1));
+      ((EXPMASK & INTOF(A)) >> (DEFPREC - 1));
     lparams->precision = ndigits > 0 ? ndigits : 0;
     INTTYPE leadmask = params->leadmask;
     leadmask ^= (((INTCONST(1) <<
@@ -195,6 +199,13 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #endif /* #ifndef CONCATENATE_INNER */
 
 
+
+
+/************************************************
+ ************************************************
+ * MACROS WITH SEQUENTIAL AND PARALLEL FLAVOUR. *
+ ************************************************
+ ************************************************/
 /*  Rounding functions. */
 #ifdef SINGLE_THREADED
 #define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _sequential)
@@ -251,7 +262,7 @@ static inline void RN_TIES_TO_AWAY (FPTYPE *X,
       } else if (ABS(A+i) >= p->xbnd) { // Overflow.
         X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
       } else {
-        UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
         X[i] = FPOF((INTOF(A+i) +
                      (INTCONST(1) << (DEFPREC-1-lp.precision))) & lp.leadmask);
       }
@@ -291,7 +302,7 @@ static inline void RN_TIES_TO_ZERO (FPTYPE *X,
       } else if (ABS(A+i) > p->xbnd) { // Overflow.
         X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
       } else {
-        UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
         X[i] = FPOF((INTOF(A+i) + (lp.trailmask>>1)) & lp.leadmask);
       }
     }
@@ -334,7 +345,7 @@ static inline void RN_TIES_TO_EVEN (FPTYPE *X,
       } else if (ABS(A+i) >= p->xbnd) { // Overflow.
         X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
       } else {
-        UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
         INTTYPE LSB = ((INTOF(A+i) >> (DEFPREC-lp.precision)) & INTCONST(1))
           | (lp.precision == 1 && DEFEMAX != p->emax); // Hidden bit is one.
         X[i] = FPOF((INTOF(A+i) + ((lp.trailmask >> 1) + LSB)) & lp.leadmask);
@@ -381,7 +392,7 @@ static inline void RD_TWD_PINF (FPTYPE *X,
         else // A[i] == -INFINITY
           X[i] = -INFINITY;
       } else {
-        UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
         if (SIGN(A+i) == 0) // Add ulp if x is positive.
           X[i] = FPOF((INTOF(A+i) + lp.trailmask) & lp.leadmask);
         else
@@ -429,7 +440,7 @@ static inline void RD_TWD_NINF (FPTYPE *X,
         else // A[i] == INFINITY
           X[i] = INFINITY;
       } else {
-        UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
         if (SIGN(A+i)) // Subtract ulp if x is positive.
           X[i] = FPOF((INTOF(A+i) + lp.trailmask) & lp.leadmask);
         else
@@ -465,7 +476,7 @@ static inline void RD_TWD_ZERO (FPTYPE *X,
       } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
         X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmax));
       } else {
-        UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
         X[i] = FPOF(INTOF(A+i) & lp.leadmask);
       }
     }
@@ -515,7 +526,7 @@ static inline void RS_PROP(FPTYPE *X,
         continue;
       }
     } else if (ABS(A+i) < p->xbnd) { // Rounding possibly required.
-      UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+      UPDATE_LOCAL_PARAMS(A+i, p, &lp);
       INTTYPE rndbuf = GENRAND(seed) & lp.trailmask;
       if (ABS(A+i) > p->xmax) {
         rndbuf = rndbuf >> 1;
@@ -545,7 +556,7 @@ static inline void RS_EQUI(FPTYPE *X,
   INITBIT_SINGLE(bitseed);
   #endif /* #ifdef USE_OPENMP */
   for (size_t i=0; i<numelem; i++){
-    UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+    UPDATE_LOCAL_PARAMS(A+i, p, &lp);
     if (ABS(A+i) < p->ftzthreshold && A[i] != 0) { // Underflow.
       randombit = GENBIT(bitseed);
       X[i] = FPOF( SIGN(A+i) | INTOFCONST(randombit ? p->ftzthreshold : 0));
@@ -577,7 +588,7 @@ static inline void RO(FPTYPE *X,
     } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
       X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmax));
     } else {
-      UPDATE_LOCAL_PARAMS(A, i, p, &lp);
+      UPDATE_LOCAL_PARAMS(A+i, p, &lp);
       if ((lp.trailmask & INTOF(A+i)) // Not exactly representable.
           && (lp.precision > 1)) // Set the last bit to 1 if stored explicitly.
         X[i] = FPOF((INTOF(A+i) & lp.leadmask) |
@@ -616,10 +627,9 @@ static inline int MAINFUN(FPTYPE *X,
   const FPPARAMS p = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);
 
   #ifdef USE_OPENMP
-  #pragma omp parallel shared(A, X, fpopts)
+  #pragma omp parallel shared(X, A, fpopts)
   #endif /* #ifdef USE_OPENMP */
   {
-
     switch (fpopts->round) {
     case CPFLOAT_RND_NA: // round-to-nearest with ties-to-away
       RN_TIES_TO_AWAY(X, A, numelem, &p);
