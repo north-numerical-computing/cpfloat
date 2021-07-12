@@ -21,7 +21,7 @@ static size_t emax [] = {15, 127, 127};
 static size_t nformats = 3;
 
 /* Structure for options and fixtures. */
-static optstruct *fpopts;
+optstruct *fpopts;
 
 void fpopts_setup(void) {
   fpopts = malloc(sizeof(optstruct));
@@ -127,8 +127,10 @@ void init_intarray_rounding_double(uint64_t *x, size_t n,
   for (size_t i = 2; i < n; i+=3) {
     first += step;
     x[i] = first - 1ul;
-    x[i+1] = first + 1ul;
-    x[i+2] = first  + (step >> 1);
+    if (i+1 < n)
+      x[i+1] = first + 1ul;
+    if (i+2 < n)
+      x[i+2] = first + (step >> 1);
   }
 }
 
@@ -140,8 +142,10 @@ void init_intarray_rounding_float(uint32_t *x, size_t n,
   for (size_t i = 2; i < n; i+=3) {
     first += step;
     x[i] = first - 1u;
-    x[i+1] = first + 1u;
-    x[i+2] = first  + (step >> 1);
+    if (i+1 < n)
+      x[i+1] = first + 1ul;
+    if (i+2 < n)
+      x[i+2] = first + (step >> 1);
   }
 }
 
@@ -169,8 +173,10 @@ void init_fparray_rounding_double(double *x, size_t n,
   for (size_t i = 2; i < n; i+=3) {
     first += step;
     x[i] = FPOFd(INTOFd(first) - 1lu);
-    x[i+1] = FPOFd(INTOFd(first) + 1lu);
-    x[i+2] = first + step/2;
+    if (i+1 < n)
+        x[i+1] = FPOFd(INTOFd(first) + 1lu);
+    if (i+2 < n)
+        x[i+2] = first + step/2;
   }
 }
 
@@ -182,8 +188,10 @@ void init_fparray_rounding_float(float *x, size_t n,
   for (size_t i = 2; i < n; i+=3) {
     first += step;
     x[i] = FPOFf(INTOFf(first) - 1lu);
-    x[i+1] = FPOFf(INTOFf(first) + 1lu);
-    x[i+2] = first + step/2;
+    if (i+1 < n)
+        x[i+1] = FPOFf(INTOFf(first) + 1lu);
+    if (i+2 < n)
+        x[i+2] = first + step/2;
   }
 }
 
@@ -269,8 +277,11 @@ void check_array_double(double *y, double *x, double *ref,
   for (size_t j = 0; j < n; j++) {
     if (!nan_safe_compare_double(y[j], ref[j])) {
       printf("DOUBLE\n");
-      printf("***\nj = %ld\nx = %.15e\ny = %.15e\nr = %.15e\nr = %d\npr = %d\ne = %d\ns = %d\n",
-             j, x[j], y[j], ref[j],
+      printf("***\nj = %ld\nin  = %23.15e [%lX]\nout = %23.15e [%lX]\nref = %23.15e [%lX]\nr = %d\npr = %d\ne = %d\ns = %d\n",
+             j,
+             x[j], *(uint64_t *)(x+j),
+             y[j], *(uint64_t *)(y+j),
+             ref[j], *(uint64_t *)(ref+j),
              fpopts->round, fpopts->precision, fpopts->emax,
              fpopts->subnormal);
     }
@@ -285,10 +296,14 @@ void check_array_float(float *y, float *x, float *ref,
   for (size_t j = 0; j < n; j++) {
     if (!nan_safe_compare_float(y[j], ref[j])) {
       printf("FLOAT\n");
-      printf("***\nj = %ld\nx = %.15e\ny = %.15e\nr = %.15e\nr = %d\npr = %d\ne = %d\ns = %d\n",
-             j, x[j], y[j], ref[j],
-             fpopts->round, fpopts->precision, fpopts->emax,
-             fpopts->subnormal);
+      printf(
+          "***\nj = %ld\nin  = %16.8e [%X]\nout = %16.8e [%X]\nref = %16.8e [%X]\nr = %d\npr = %d\ne = %d\ns = %d\n",
+          j,
+          x[j], * (uint32_t *)(x+j),
+          y[j], * (uint32_t *)(y+j),
+          ref[j], * (uint32_t *)(ref+j),
+          fpopts->round, fpopts->precision,
+          fpopts->emax, fpopts->subnormal);
     }
     ck_assert(nan_safe_compare_float(y[j], ref[j]));
   }
