@@ -65,21 +65,27 @@ typedef struct {
 #define BITTYPE unsigned int
 #define BITSEEDTYPE pcg32_random_t
 #define INITBIT_SINGLE(seed)                    \
-  pcg32_srandom_r(&seed,                        \
+  pcg32_srandom_r(seed,                        \
                   time(NULL),                   \
-                  (intptr_t)&seed)
+                  (intptr_t)seed)
 #define INITBIT_MULTI(seed)                                     \
-  pcg32_srandom_r(&seed,                                        \
+  pcg32_srandom_r(seed,                                        \
                   omp_get_thread_num() * 13254 + time(NULL),    \
-                  (intptr_t)&seed)
-#define GENBIT(seed) (pcg32_random_r(&seed) & (1U << 31))
+                  (intptr_t)seed)
+#define GENBIT(seed) (pcg32_random_r(seed) & (1U << 31))
 #else /* #ifdef PCG_VARIANTS_H_INCLUDED */
 #define BITTYPE unsigned int
 #define BITSEEDTYPE unsigned int
-#define INITBIT_SINGLE(seed) seed = time(NULL)
-#define INITBIT_MULTI(seed) seed = omp_get_thread_num() * 13254 + time(NULL)
-#define GENBIT(seed) (rand_r(&seed) & (1U << 30))
+#define INITBIT_SINGLE(seed) *seed = time(NULL)
+#define INITBIT_MULTI(seed) *seed = omp_get_thread_num() * 13254 + time(NULL)
+#define GENBIT(seed) (rand_r(seed) & (1U << 30))
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
+
+/* Global state or pseudo-random number generators. */
+#define BITSEED ADDSUFFIXTO(bitseed)
+#define SEED ADDSUFFIXTO(seed)
+static BITSEEDTYPE *BITSEED = NULL;
+static SEEDTYPE *SEED = NULL;
 
 /* Function to validate floating-point options passed to MAINFUNNAME. */
 #define VALIDATE_INPUT CONCATENATE(ADDSUFFIXTO(MAINFUNNAME),_validate_optstruct)
@@ -211,22 +217,60 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _sequential)
 #define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _sequential)
 #define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _sequential)
+
 #define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _sequential)
 #define RD_TWD_NINF CONCATENATE(ADDSUFFIXTO(rd_ninf), _sequential)
 #define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _sequential)
+
 #define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _sequential)
 #define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _sequential)
+
 #define RO CONCATENATE(ADDSUFFIXTO(ro), _sequential)
+
+/* Functions to initialize the pseudo-random number generator. */
+#define INIT_BITSEED_SINGLE CONCATENATE(ADDSUFFIXTO(init_bitseed), _single)
+static inline void INIT_BITSEED_SINGLE () {
+  if (BITSEED == NULL) {
+    BITSEED = malloc(sizeof(*BITSEED));
+    INITBIT_SINGLE(BITSEED);
+  }
+}
+#define INIT_SEED_SINGLE CONCATENATE(ADDSUFFIXTO(init_seed), _single)
+static inline void INIT_SEED_SINGLE () {
+  if (SEED == NULL) {
+    SEED = malloc(sizeof(*SEED));
+    INITRAND_SINGLE(SEED);
+  }
+}
 #else /* #ifdef SINGLE_THREADED */
 #define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _parallel)
 #define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _parallel)
 #define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _parallel)
+
 #define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _parallel)
 #define RD_TWD_NINF CONCATENATE(ADDSUFFIXTO(rd_ninf), _parallel)
 #define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _parallel)
+
 #define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _parallel)
 #define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _parallel)
+
 #define RO CONCATENATE(ADDSUFFIXTO(ro), _parallel)
+
+/* Functions to initialize the pseudo-random number generator. */
+#define INIT_BITSEED_MULTI CONCATENATE(ADDSUFFIXTO(init_bitseed), _multi)
+static inline void INIT_BITSEED_MULTI () {
+  if (BITSEED == NULL) {
+    BITSEED = malloc(sizeof(*BITSEED));
+    INITBIT_MULTI(BITSEED);
+  }
+}
+#define INIT_SEED_MULTI CONCATENATE(ADDSUFFIXTO(init_seed), _multi)
+static inline void INIT_SEED_MULTI () {
+  if (SEED == NULL) {
+    SEED = malloc(sizeof(*SEED));
+    INITRAND_MULTI(SEED);
+  }
+}
 #endif /* #ifdef SINGLE_THREADED */
 
 /* Routine for round-to-nearest with ties-to-away. */
@@ -489,12 +533,11 @@ static inline void RS_PROP(FPTYPE *X,
                            const size_t numelem,
                            const FPPARAMS *p) {
   LOCPARAMS lp;
-  SEEDTYPE seed;
   #ifdef USE_OPENMP
-  INITRAND_MULTI(seed);
+  INIT_SEED_MULTI();
   #pragma omp for
   #else /* #ifdef USE_OPENMP */
-  INITRAND_SINGLE(seed);
+  INIT_SEED_SINGLE();
   #endif /* #ifdef USE_OPENMP */
   for (size_t i=0; i<numelem; i++){
     if (ABS(A+i) < p->ftzthreshold){ // Underflow.
@@ -509,7 +552,7 @@ static inline void RS_PROP(FPTYPE *X,
       int localemin = p->subnormal == CPFLOAT_SUBN_USE ?
         p->emin - (int)p->precision + 1: p->emin;
       int expdiff = localemin - expx;
-      INTTYPE rnd = GENRAND(seed) >> 1;
+      INTTYPE rnd = GENRAND(SEED) >> 1;
       // Shift fraction of A[i] left or right as needed.
       if (expdiff <= NLEADBITS - 1)
         trailfrac <<= NLEADBITS - 1 - expdiff;
@@ -527,7 +570,7 @@ static inline void RS_PROP(FPTYPE *X,
       }
     } else if (ABS(A+i) < p->xbnd) { // Rounding possibly required.
       UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-      INTTYPE rndbuf = GENRAND(seed) & lp.trailmask;
+      INTTYPE rndbuf = GENRAND(SEED) & lp.trailmask;
       if (ABS(A+i) > p->xmax) {
         rndbuf = rndbuf >> 1;
         lp.leadmask = (lp.leadmask >> 1) | SIGNMASK;
@@ -547,24 +590,23 @@ static inline void RS_EQUI(FPTYPE *X,
                            const size_t numelem,
                            const FPPARAMS *p) {
   LOCPARAMS lp;
-  BITSEEDTYPE bitseed;
   BITTYPE randombit;
   #ifdef USE_OPENMP
-  INITBIT_MULTI(bitseed);
+  INIT_BITSEED_MULTI();
   #pragma omp for
   #else /* #ifdef USE_OPENMP */
-  INITBIT_SINGLE(bitseed);
+  INIT_BITSEED_SINGLE();
   #endif /* #ifdef USE_OPENMP */
   for (size_t i=0; i<numelem; i++){
     UPDATE_LOCAL_PARAMS(A+i, p, &lp);
     if (ABS(A+i) < p->ftzthreshold && A[i] != 0) { // Underflow.
-      randombit = GENBIT(bitseed);
+      randombit = GENBIT(BITSEED);
       X[i] = FPOF( SIGN(A+i) | INTOFCONST(randombit ? p->ftzthreshold : 0));
     } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
-      randombit = GENBIT(bitseed);
+      randombit = GENBIT(BITSEED);
       X[i] = FPOF( SIGN(A+i) | INTOFCONST(randombit ? INFINITY : p->xmax));
     } else if ((INTOF(A+i) & lp.trailmask)) { // Not exactly representable.
-      randombit = GENBIT(bitseed);
+      randombit = GENBIT(BITSEED);
       X[i] = FPOF(INTOF(A+i) & lp.leadmask);
       if (randombit)
         X[i] = FPOF(INTOF(X+i) + (INTCONST(1) << (DEFPREC-lp.precision)));
