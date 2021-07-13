@@ -6,7 +6,7 @@
  * @brief Definition of CPFloat data types.
  *
  * @details This file includes all the external header files used by CPFloat,
- * and defines the enumerated types
+ * defines the enumerated types
  *
  * + @ref cpfloat_subnormal_t,
  * + @ref cpfloat_explim_t,
@@ -100,6 +100,31 @@ typedef enum {
   /** Introduce soft errors after the floating-point conversion. */
   CPFLOAT_SOFTERR = 1
 } cpfloat_softerr_t;
+
+#ifdef PCG_VARIANTS_H_INCLUDED
+#define CPFLOAT_BITSEEDTYPE pcg32_random_t
+#define CPFLOAT_RANDSEEDTYPEF pcg32_random_t
+#define CPFLOAT_RANDSEEDTYPE pcg64_random_t
+#else /* #ifdef PCG_VARIANTS_H_INCLUDED */
+#define CPFLOAT_BITSEEDTYPE unsigned int
+#define CPFLOAT_RANDSEEDTYPEF size_t
+#define CPFLOAT_RANDSEEDTYPE size_t
+#endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
+
+/**
+ * @brief Internal state of the pseudo-random bit generator.
+ */
+typedef CPFLOAT_BITSEEDTYPE cpfloat_bitseed_t;
+
+/**
+ * @brief Internal state of the pseudo-random `float` generator.
+ */
+typedef CPFLOAT_RANDSEEDTYPEF cpfloat_randseedf_t;
+
+/**
+ * @brief Internal state of the pseudo-random `double` generator.
+ */
+typedef CPFLOAT_RANDSEEDTYPE cpfloat_randseed_t;
 
 /**
  * @brief Specify target format, rounding mode, and occurrence of soft faults.
@@ -226,6 +251,30 @@ typedef struct {
    * [0,1].
    */
   double p;
+  /**
+   * @brief Internal state of pseudo-random number generator for single bits.
+   *
+   * @details This field is used to store the internal state of the random
+   *  number generator used when @ref round is set to `CPFLOAT_RND_SE`. This
+   *  value should be initialized to `NULL`.
+   */
+  cpfloat_bitseed_t *bitseed;
+  /**
+   * @brief Internal state of pseudo-random number generator for `float`s.
+   *
+   * @details This field is used to store the internal state of the random
+   *  number generator used when @ref round is set to `CPFLOAT_RND_SP` and
+   *  `float` arrays are used. This value should be initialized to `NULL`.
+   */
+  cpfloat_randseedf_t *randseedf;
+  /**
+   * @brief Internal state of pseudo-random number generator for `double`s.
+   *
+   * @details This field is used to store the internal state of the random
+   *  number generator used when @ref round is set to `CPFLOAT_RND_SP` and
+   *  `double` arrays are used. This value should be initialized to `NULL`.
+   */
+  cpfloat_randseed_t *randseed;
 } optstruct;
 
 #endif // _CHOPFAST_DEFINITIONS_

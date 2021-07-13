@@ -45,6 +45,9 @@ void mexFunction(int nlhs,
     fpopts->round = CPFLOAT_RND_NE;
     fpopts->flip = CPFLOAT_NO_SOFTERR;
     fpopts->p = 0.5;
+    fpopts->bitseed = NULL;
+    fpopts->randseedf = NULL;
+    fpopts->randseed = NULL;
   }
 
   /* Parse second argument and populate fpopts structure. */

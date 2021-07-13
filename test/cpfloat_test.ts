@@ -27,6 +27,9 @@ void fpopts_setup(void) {
   fpopts = malloc(sizeof(optstruct));
   fpopts->flip = 0;
   fpopts->p = 0.5;
+  fpopts->bitseed = NULL;
+  fpopts->randseedf = NULL;
+  fpopts->randseed = NULL;
 }
 
 void fpopts_teardown(void) {

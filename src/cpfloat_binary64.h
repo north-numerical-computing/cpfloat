@@ -32,8 +32,6 @@
 #define FRACMASK 0x000FFFFFFFFFFFFFULL
 
 #ifdef PCG_VARIANTS_H_INCLUDED
-#define NRNDBITS 64
-#define SEEDTYPE pcg64_random_t
 #define INITRAND_SINGLE(seed)                   \
   pcg64_srandom_r(seed,                         \
                   time(NULL),                   \
@@ -46,8 +44,6 @@
 #else /* #ifdef PCG_VARIANTS_H_INCLUDED */
 #warning "The default C random number generator is being used."
 #warning "Please compile with the option --include <path-to-pcg_variants.h>."
-#define NRNDBITS 62
-#define SEEDTYPE size_t
 #define INITRAND_SINGLE(seed) *seed = time(NULL)
 #define INITRAND_MULTI(seed) *seed = omp_get_thread_num() * 13254 + time(NULL)
 #define GENRAND(seed) ((INTTYPE)rand_r((unsigned int *)seed) + \

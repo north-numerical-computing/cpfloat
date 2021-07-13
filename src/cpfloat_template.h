@@ -29,6 +29,12 @@ typedef union {
   FPTYPE fpval;
 } FPUNION;
 
+/* Types for internal state of pseudo-random number generator. */
+#define BITSEED bitseed
+#define BITSEEDTYPE cpfloat_bitseed_t
+#define RANDSEED ADDSUFFIXTO(randseed)
+#define RANDSEEDTYPE CONCATENATE(ADDSUFFIXTO(cpfloat_randseed),_t)
+
 /* Relevant parameters of floating-point number system. */
 #define FPPARAMS ADDSUFFIXTO(fpparams)
 typedef struct {
@@ -42,6 +48,8 @@ typedef struct {
   const FPTYPE xbnd;
   const INTTYPE leadmask;
   const INTTYPE trailmask;
+  BITSEEDTYPE *BITSEED;
+  RANDSEEDTYPE *RANDSEED;
 } FPPARAMS;
 
 /* Parameters used for subnormal numbers. */
@@ -61,9 +69,13 @@ typedef struct {
 #define SIGN(x)(SIGNMASK & INTOF(x))
 #define ABS(x)(FPOF((INTTYPE)(ABSMASK & INTOF(x))))
 
+/* Functions to initialize bit pseudo-random generators and generate bits. */
+/*
+ * NOTE: The following block does not depend on the type of the array (float or
+ * double), thus they could in principle be moved out of cpfloat_template.h.
+ */
 #ifdef PCG_VARIANTS_H_INCLUDED
 #define BITTYPE unsigned int
-#define BITSEEDTYPE pcg32_random_t
 #define INITBIT_SINGLE(seed)                    \
   pcg32_srandom_r(seed,                        \
                   time(NULL),                   \
@@ -75,17 +87,10 @@ typedef struct {
 #define GENBIT(seed) (pcg32_random_r(seed) & (1U << 31))
 #else /* #ifdef PCG_VARIANTS_H_INCLUDED */
 #define BITTYPE unsigned int
-#define BITSEEDTYPE unsigned int
 #define INITBIT_SINGLE(seed) *seed = time(NULL)
 #define INITBIT_MULTI(seed) *seed = omp_get_thread_num() * 13254 + time(NULL)
 #define GENBIT(seed) (rand_r(seed) & (1U << 30))
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
-
-/* Global state or pseudo-random number generators. */
-#define BITSEED ADDSUFFIXTO(bitseed)
-#define SEED ADDSUFFIXTO(seed)
-static BITSEEDTYPE *BITSEED = NULL;
-static SEEDTYPE *SEED = NULL;
 
 /* Function to validate floating-point options passed to MAINFUNNAME. */
 #define VALIDATE_INPUT CONCATENATE(ADDSUFFIXTO(MAINFUNNAME),_validate_optstruct)
@@ -175,7 +180,7 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
 
   FPPARAMS params = {precision, emax, emin, fpopts->subnormal,
                      ftzthreshold, xmin, xmax, xbnd,
-                     leadmask, trailmask};
+                     leadmask, trailmask, fpopts->BITSEED, fpopts->RANDSEED};
 
   return params;
 }
@@ -229,17 +234,17 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 /* Functions to initialize the pseudo-random number generator. */
 #define INIT_BITSEED_SINGLE CONCATENATE(ADDSUFFIXTO(init_bitseed), _single)
-static inline void INIT_BITSEED_SINGLE () {
-  if (BITSEED == NULL) {
-    BITSEED = malloc(sizeof(*BITSEED));
-    INITBIT_SINGLE(BITSEED);
+static inline void INIT_BITSEED_SINGLE (FPPARAMS *params) {
+  if (params->BITSEED == NULL) {
+    params->BITSEED = malloc(sizeof(*params->BITSEED));
+    INITBIT_SINGLE(params->BITSEED);
   }
 }
-#define INIT_SEED_SINGLE CONCATENATE(ADDSUFFIXTO(init_seed), _single)
-static inline void INIT_SEED_SINGLE () {
-  if (SEED == NULL) {
-    SEED = malloc(sizeof(*SEED));
-    INITRAND_SINGLE(SEED);
+#define INIT_RANDSEED_SINGLE CONCATENATE(ADDSUFFIXTO(init_seed), _single)
+static inline void INIT_RANDSEED_SINGLE (FPPARAMS *params) {
+  if (params->RANDSEED == NULL) {
+    params->RANDSEED = malloc(sizeof(*params->RANDSEED));
+    INITRAND_SINGLE(params->RANDSEED);
   }
 }
 #else /* #ifdef SINGLE_THREADED */
@@ -258,17 +263,17 @@ static inline void INIT_SEED_SINGLE () {
 
 /* Functions to initialize the pseudo-random number generator. */
 #define INIT_BITSEED_MULTI CONCATENATE(ADDSUFFIXTO(init_bitseed), _multi)
-static inline void INIT_BITSEED_MULTI () {
-  if (BITSEED == NULL) {
-    BITSEED = malloc(sizeof(*BITSEED));
-    INITBIT_MULTI(BITSEED);
+static inline void INIT_BITSEED_MULTI (FPPARAMS *fpopts) {
+  if (fpopts->BITSEED == NULL) {
+    fpopts->BITSEED = malloc(sizeof(*fpopts->BITSEED));
+    INITBIT_MULTI(fpopts->BITSEED);
   }
 }
-#define INIT_SEED_MULTI CONCATENATE(ADDSUFFIXTO(init_seed), _multi)
-static inline void INIT_SEED_MULTI () {
-  if (SEED == NULL) {
-    SEED = malloc(sizeof(*SEED));
-    INITRAND_MULTI(SEED);
+#define INIT_RANDSEED_MULTI CONCATENATE(ADDSUFFIXTO(init_seed), _multi)
+static inline void INIT_RANDSEED_MULTI (FPPARAMS *fpopts) {
+  if (fpopts->RANDSEED == NULL) {
+    fpopts->RANDSEED = malloc(sizeof(*RANDSEED));
+    INITRAND_MULTI(fpopts->RANDSEED);
   }
 }
 #endif /* #ifdef SINGLE_THREADED */
@@ -531,13 +536,13 @@ static inline void RD_TWD_ZERO (FPTYPE *X,
 static inline void RS_PROP(FPTYPE *X,
                            const FPTYPE *A,
                            const size_t numelem,
-                           const FPPARAMS *p) {
+                           FPPARAMS *p) {
   LOCPARAMS lp;
   #ifdef USE_OPENMP
-  INIT_SEED_MULTI();
+  INIT_RANDSEED_MULTI(p);
   #pragma omp for
   #else /* #ifdef USE_OPENMP */
-  INIT_SEED_SINGLE();
+  INIT_RANDSEED_SINGLE(p);
   #endif /* #ifdef USE_OPENMP */
   for (size_t i=0; i<numelem; i++){
     if (ABS(A+i) < p->ftzthreshold){ // Underflow.
@@ -552,7 +557,7 @@ static inline void RS_PROP(FPTYPE *X,
       int localemin = p->subnormal == CPFLOAT_SUBN_USE ?
         p->emin - (int)p->precision + 1: p->emin;
       int expdiff = localemin - expx;
-      INTTYPE rnd = GENRAND(SEED) >> 1;
+      INTTYPE rnd = GENRAND(p->RANDSEED) >> 1;
       // Shift fraction of A[i] left or right as needed.
       if (expdiff <= NLEADBITS - 1)
         trailfrac <<= NLEADBITS - 1 - expdiff;
@@ -570,7 +575,7 @@ static inline void RS_PROP(FPTYPE *X,
       }
     } else if (ABS(A+i) < p->xbnd) { // Rounding possibly required.
       UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-      INTTYPE rndbuf = GENRAND(SEED) & lp.trailmask;
+      INTTYPE rndbuf = GENRAND(p->RANDSEED) & lp.trailmask;
       if (ABS(A+i) > p->xmax) {
         rndbuf = rndbuf >> 1;
         lp.leadmask = (lp.leadmask >> 1) | SIGNMASK;
@@ -588,25 +593,25 @@ static inline void RS_PROP(FPTYPE *X,
 static inline void RS_EQUI(FPTYPE *X,
                            const FPTYPE *A,
                            const size_t numelem,
-                           const FPPARAMS *p) {
+                           FPPARAMS *p) {
   LOCPARAMS lp;
   BITTYPE randombit;
   #ifdef USE_OPENMP
-  INIT_BITSEED_MULTI();
+  INIT_BITSEED_MULTI(p);
   #pragma omp for
   #else /* #ifdef USE_OPENMP */
-  INIT_BITSEED_SINGLE();
+  INIT_BITSEED_SINGLE(p);
   #endif /* #ifdef USE_OPENMP */
   for (size_t i=0; i<numelem; i++){
     UPDATE_LOCAL_PARAMS(A+i, p, &lp);
     if (ABS(A+i) < p->ftzthreshold && A[i] != 0) { // Underflow.
-      randombit = GENBIT(BITSEED);
+      randombit = GENBIT(p->BITSEED);
       X[i] = FPOF( SIGN(A+i) | INTOFCONST(randombit ? p->ftzthreshold : 0));
     } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
-      randombit = GENBIT(BITSEED);
+      randombit = GENBIT(p->BITSEED);
       X[i] = FPOF( SIGN(A+i) | INTOFCONST(randombit ? INFINITY : p->xmax));
     } else if ((INTOF(A+i) & lp.trailmask)) { // Not exactly representable.
-      randombit = GENBIT(BITSEED);
+      randombit = GENBIT(p->BITSEED);
       X[i] = FPOF(INTOF(A+i) & lp.leadmask);
       if (randombit)
         X[i] = FPOF(INTOF(X+i) + (INTCONST(1) << (DEFPREC-lp.precision)));
@@ -666,7 +671,7 @@ static inline int MAINFUN(FPTYPE *X,
                           const optstruct *fpopts) {
 
   int retval = 0;
-  const FPPARAMS p = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);
+  FPPARAMS p = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);
 
   #ifdef USE_OPENMP
   #pragma omp parallel shared(X, A, fpopts)
@@ -796,12 +801,10 @@ static inline int MAINFUN_COMBO(FPTYPE *X,
 #undef EXPMASK
 #undef FRACMASK
 
-#undef SEEDTYPE
 #undef INITRAND_SINGLE
 #undef INITRAND_MULTI
 #undef GENRAND
 #undef GENBIT
-#undef NRNDBITS
 #endif /* #ifdef SINGLE_THREADED */
 
 /*
