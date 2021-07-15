@@ -72,16 +72,16 @@ typedef struct {
 /* Functions to initialize bit pseudo-random generators and generate bits. */
 /*
  * NOTE: The following block does not depend on the type of the array (float or
- * double), thus they could in principle be moved out of cpfloat_template.h.
+ * double), thus it could in principle be moved out of cpfloat_template.h.
  */
 #ifdef PCG_VARIANTS_H_INCLUDED
 #define BITTYPE unsigned int
 #define INITBIT_SINGLE(seed)                    \
-  pcg32_srandom_r(seed,                        \
+  pcg32_srandom_r(seed,                         \
                   time(NULL),                   \
                   (intptr_t)seed)
 #define INITBIT_MULTI(seed)                                     \
-  pcg32_srandom_r(seed,                                        \
+  pcg32_srandom_r(seed,                                         \
                   omp_get_thread_num() * 13254 + time(NULL),    \
                   (intptr_t)seed)
 #define GENBIT(seed) (pcg32_random_r(seed) & (1U << 31))
@@ -207,6 +207,247 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   }
 }
 
+
+/*******************************
+ * Macros for scalar rounding. *
+ *******************************/
+
+/* Round-to-nearest with ties-to-away. */
+#define RN_TIES_TO_AWAY_SCALAR_SAME_EXP(x, a, p)                \
+  if (p->subnormal != CPFLOAT_SUBN_USE && ABS(a) < p->xmin) {    \
+    if (ABS(a) >= p->xmin/2)                                     \
+      *(x) = FPOF(SIGN(a) | INTOFCONST(p->xmin));              \
+    else                                                           \
+      *(x) = FPOF(SIGN(a));                                    \
+  } else                                                           \
+    *(x) = FPOF((INTOF(a) +                                    \
+                 (INTCONST(1) << (DEFPREC-1-p->precision))) & p->leadmask);
+
+#define RN_TIES_TO_AWAY_SCALAR_OTHER_EXP(x, a, p, lp)                       \
+  if (ABS(a) < p->ftzthreshold) { /* Underflow */                            \
+   if (ABS(a) < p->ftzthreshold/2)                                           \
+     *(x) = FPOF(SIGN(a));                                                 \
+   else                                                                        \
+     *(x) = FPOF(SIGN(a) | INTOFCONST(p->ftzthreshold));                   \
+  } else if (ABS(a) >= p->xbnd) { /* Overflow */                             \
+    *(x) = FPOF(SIGN(a) | INTOFCONST(INFINITY));                           \
+  } else {                                                                     \
+    UPDATE_LOCAL_PARAMS(A+i, p, &lp);                                          \
+    *(x) = FPOF((INTOF(a) +                                                \
+                 (INTCONST(1) << (DEFPREC-1-lp.precision))) & lp.leadmask);    \
+  }
+
+/* Round-to-nearest with ties-to-zero. */
+#define RN_TIES_TO_ZERO_SCALAR_SAME_EXP(x, a, p)                \
+  if (p->subnormal != CPFLOAT_SUBN_USE && ABS(a) < p->xmin) {    \
+    if (ABS(a) > p->xmin/2)                                      \
+      *(x) = FPOF(SIGN(a) | INTOFCONST(p->xmin));              \
+    else                                                           \
+      *(x) = FPOF(SIGN(a));                                    \
+  } else                                                           \
+    *(x) = FPOF((INTOF(a) + (p->trailmask>>1)) & p->leadmask);
+
+#define RN_TIES_TO_ZERO_SCALAR_OTHER_EXP(x, a, p, lp)              \
+  if (ABS(a) < p->ftzthreshold) { /* Underflow */                   \
+    if (ABS(a) > p->ftzthreshold/2)                                 \
+      *(x) = FPOF(SIGN(a) | INTOFCONST(p->ftzthreshold));         \
+    else                                                              \
+      *(x) = FPOF(SIGN(a));                                       \
+  } else if (ABS(a) > p->xbnd) { /* Overflow */                     \
+    *(x) = FPOF(SIGN(a) | INTOFCONST(INFINITY));                  \
+  } else {                                                            \
+    UPDATE_LOCAL_PARAMS(A+i, p, &lp);                                 \
+    *(x) = FPOF((INTOF(a) + (lp.trailmask>>1)) & lp.leadmask);    \
+  }
+
+/* Round-to-nearest with ties-to-even. */
+#define RN_TIES_TO_EVEN_SCALAR_SAME_EXP(x, a, p)                           \
+  if (p->subnormal != CPFLOAT_SUBN_USE && ABS(a) < p->xmin) {               \
+    if (ABS(a) >= p->xmin/2)                                                \
+          *(x) = FPOF(SIGN(a) | INTOFCONST(p->xmin));                     \
+    else                                                                      \
+          *(x) = FPOF(SIGN(a));                                           \
+  } else {                                                                    \
+    INTTYPE LSB = (INTOF(a) >> (DEFPREC-p->precision)) & INTCONST(1);       \
+    *(x) = FPOF((INTOF(a) + (p->trailmask >> 1) + LSB) & p->leadmask);    \
+  }
+
+#define RN_TIES_TO_EVEN_SCALAR_OTHER_EXP(x, a, p, lp)                       \
+  if (ABS(a) < p->ftzthreshold) { /* Underflow */                            \
+    if (ABS(a) < p->ftzthreshold/2                                           \
+        || (ABS(a) == p->ftzthreshold/2                                      \
+            && p->subnormal == CPFLOAT_SUBN_USE))                              \
+      *(x) = FPOF(SIGN(a));                                                \
+    else                                                                       \
+      *(x) = FPOF(SIGN(a) | INTOFCONST(p->ftzthreshold));                  \
+  } else if (ABS(a) >= p->xbnd) { /* Overflow */                             \
+    *(x) = FPOF(SIGN(a) | INTOFCONST(INFINITY));                           \
+  } else {                                                                     \
+    UPDATE_LOCAL_PARAMS(A+i, p, &lp);                                          \
+    INTTYPE LSB = ((INTOF(a) >> (DEFPREC-lp.precision)) & INTCONST(1))       \
+      | (lp.precision == 1 && DEFEMAX != p->emax); /* Hidden bit is one. */    \
+    *(x) = FPOF((INTOF(a) + ((lp.trailmask >> 1) + LSB)) & lp.leadmask);   \
+  }
+
+/* Round-to-plus-infinity (also known as round-up). */
+#define RD_TWD_PINF_SCALAR_SAME_EXP(x, a, p)                    \
+  if (p->subnormal != CPFLOAT_SUBN_USE && ABS(a) < p->xmin) {    \
+    if(*(a) > 0)                                                 \
+      *(x) = p->xmin;                                            \
+    else                                                           \
+      *(x) = FPOF(SIGN(a));                                    \
+  } else {                                                         \
+    if (*(a) > 0) /* Add ulp if x is positive finite. */         \
+      *(x) = FPOF((INTOF(a) + p->trailmask) & p->leadmask);    \
+    else                                                           \
+      *(x) = FPOF(INTOF(a) & p->leadmask);                     \
+  }
+
+#define RD_TWD_PINF_SCALAR_OTHER_EXP(x, a, p, lp)               \
+  if (ABS(a) < p->ftzthreshold) { /* Underflow */                \
+    *(x) = *(a) > 0 ? p->ftzthreshold : 0;                     \
+  } else if (ABS(a) > p->xmax) { /* Overflow */                  \
+    if (*(a) > p->xmax)                                          \
+      *(x) = INFINITY;                                           \
+    else if (*(a) < -p->xmax && *(a) != -INFINITY)             \
+      *(x) = -p->xmax;                                           \
+    else /* *(a) == -INFINITY */                                 \
+      *(x) = -INFINITY;                                          \
+  } else {                                                         \
+    UPDATE_LOCAL_PARAMS(A+i, p, &lp);                              \
+    if (SIGN(a) == 0) /* Add ulp if x is positive.  */           \
+      *(x) = FPOF((INTOF(a) + lp.trailmask) & lp.leadmask);    \
+    else                                                           \
+      *(x) = FPOF(INTOF(a) & lp.leadmask);                     \
+  }
+
+/* Round-to-minus-infinity (also known as round-down). */
+#define RD_TWD_NINF_SCALAR_SAME_EXP(x, a, p)                    \
+  if (p->subnormal != CPFLOAT_SUBN_USE && ABS(a) < p->xmin) {    \
+    if(*(a) < 0)                                                 \
+      *(x) = -p->xmin;                                           \
+    else                                                           \
+      *(x) = FPOF(SIGN(a));                                    \
+  } else {                                                         \
+    if (*(a) < 0) /* Subtract ulp if x is positive finite. */    \
+      *(x) = FPOF((INTOF(a) + p->trailmask) & p->leadmask);    \
+    else                                                           \
+      *(x) = FPOF(INTOF(a) & p->leadmask);                     \
+  }
+
+#define RD_TWD_NINF_SCALAR_OTHER_EXP(x, a, p, lp)               \
+  if (ABS(a) < p->ftzthreshold) { /* Underflow */                \
+    *(x) = *(a) >= 0 ? 0 : -p->ftzthreshold;                   \
+  } else if (ABS(a) > p->xmax) { /* Overflow */                  \
+    if (*(a) < -p->xmax)                                         \
+      *(x) = -INFINITY;                                          \
+    else if (*(a) > p->xmax && *(a) != INFINITY)               \
+      *(x) = p->xmax;                                            \
+    else /* *(a) == INFINITY */                                  \
+      *(x) = INFINITY;                                           \
+  } else {                                                         \
+    UPDATE_LOCAL_PARAMS(A+i, p, &lp);                              \
+    if (SIGN(a)) /* Subtract ulp if x is positive. */            \
+      *(x) = FPOF((INTOF(a) + lp.trailmask) & lp.leadmask);    \
+    else                                                           \
+      *(x) = FPOF(INTOF(a) & lp.leadmask);                     \
+  }
+
+/* Round-to-zero (also known as truncation). */
+#define RD_TWD_ZERO_SCALAR_SAME_EXP(x, a, p)                  \
+  if (p->subnormal != CPFLOAT_SUBN_USE && ABS(a) < p->xmin)    \
+    *(x) = FPOF(SIGN(a));                                    \
+  else                                                           \
+    *(x) = FPOF(INTOF(a) & p->leadmask);
+
+#define RD_TWD_ZERO_SCALAR_OTHER_EXP(x, a, p, lp)                         \
+  if (ABS(a) < p->ftzthreshold) { /* Underflow */                          \
+    *(x) = FPOF(SIGN(a));                                                \
+  } else if (ABS(a) > p->xmax && ABS(a) != INFINITY) { /* Overflow */    \
+    *(x) = FPOF(SIGN(a) | INTOFCONST(p->xmax));                          \
+  } else {                                                                   \
+    UPDATE_LOCAL_PARAMS(A+i, p, &lp);                                        \
+    *(x) = FPOF(INTOF(a) & lp.leadmask);                                 \
+  }
+
+
+/* Stochastic rounding with proportional probabilities. */
+#define RS_PROP_SCALAR(x, a, p, lp)                                  \
+  if (ABS(a) < p->ftzthreshold){ /* Underflow */                      \
+    int expx = ((EXPMASK & INTOF(a)) >> (DEFPREC - 1)) - DEFEMAX;     \
+    INTTYPE trailfrac = (INTOF(a) & (FULLMASK >> NLEADBITS));         \
+    if (expx == -DEFEMAX) { /* No implicit bit (x is subnormal). */     \
+      expx += 1;                                                        \
+    } else { /* Make implicit bit explicit (x is normal). */            \
+      trailfrac = (INTOF(a) & (FULLMASK >> NLEADBITS))                \
+        | (INTCONST(1) << (DEFPREC-1));                                 \
+    }                                                                   \
+    int localemin = p->subnormal == CPFLOAT_SUBN_USE ?                  \
+      p->emin - (int)p->precision + 1: p->emin;                         \
+    int expdiff = localemin - expx;                                     \
+    INTTYPE rnd = GENRAND(p->RANDSEED) >> 1;                            \
+    /* Shift fraction of *(a) left or right as needed. */             \
+    if (expdiff <= NLEADBITS - 1)                                       \
+      trailfrac <<= NLEADBITS - 1 - expdiff;                            \
+    else {                                                              \
+      if (expdiff - (NLEADBITS - 1) >= NBITS)                           \
+        trailfrac = 0;                                                  \
+      else                                                              \
+        trailfrac >>= (expdiff - (NLEADBITS - 1));                      \
+    }                                                                   \
+    if (trailfrac > rnd) {                                              \
+      *(x) = FPOF(SIGN(a) | INTOFCONST(p->ftzthreshold));           \
+    } else {                                                            \
+      *(x) = FPOF(SIGN(a));                                         \
+      continue;                                                         \
+    }                                                                   \
+  } else if (ABS(a) < p->xbnd) { /* Rounding possibly required. */    \
+    UPDATE_LOCAL_PARAMS(A+i, p, &lp);                                   \
+    INTTYPE rndbuf = GENRAND(p->RANDSEED) & lp.trailmask;               \
+    if (ABS(a) > p->xmax) {                                           \
+      rndbuf = rndbuf >> 1;                                             \
+      lp.leadmask = (lp.leadmask >> 1) | SIGNMASK;                      \
+    }                                                                   \
+    *(x) = FPOF((INTOF(a) + rndbuf) & lp.leadmask);                 \
+  } else {                                                              \
+    *(x) = *(a);                                                    \
+  }                                                                     \
+  if (ABS(x) >= p->xbnd) /* Overflow */                               \
+    *(x) = FPOF(SIGN(a) | INTOFCONST(INFINITY));
+
+/* Stochastic rounding with equal probabilities. */
+#define RS_EQUI_SCALAR(x, a, p, lp)                                         \
+  UPDATE_LOCAL_PARAMS(A+i, p, &lp);                                            \
+  if (ABS(a) < p->ftzthreshold && *(a) != 0) { /* Underflow */             \
+    randombit = GENBIT(p->BITSEED);                                            \
+    *(x) = FPOF( SIGN(a) | INTOFCONST(randombit ? p->ftzthreshold : 0));   \
+  } else if (ABS(a) > p->xmax && ABS(a) != INFINITY) { /* Overflow */      \
+    randombit = GENBIT(p->BITSEED);                                            \
+    *(x) = FPOF( SIGN(a) | INTOFCONST(randombit ? INFINITY : p->xmax));    \
+  } else if ((INTOF(a) & lp.trailmask)) { /* Not exactly representable. */   \
+    randombit = GENBIT(p->BITSEED);                                            \
+    *(x) = FPOF(INTOF(a) & lp.leadmask);                                   \
+    if (randombit)                                                             \
+      *(x) = FPOF(INTOF(x) + (INTCONST(1) << (DEFPREC-lp.precision)));     \
+  } else /* *(a) exactly representable, no rounding necessary. */            \
+    *(x) = *(a);
+
+/* Round-to-odd. */
+#define RO_SCALAR(x, a, p, lp)                                              \
+  if (ABS(a) < p->ftzthreshold && *(a) != 0) { /* Underflow */             \
+    *(x) =  FPOF(SIGN(a) | INTOFCONST(p->ftzthreshold));                   \
+  } else if (ABS(a) > p->xmax && ABS(a) != INFINITY) { /* Overflow */      \
+    *(x) = FPOF(SIGN(a) | INTOFCONST(p->xmax));                            \
+  } else {                                                                     \
+    UPDATE_LOCAL_PARAMS(A+i, p, &lp);                                          \
+    if ((lp.trailmask & INTOF(a)) /* Not exactly representable. */           \
+        && (lp.precision > 1)) /* Set last bit to 1 if stored explicitly. */   \
+      *(x) = FPOF((INTOF(a) & lp.leadmask) |                               \
+                  (INTCONST(1) << (DEFPREC-lp.precision)));                    \
+    else                                                                       \
+      *(x) = FPOF(INTOF(a) & lp.leadmask);                                 \
+  }
+
 #endif /* #ifndef CONCATENATE_INNER */
 
 
@@ -279,23 +520,16 @@ static inline void INIT_RANDSEED_MULTI (FPPARAMS *params) {
 #endif /* #ifdef SINGLE_THREADED */
 
 /* Routine for round-to-nearest with ties-to-away. */
-static inline void RN_TIES_TO_AWAY (FPTYPE *X,
-                                    const FPTYPE *A,
-                                    const size_t numelem,
-                                    const FPPARAMS *p) {
+static inline void RN_TIES_TO_AWAY(FPTYPE *X,
+                                   const FPTYPE *A,
+                                   const size_t numelem,
+                                   const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
-        if (ABS(A+i) >= p->xmin/2)
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmin));
-        else
-          X[i] = FPOF(SIGN(A+i));
-      } else
-        X[i] = FPOF((INTOF(A+i) +
-                     (INTCONST(1) << (DEFPREC-1-p->precision))) & p->leadmask);
+      RN_TIES_TO_AWAY_SCALAR_SAME_EXP(X+i, A+i, p)
     }
   } else {
     LOCPARAMS lp;
@@ -303,39 +537,22 @@ static inline void RN_TIES_TO_AWAY (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (ABS(A+i) < p->ftzthreshold) { // Underflow.
-        if (ABS(A+i) < p->ftzthreshold/2)
-          X[i] = FPOF(SIGN(A+i));
-        else
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
-      } else if (ABS(A+i) >= p->xbnd) { // Overflow.
-        X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
-      } else {
-        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-        X[i] = FPOF((INTOF(A+i) +
-                     (INTCONST(1) << (DEFPREC-1-lp.precision))) & lp.leadmask);
-      }
+      RN_TIES_TO_AWAY_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
     }
   }
 }
 
 /* Routine for round-to-nearest with ties-to-zero. */
-static inline void RN_TIES_TO_ZERO (FPTYPE *X,
-                                    const FPTYPE *A,
-                                    const size_t numelem,
-                                    const FPPARAMS *p) {
+static inline void RN_TIES_TO_ZERO(FPTYPE *X,
+                                   const FPTYPE *A,
+                                   const size_t numelem,
+                                   const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
-        if (ABS(A+i) > p->xmin/2)
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmin));
-        else
-          X[i] = FPOF(SIGN(A+i));
-      } else
-        X[i] = FPOF((INTOF(A+i) + (p->trailmask>>1)) & p->leadmask);
+      RN_TIES_TO_ZERO_SCALAR_SAME_EXP(X+i, A+i, p)
     }
   } else {
     LOCPARAMS lp;
@@ -343,40 +560,22 @@ static inline void RN_TIES_TO_ZERO (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (ABS(A+i) < p->ftzthreshold) { // Underflow.
-        if (ABS(A+i) > p->ftzthreshold/2)
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
-        else
-          X[i] = FPOF(SIGN(A+i));
-      } else if (ABS(A+i) > p->xbnd) { // Overflow.
-        X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
-      } else {
-        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-        X[i] = FPOF((INTOF(A+i) + (lp.trailmask>>1)) & lp.leadmask);
-      }
+      RN_TIES_TO_ZERO_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
     }
   }
 }
 
 /* Routine for round-to-nearest with ties-to-even. */
-static inline void RN_TIES_TO_EVEN (FPTYPE *X,
-                                    const FPTYPE *A,
-                                    const size_t numelem,
-                                    const FPPARAMS *p) {
+static inline void RN_TIES_TO_EVEN(FPTYPE *X,
+                                   const FPTYPE *A,
+                                   const size_t numelem,
+                                   const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
-        if (ABS(A+i) >= p->xmin/2)
-              X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmin));
-            else
-              X[i] = FPOF(SIGN(A+i));
-      } else {
-        INTTYPE LSB = (INTOF(A+i) >> (DEFPREC-p->precision)) & INTCONST(1);
-        X[i] = FPOF((INTOF(A+i) + (p->trailmask >> 1) + LSB) & p->leadmask);
-      }
+      RN_TIES_TO_EVEN_SCALAR_SAME_EXP(X+i, A+i, p)
     }
   } else {
     LOCPARAMS lp;
@@ -384,46 +583,22 @@ static inline void RN_TIES_TO_EVEN (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (ABS(A+i) < p->ftzthreshold) { // Underflow.
-        if (ABS(A+i) < p->ftzthreshold/2
-            || (ABS(A+i) == p->ftzthreshold/2
-                && p->subnormal == CPFLOAT_SUBN_USE))
-          X[i] = FPOF(SIGN(A+i));
-        else
-          X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
-      } else if (ABS(A+i) >= p->xbnd) { // Overflow.
-        X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
-      } else {
-        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-        INTTYPE LSB = ((INTOF(A+i) >> (DEFPREC-lp.precision)) & INTCONST(1))
-          | (lp.precision == 1 && DEFEMAX != p->emax); // Hidden bit is one.
-        X[i] = FPOF((INTOF(A+i) + ((lp.trailmask >> 1) + LSB)) & lp.leadmask);
-      }
+      RN_TIES_TO_EVEN_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
     }
   }
 }
 
 /* Routine for round-to-plus-infinity (also known as round-up). */
-static inline void RD_TWD_PINF (FPTYPE *X,
-                                const FPTYPE *A,
-                                const size_t numelem,
-                                const FPPARAMS *p) {
+static inline void RD_TWD_PINF(FPTYPE *X,
+                               const FPTYPE *A,
+                               const size_t numelem,
+                               const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
-        if(A[i] > 0)
-          X[i] = p->xmin;
-        else
-          X[i] = FPOF(SIGN(A+i));
-      } else {
-        if (A[i] > 0) // Add ulp if x is positive finite.
-          X[i] = FPOF((INTOF(A+i) + p->trailmask) & p->leadmask);
-        else
-          X[i] = FPOF(INTOF(A+i) & p->leadmask);
-      }
+      RD_TWD_PINF_SCALAR_SAME_EXP(X+i, A+i, p)
     }
   } else {
     LOCPARAMS lp;
@@ -431,47 +606,22 @@ static inline void RD_TWD_PINF (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (ABS(A+i) < p->ftzthreshold) { // Underflow.
-        X[i] = A[i] > 0 ? p->ftzthreshold : 0;
-      } else if (ABS(A+i) > p->xmax) { // Overflow.
-        if (A[i] > p->xmax)
-          X[i] = INFINITY;
-        else if (A[i] < -p->xmax && A[i] != -INFINITY)
-          X[i] = -p->xmax;
-        else // A[i] == -INFINITY
-          X[i] = -INFINITY;
-      } else {
-        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-        if (SIGN(A+i) == 0) // Add ulp if x is positive.
-          X[i] = FPOF((INTOF(A+i) + lp.trailmask) & lp.leadmask);
-        else
-          X[i] = FPOF(INTOF(A+i) & lp.leadmask);
-      }
+      RD_TWD_PINF_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
     }
   }
 }
 
 /* Routine for round-to-minus-infinity (also known as round-down). */
-static inline void RD_TWD_NINF (FPTYPE *X,
-                                const FPTYPE *A,
-                                const size_t numelem,
-                                const FPPARAMS *p) {
+static inline void RD_TWD_NINF(FPTYPE *X,
+                               const FPTYPE *A,
+                               const size_t numelem,
+                               const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin) {
-        if(A[i] < 0)
-          X[i] = -p->xmin;
-        else
-          X[i] = FPOF(SIGN(A+i));
-      } else {
-        if (A[i] < 0) // Subtract ulp if x is positive finite.
-          X[i] = FPOF((INTOF(A+i) + p->trailmask) & p->leadmask);
-        else
-          X[i] = FPOF(INTOF(A+i) & p->leadmask);
-      }
+      RD_TWD_NINF_SCALAR_SAME_EXP(X+i, A+i, p)
     }
   } else {
     LOCPARAMS lp;
@@ -479,40 +629,22 @@ static inline void RD_TWD_NINF (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (ABS(A+i) < p->ftzthreshold) { // Underflow.
-        X[i] = A[i] >= 0 ? 0 : -p->ftzthreshold;
-      } else if (ABS(A+i) > p->xmax) { // Overflow.
-        if (A[i] < -p->xmax)
-          X[i] = -INFINITY;
-        else if (A[i] > p->xmax && A[i] != INFINITY)
-          X[i] = p->xmax;
-        else // A[i] == INFINITY
-          X[i] = INFINITY;
-      } else {
-        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-        if (SIGN(A+i)) // Subtract ulp if x is positive.
-          X[i] = FPOF((INTOF(A+i) + lp.trailmask) & lp.leadmask);
-        else
-          X[i] = FPOF(INTOF(A+i) & lp.leadmask);
-      }
+      RD_TWD_NINF_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
     }
   }
 }
 
 /* Routine for round-to-zero (also known as truncation). */
-static inline void RD_TWD_ZERO (FPTYPE *X,
-                                const FPTYPE *A,
-                                const size_t numelem,
-                                const FPPARAMS *p) {
+static inline void RD_TWD_ZERO(FPTYPE *X,
+                               const FPTYPE *A,
+                               const size_t numelem,
+                               const FPPARAMS *p) {
   if (p->emax == DEFEMAX) {
     #ifdef USE_OPENMP
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (p->subnormal != CPFLOAT_SUBN_USE && ABS(A+i) < p->xmin)
-        X[i] = FPOF(SIGN(A+i));
-      else
-        X[i] = FPOF(INTOF(A+i) & p->leadmask);
+      RD_TWD_ZERO_SCALAR_SAME_EXP (X+i, A+i, p)
     }
   } else {
     LOCPARAMS lp;
@@ -520,14 +652,7 @@ static inline void RD_TWD_ZERO (FPTYPE *X,
     #pragma omp for
     #endif /* #ifdef USE_OPENMP */
     for (size_t i=0; i<numelem; i++){
-      if (ABS(A+i) < p->ftzthreshold) { // Underflow.
-        X[i] = FPOF(SIGN(A+i));
-      } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
-        X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmax));
-      } else {
-        UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-        X[i] = FPOF(INTOF(A+i) & lp.leadmask);
-      }
+      RD_TWD_ZERO_SCALAR_OTHER_EXP (X+i, A+i, p, lp)
     }
   }
 }
@@ -545,47 +670,7 @@ static inline void RS_PROP(FPTYPE *X,
   INIT_RANDSEED_SINGLE(p);
   #endif /* #ifdef USE_OPENMP */
   for (size_t i=0; i<numelem; i++){
-    if (ABS(A+i) < p->ftzthreshold){ // Underflow.
-      int expx = ((EXPMASK & INTOF(A+i)) >> (DEFPREC - 1)) - DEFEMAX;
-      INTTYPE trailfrac = (INTOF(A+i) & (FULLMASK >> NLEADBITS));
-      if (expx == -DEFEMAX) { // No implicit bit (x is subnormal).
-        expx += 1;
-      } else { // Make implicit bit explicit (x is normal).
-        trailfrac = (INTOF(A+i) & (FULLMASK >> NLEADBITS))
-          | (INTCONST(1) << (DEFPREC-1));
-      }
-      int localemin = p->subnormal == CPFLOAT_SUBN_USE ?
-        p->emin - (int)p->precision + 1: p->emin;
-      int expdiff = localemin - expx;
-      INTTYPE rnd = GENRAND(p->RANDSEED) >> 1;
-      // Shift fraction of A[i] left or right as needed.
-      if (expdiff <= NLEADBITS - 1)
-        trailfrac <<= NLEADBITS - 1 - expdiff;
-      else {
-        if (expdiff - (NLEADBITS - 1) >= NBITS)
-          trailfrac = 0;
-        else
-          trailfrac >>= (expdiff - (NLEADBITS - 1));
-      }
-      if (trailfrac > rnd) {
-        X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
-      } else {
-        X[i] = FPOF(SIGN(A+i));
-        continue;
-      }
-    } else if (ABS(A+i) < p->xbnd) { // Rounding possibly required.
-      UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-      INTTYPE rndbuf = GENRAND(p->RANDSEED) & lp.trailmask;
-      if (ABS(A+i) > p->xmax) {
-        rndbuf = rndbuf >> 1;
-        lp.leadmask = (lp.leadmask >> 1) | SIGNMASK;
-      }
-      X[i] = FPOF((INTOF(A+i) + rndbuf) & lp.leadmask);
-    } else {
-      X[i] = A[i];
-    }
-    if (ABS(X+i) >= p->xbnd) // Overflow.
-      X[i] = FPOF(SIGN(A+i) | INTOFCONST(INFINITY));
+    RS_PROP_SCALAR(X+i, A+i, p, lp)
   }
 }
 
@@ -603,20 +688,7 @@ static inline void RS_EQUI(FPTYPE *X,
   INIT_BITSEED_SINGLE(p);
   #endif /* #ifdef USE_OPENMP */
   for (size_t i=0; i<numelem; i++){
-    UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-    if (ABS(A+i) < p->ftzthreshold && A[i] != 0) { // Underflow.
-      randombit = GENBIT(p->BITSEED);
-      X[i] = FPOF( SIGN(A+i) | INTOFCONST(randombit ? p->ftzthreshold : 0));
-    } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
-      randombit = GENBIT(p->BITSEED);
-      X[i] = FPOF( SIGN(A+i) | INTOFCONST(randombit ? INFINITY : p->xmax));
-    } else if ((INTOF(A+i) & lp.trailmask)) { // Not exactly representable.
-      randombit = GENBIT(p->BITSEED);
-      X[i] = FPOF(INTOF(A+i) & lp.leadmask);
-      if (randombit)
-        X[i] = FPOF(INTOF(X+i) + (INTCONST(1) << (DEFPREC-lp.precision)));
-    } else // A[i] exactly representable, no rounding necessary
-      X[i] = A[i];
+    RS_EQUI_SCALAR(X+i, A+i, p, lp)
   }
 }
 
@@ -630,19 +702,7 @@ static inline void RO(FPTYPE *X,
   #pragma omp for
   #endif /* #ifdef USE_OPENMP */
   for (size_t i=0; i<numelem; i++){
-    if (ABS(A+i) < p->ftzthreshold && A[i] != 0) { // Underflow.
-      X[i] =  FPOF(SIGN(A+i) | INTOFCONST(p->ftzthreshold));
-    } else if (ABS(A+i) > p->xmax && ABS(A+i) != INFINITY) { // Overflow.
-      X[i] = FPOF(SIGN(A+i) | INTOFCONST(p->xmax));
-    } else {
-      UPDATE_LOCAL_PARAMS(A+i, p, &lp);
-      if ((lp.trailmask & INTOF(A+i)) // Not exactly representable.
-          && (lp.precision > 1)) // Set the last bit to 1 if stored explicitly.
-        X[i] = FPOF((INTOF(A+i) & lp.leadmask) |
-                    (INTCONST(1) << (DEFPREC-lp.precision)));
-      else
-        X[i] = FPOF(INTOF(A+i) & lp.leadmask);
-    }
+    RO_SCALAR(X+i, A+i, p, lp)
   }
 }
 
