@@ -263,17 +263,17 @@ static inline void INIT_RANDSEED_SINGLE (FPPARAMS *params) {
 
 /* Functions to initialize the pseudo-random number generator. */
 #define INIT_BITSEED_MULTI CONCATENATE(ADDSUFFIXTO(init_bitseed), _multi)
-static inline void INIT_BITSEED_MULTI (FPPARAMS *fpopts) {
-  if (fpopts->BITSEED == NULL) {
-    fpopts->BITSEED = malloc(sizeof(*fpopts->BITSEED));
-    INITBIT_MULTI(fpopts->BITSEED);
+static inline void INIT_BITSEED_MULTI (FPPARAMS *params) {
+  if (params->BITSEED == NULL) {
+    params->BITSEED = malloc(sizeof(*params->BITSEED));
+    INITBIT_MULTI(params->BITSEED);
   }
 }
 #define INIT_RANDSEED_MULTI CONCATENATE(ADDSUFFIXTO(init_seed), _multi)
-static inline void INIT_RANDSEED_MULTI (FPPARAMS *fpopts) {
-  if (fpopts->RANDSEED == NULL) {
-    fpopts->RANDSEED = malloc(sizeof(*RANDSEED));
-    INITRAND_MULTI(fpopts->RANDSEED);
+static inline void INIT_RANDSEED_MULTI (FPPARAMS *params) {
+  if (params->RANDSEED == NULL) {
+    params->RANDSEED = malloc(sizeof(*params->RANDSEED));
+    INITRAND_MULTI(params->RANDSEED);
   }
 }
 #endif /* #ifdef SINGLE_THREADED */
