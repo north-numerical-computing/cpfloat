@@ -458,21 +458,8 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
  * MACROS WITH SEQUENTIAL AND PARALLEL FLAVOUR. *
  ************************************************
  ************************************************/
-/*  Rounding functions. */
+
 #ifdef SINGLE_THREADED
-#define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _sequential)
-#define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _sequential)
-#define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _sequential)
-
-#define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _sequential)
-#define RD_TWD_NINF CONCATENATE(ADDSUFFIXTO(rd_ninf), _sequential)
-#define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _sequential)
-
-#define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _sequential)
-#define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _sequential)
-
-#define RO CONCATENATE(ADDSUFFIXTO(ro), _sequential)
-
 /* Functions to initialize the pseudo-random number generator. */
 #define INIT_BITSEED_SINGLE CONCATENATE(ADDSUFFIXTO(init_bitseed), _single)
 static inline void INIT_BITSEED_SINGLE (FPPARAMS *params) {
@@ -489,19 +476,6 @@ static inline void INIT_RANDSEED_SINGLE (FPPARAMS *params) {
   }
 }
 #else /* #ifdef SINGLE_THREADED */
-#define RN_TIES_TO_AWAY CONCATENATE(ADDSUFFIXTO(rn_tta), _parallel)
-#define RN_TIES_TO_ZERO CONCATENATE(ADDSUFFIXTO(rn_ttz), _parallel)
-#define RN_TIES_TO_EVEN CONCATENATE(ADDSUFFIXTO(rn_tte), _parallel)
-
-#define RD_TWD_PINF CONCATENATE(ADDSUFFIXTO(rd_pinf), _parallel)
-#define RD_TWD_NINF CONCATENATE(ADDSUFFIXTO(rd_ninf), _parallel)
-#define RD_TWD_ZERO CONCATENATE(ADDSUFFIXTO(rd_zero), _parallel)
-
-#define RS_PROP CONCATENATE(ADDSUFFIXTO(rs_prop), _parallel)
-#define RS_EQUI CONCATENATE(ADDSUFFIXTO(rs_equi), _parallel)
-
-#define RO CONCATENATE(ADDSUFFIXTO(ro), _parallel)
-
 /* Functions to initialize the pseudo-random number generator. */
 #define INIT_BITSEED_MULTI CONCATENATE(ADDSUFFIXTO(init_bitseed), _multi)
 static inline void INIT_BITSEED_MULTI (FPPARAMS *params) {
@@ -519,192 +493,142 @@ static inline void INIT_RANDSEED_MULTI (FPPARAMS *params) {
 }
 #endif /* #ifdef SINGLE_THREADED */
 
-/* Routine for round-to-nearest with ties-to-away. */
-static inline void RN_TIES_TO_AWAY(FPTYPE *X,
-                                   const FPTYPE *A,
-                                   const size_t numelem,
-                                   const FPPARAMS *p) {
-  if (p->emax == DEFEMAX) {
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RN_TIES_TO_AWAY_SCALAR_SAME_EXP(X+i, A+i, p)
-    }
-  } else {
-    LOCPARAMS lp;
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RN_TIES_TO_AWAY_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
-    }
-  }
-}
+/******************************
+ * Macros for vector rounding *
+ ******************************/
 
-/* Routine for round-to-nearest with ties-to-zero. */
-static inline void RN_TIES_TO_ZERO(FPTYPE *X,
-                                   const FPTYPE *A,
-                                   const size_t numelem,
-                                   const FPPARAMS *p) {
-  if (p->emax == DEFEMAX) {
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RN_TIES_TO_ZERO_SCALAR_SAME_EXP(X+i, A+i, p)
-    }
-  } else {
-    LOCPARAMS lp;
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RN_TIES_TO_ZERO_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
-    }
-  }
-}
+#ifdef USE_OPENMP
+#define PRAGMA_STRING _Pragma("omp for")
+#define INIT_RANDSEED_STRING(p) INIT_RANDSEED_MULTI(p);
+#define INIT_BITSEED_STRING(p) INIT_BITSEED_MULTI(p);
+#else /* #if USE_OPENMP */
+#define PRAGMA_STRING
+#define INIT_RANDSEED_STRING(p) INIT_RANDSEED_SINGLE(p);
+#define INIT_BITSEED_STRING(p) INIT_BITSEED_SINGLE(p);
+#endif /* #if USE_OPENMP */
 
-/* Routine for round-to-nearest with ties-to-even. */
-static inline void RN_TIES_TO_EVEN(FPTYPE *X,
-                                   const FPTYPE *A,
-                                   const size_t numelem,
-                                   const FPPARAMS *p) {
-  if (p->emax == DEFEMAX) {
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RN_TIES_TO_EVEN_SCALAR_SAME_EXP(X+i, A+i, p)
-    }
-  } else {
-    LOCPARAMS lp;
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RN_TIES_TO_EVEN_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
-    }
+/* Round-to-nearest with ties-to-away. */
+#define RN_TIES_TO_AWAY(X, A, FSTRING, numelem, p)         \
+  if (p->emax == DEFEMAX) {                                \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RN_TIES_TO_AWAY_SCALAR_SAME_EXP(X+i, A+i, p)         \
+    }                                                      \
+  } else {                                                 \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RN_TIES_TO_AWAY_SCALAR_OTHER_EXP(X+i, A+i, p, lp)    \
+    }                                                      \
   }
-}
 
-/* Routine for round-to-plus-infinity (also known as round-up). */
-static inline void RD_TWD_PINF(FPTYPE *X,
-                               const FPTYPE *A,
-                               const size_t numelem,
-                               const FPPARAMS *p) {
-  if (p->emax == DEFEMAX) {
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RD_TWD_PINF_SCALAR_SAME_EXP(X+i, A+i, p)
-    }
-  } else {
-    LOCPARAMS lp;
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RD_TWD_PINF_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
-    }
+/* Round-to-nearest with ties-to-zero. */
+#define RN_TIES_TO_ZERO(X, Y, FSTRING, numelem, p)         \
+  if (p->emax == DEFEMAX) {                                \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RN_TIES_TO_ZERO_SCALAR_SAME_EXP(X+i, A+i, p)         \
+    }                                                      \
+  } else {                                                 \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RN_TIES_TO_ZERO_SCALAR_OTHER_EXP(X+i, A+i, p, lp)    \
+    }                                                      \
   }
-}
 
-/* Routine for round-to-minus-infinity (also known as round-down). */
-static inline void RD_TWD_NINF(FPTYPE *X,
-                               const FPTYPE *A,
-                               const size_t numelem,
-                               const FPPARAMS *p) {
-  if (p->emax == DEFEMAX) {
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RD_TWD_NINF_SCALAR_SAME_EXP(X+i, A+i, p)
-    }
-  } else {
-    LOCPARAMS lp;
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RD_TWD_NINF_SCALAR_OTHER_EXP(X+i, A+i, p, lp)
-    }
+/* Round-to-nearest with ties-to-even. */
+#define RN_TIES_TO_EVEN(X, Y, FSTRING, numelem, p)         \
+  if (p->emax == DEFEMAX) {                                \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RN_TIES_TO_EVEN_SCALAR_SAME_EXP(X+i, A+i, p)         \
+    }                                                      \
+  } else {                                                 \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RN_TIES_TO_EVEN_SCALAR_OTHER_EXP(X+i, A+i, p, lp)    \
+    }                                                      \
   }
-}
 
-/* Routine for round-to-zero (also known as truncation). */
-static inline void RD_TWD_ZERO(FPTYPE *X,
-                               const FPTYPE *A,
-                               const size_t numelem,
-                               const FPPARAMS *p) {
-  if (p->emax == DEFEMAX) {
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RD_TWD_ZERO_SCALAR_SAME_EXP (X+i, A+i, p)
-    }
-  } else {
-    LOCPARAMS lp;
-    #ifdef USE_OPENMP
-    #pragma omp for
-    #endif /* #ifdef USE_OPENMP */
-    for (size_t i=0; i<numelem; i++){
-      RD_TWD_ZERO_SCALAR_OTHER_EXP (X+i, A+i, p, lp)
-    }
+/* Round-to-plus-infinity (also known as round-up). */
+#define RD_TWD_PINF(X, Y, FSTRING, numelem, p)             \
+  if (p->emax == DEFEMAX) {                                \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RD_TWD_PINF_SCALAR_SAME_EXP(X+i, A+i, p)             \
+    }                                                      \
+  } else {                                                 \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RD_TWD_PINF_SCALAR_OTHER_EXP(X+i, A+i, p, lp)        \
+    }                                                      \
   }
-}
 
-/* Routine for stochastic rounding with proportional probabilities. */
-static inline void RS_PROP(FPTYPE *X,
-                           const FPTYPE *A,
-                           const size_t numelem,
-                           FPPARAMS *p) {
-  LOCPARAMS lp;
-  #ifdef USE_OPENMP
-  INIT_RANDSEED_MULTI(p);
-  #pragma omp for
-  #else /* #ifdef USE_OPENMP */
-  INIT_RANDSEED_SINGLE(p);
-  #endif /* #ifdef USE_OPENMP */
-  for (size_t i=0; i<numelem; i++){
-    RS_PROP_SCALAR(X+i, A+i, p, lp)
+/* Round-to-minus-infinity (also known as round-down). */
+#define RD_TWD_NINF(X, Y, FSTRING, numelem, p)             \
+  if (p->emax == DEFEMAX) {                                \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RD_TWD_NINF_SCALAR_SAME_EXP(X+i, A+i, p)             \
+    }                                                      \
+  } else {                                                 \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RD_TWD_NINF_SCALAR_OTHER_EXP(X+i, A+i, p, lp)        \
+    }                                                      \
   }
-}
 
-/* Routine for stochastic rounding with equal probabilities. */
-static inline void RS_EQUI(FPTYPE *X,
-                           const FPTYPE *A,
-                           const size_t numelem,
-                           FPPARAMS *p) {
-  LOCPARAMS lp;
-  BITTYPE randombit;
-  #ifdef USE_OPENMP
-  INIT_BITSEED_MULTI(p);
-  #pragma omp for
-  #else /* #ifdef USE_OPENMP */
-  INIT_BITSEED_SINGLE(p);
-  #endif /* #ifdef USE_OPENMP */
-  for (size_t i=0; i<numelem; i++){
-    RS_EQUI_SCALAR(X+i, A+i, p, lp)
+/* Round-to-zero (also known as truncation). */
+#define RD_TWD_ZERO(X, Y, FSTRING, numelem, p)             \
+  if (p->emax == DEFEMAX) {                                \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RD_TWD_ZERO_SCALAR_SAME_EXP (X+i, A+i, p)            \
+    }                                                      \
+  } else {                                                 \
+    PRAGMA_STRING                                          \
+    for (size_t i=0; i<numelem; i++){                      \
+      FSTRING                                              \
+      RD_TWD_ZERO_SCALAR_OTHER_EXP (X+i, A+i, p, lp)       \
+    }                                                      \
   }
-}
 
-/* Routine for round-to-odd. */
-static inline void RO(FPTYPE *X,
-                      const FPTYPE *A,
-                      const size_t numelem,
-                      const FPPARAMS *p) {
-  LOCPARAMS lp;
-  #ifdef USE_OPENMP
-  #pragma omp for
-  #endif /* #ifdef USE_OPENMP */
-  for (size_t i=0; i<numelem; i++){
-    RO_SCALAR(X+i, A+i, p, lp)
+/* Stochastic rounding with proportional probabilities. */
+#define RS_PROP(X, Y, FSTRING, numelem, p)    \
+  INIT_RANDSEED_STRING(p)                     \
+  PRAGMA_STRING                               \
+  for (size_t i=0; i<numelem; i++){           \
+    FSTRING                                   \
+    RS_PROP_SCALAR(X+i, A+i, p, lp)           \
   }
-}
+
+/* Stochastic rounding with equal probabilities. */
+#define RS_EQUI(X, Y, FSTRING, numelem, p)    \
+  INIT_BITSEED_STRING(p)                      \
+  BITTYPE randombit;                          \
+  PRAGMA_STRING                               \
+  for (size_t i=0; i<numelem; i++){           \
+    FSTRING                                   \
+    RS_EQUI_SCALAR(X+i, A+i, p, lp)           \
+  }
+
+/* Round-to-odd. */
+#define RO(X, Y, FSTRING, numelem, p)    \
+  PRAGMA_STRING                          \
+  for (size_t i=0; i<numelem; i++){      \
+    FSTRING                              \
+    RO_SCALAR(X+i, A+i, p, lp)           \
+  }
 
 /*
  * Macros that define the main rounding functions. Either two or three functions
@@ -731,39 +655,41 @@ static inline int MAINFUN(FPTYPE *X,
                           const optstruct *fpopts) {
 
   int retval = 0;
-  FPPARAMS p = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);
+  FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);
+  FPPARAMS *paramsptr = &params;
+  LOCPARAMS lp;
 
   #ifdef USE_OPENMP
-  #pragma omp parallel shared(X, A, fpopts)
+  #pragma omp parallel shared(X, A, fpopts) private(params, lp)
   #endif /* #ifdef USE_OPENMP */
   {
     switch (fpopts->round) {
     case CPFLOAT_RND_NA: // round-to-nearest with ties-to-away
-      RN_TIES_TO_AWAY(X, A, numelem, &p);
+      RN_TIES_TO_AWAY(X, A, , numelem, paramsptr);
       break;
     case CPFLOAT_RND_NZ: // round-to-nearest with ties-to-zero
-      RN_TIES_TO_ZERO(X, A, numelem, &p);
+      RN_TIES_TO_ZERO(X, A, , numelem, paramsptr);
       break;
     case CPFLOAT_RND_NE: // round-to-nearest with ties-to-even
-      RN_TIES_TO_EVEN(X, A, numelem, &p);
+      RN_TIES_TO_EVEN(X, A, , numelem, paramsptr);
       break;
     case CPFLOAT_RND_TP: // round-toward-positive
-      RD_TWD_PINF(X, A, numelem, &p);
+      RD_TWD_PINF(X, A, , numelem, paramsptr);
       break;
     case CPFLOAT_RND_TN: // round-toward-negative
-      RD_TWD_NINF(X, A, numelem, &p);
+      RD_TWD_NINF(X, A, , numelem, paramsptr);
       break;
     case CPFLOAT_RND_TZ: // round-toward-zero
-      RD_TWD_ZERO(X, A, numelem, &p);
+      RD_TWD_ZERO(X, A, , numelem, paramsptr);
       break;
     case CPFLOAT_RND_SP: // stochastic rounding with proportional probabilities
-      RS_PROP(X, A, numelem, &p);
+      RS_PROP(X, A, , numelem, paramsptr);
       break;
     case CPFLOAT_RND_SE: // stochastic rounding with equal probabilities
-      RS_EQUI(X, A, numelem, &p);
+      RS_EQUI(X, A, , numelem, paramsptr);
       break;
     case CPFLOAT_RND_OD: // round-to-odd
-      RO(X, A, numelem, &p);
+      RO(X, A, , numelem, paramsptr);
       break;
     default: // No rounding if unknown mode specified.
       #ifdef USE_OPENMP
@@ -817,6 +743,10 @@ static inline int MAINFUN_COMBO(FPTYPE *X,
   return MAINFUN(X, A, numelem, fpopts);
 }
 #endif /* #ifdef _OPENMP */
+
+#undef PRAGMA_STRING
+#undef INIT_RANDSEED_STRING
+#undef INIT_BITSEED_STRING
 
 #undef RN_TIES_TO_AWAY
 #undef RN_TIES_TO_ZERO
