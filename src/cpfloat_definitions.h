@@ -26,7 +26,9 @@
 
 #include <time.h>
 #include <math.h>
+#include <fenv.h>
 #include <float.h>
+#include <limits.h>
 #include <string.h>
 
 /* #include "pcg_variants.h" */
