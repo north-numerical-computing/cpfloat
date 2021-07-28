@@ -21,6 +21,7 @@
 #define FPTYPE float
 #define INTTYPE uint32_t
 #define INTSUFFIX  U
+
 #define DEFPREC   24
 #define DEFEMAX  127
 #define DEFEMIN -126
@@ -33,11 +34,11 @@
 #define FRACMASK 0x007FFFFFU
 
 #ifdef PCG_VARIANTS_H_INCLUDED
-#define INITRAND_SINGLE(seed)               \
+#define INITRAND_SEQ(seed)                  \
   pcg32_srandom_r(seed,                     \
                   time(NULL),               \
                   (intptr_t)seed)
-#define INITRAND_MULTI(seed)                                    \
+#define INITRAND_PAR(seed)                                      \
   pcg32_srandom_r(seed,                                         \
                   omp_get_thread_num() * 13254 + time(NULL),    \
                   (intptr_t)seed)
@@ -45,8 +46,8 @@
 #else /* #ifdef PCG_VARIANTS_H_INCLUDED */
 #warning "The default C random number generator is being used."
 #warning "Please compile with the option --include <path-to-pcg_variants.h>."
-#define INITRAND_SINGLE(seed) *seed = time(NULL)
-#define INITRAND_MULTI(seed) *seed = omp_get_thread_num() * 13254 + time(NULL)
+#define INITRAND_SEQ(seed) *seed = time(NULL)
+#define INITRAND_PAR(seed) *seed = omp_get_thread_num() * 13254 + time(NULL)
 #define GENRAND(seed) (INTTYPE)rand_r((unsigned int *)seed)
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
 /** @endcond */
@@ -122,66 +123,11 @@ int cpfloatf(float *X,
              const size_t numelem,
              const optstruct *fpopts);
 
-#ifdef _OPENMP
-/**
- * @brief Round `float` array to lower precision without using OpenMP.
- *
- * @details If the function executes without errors, then the array @p X
- * contains the @p numelem entries of the array @p A rounded to a
- * lower-precision target format. The parameters of the target format and the
- * rounding mode to be used are encoded in @p fpopts. If required, the function
- * flips one bit in some of the entries of @p X.
- *
- * @param[out] X Array of rounded values.
- * @param[in] A Input array.
- * @param[in] numelem Number of elements in @p X and @p A.
- * @param[in] fpopts Parameters for target format, rounding mode, and soft errors.
- *
- * @return The function returns @b 1 if @p fpopts->precision is larger than 24,
- * @b 2 if @p fpopts->emax is larger than 127, and @b 0 otherwise.
- */
-static inline
-int cpfloatf_sequential(float *X,
-                        const float *A,
-                        const size_t numelem,
-                        const optstruct *fpopts);
-/**
- * @brief Round `float` array to lower precision using multiple OpenMP threads.
- *
- * @details If the function executes without errors, then the array @p X
- * contains the @p numelem entries of the array @p A rounded to a
- * lower-precision target format. The parameters of the target format and the
- * rounding mode to be used are encoded in @p fpopts. If required, the function
- * flips one bit in some of the entries of @p X.
- *
- * This function tries to use as many OpenMP threads as available on the system.
- *
- * @param[out] X Array of rounded values.
- * @param[in] A Input array.
- * @param[in] numelem Number of elements in @p X and @p A.
- * @param[in] fpopts Parameters for target format, rounding mode, and soft errors.
- *
- * @return The function returns @b 1 if @p fpopts->precision is larger than 24,
- * @b 2 if @p fpopts->emax is larger than 127, and @b 0 otherwise.
- */
-static inline
-int cpfloatf_parallel(float *X,
-                      const float *A,
-                      const size_t numelem,
-                      const optstruct *fpopts);
 #include "cpfloat_threshold_binary32.h"
-/** @cond */
-#define USE_OPENMP
-#include "cpfloat_template.h"
-#undef USE_OPENMP
-/** @endcond */
-#endif /* #ifdef _OPENMP */
 
-#define SINGLE_THREADED
 /** @cond */
 #include "cpfloat_template.h"
 /** @endcond */
-#undef SINGLE_THREADED
 
 #endif // _CPFLOAT_BINARY32_
 
