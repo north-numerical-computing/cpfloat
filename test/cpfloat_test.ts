@@ -18,7 +18,7 @@
 // binary16, bfloat16, TensorFloat-32
 static size_t precision [] = {11, 8, 11};
 static size_t emax [] = {15, 127, 127};
-static size_t nformats = 3;
+static size_t nformats = 2;
 
 /* Structure for options and fixtures. */
 optstruct *fpopts;
@@ -687,7 +687,7 @@ for (size_t mode=1; mode<3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
     fpopts->emax = emax[i];
-    size_t n = ldexp(1., fpopts->precision - 1) * (ldexp(1., 5) - 2);
+    size_t n = ldexp(1., fpopts->precision-1) * 2 * fpopts->emax;
     uint64_t *xd = malloc(n * sizeof(*xd));
     init_intarray_double(xd, n, intminnormal_double(fpopts),
                          1ul << (52-fpopts->precision + 1));
@@ -1379,7 +1379,7 @@ for (size_t mode=1; mode<3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
     fpopts->emax = emax[i];
-    size_t n = 3 * (ldexp(1., fpopts->precision - 1) * (ldexp(1., 5) - 2) - 1);
+    size_t n = 3 * (ldexp(1., fpopts->precision-1) * 2 * fpopts->emax - 1);
     uint64_t *xd_imm = malloc(n * sizeof(*xd_imm));
     uint64_t *refd = malloc(n * sizeof(*refd));
     double *xd = malloc(n * sizeof(*xd));
@@ -1785,7 +1785,8 @@ for (size_t mode=1; mode<3; mode++ ) {
       for (size_t i = 0; i < nformats; i++) {
         fpopts->precision = precision[i];
         fpopts->emax = emax[i];
-        size_t n = 3 * (ldexp(1., fpopts->precision - 1) * (ldexp(1., 5) - 2) - 1);
+
+        size_t n = 3 * (ldexp(1., fpopts->precision-1) * 2 * fpopts->emax - 1);
         uint64_t *xd = malloc(n * sizeof(*xd));
         double xmin = minnormal(fpopts);
         uint64_t stepd = 1ul << (52-fpopts->precision + 1);
@@ -1803,6 +1804,7 @@ for (size_t mode=1; mode<3; mode++ ) {
                                  n, fpopts, 6, i, i, subnormal, explim, mode);
         invprob_array_double(proundprop, 3);
         free(xd);
+
         uint32_t *xf = malloc(n * sizeof(*xf));
         uint32_t stepf = 1ul << (23-fpopts->precision + 1);
         float xminf = minnormal(fpopts);
@@ -1832,9 +1834,9 @@ putenv("CK_VERBOSITY=verbose");
 tcase_add_unchecked_fixture(tc1_1, fpopts_setup, fpopts_teardown);
 tcase_add_unchecked_fixture(tc1_2, fpopts_setup, fpopts_teardown);
 tcase_add_unchecked_fixture(tc1_3, fpopts_setup, fpopts_teardown);
-tcase_set_timeout(tc1_1, 100);
-tcase_set_timeout(tc1_2, 200);
-tcase_set_timeout(tc1_3, 300);
+tcase_set_timeout(tc1_1, 1800);
+tcase_set_timeout(tc1_2, 1800);
+tcase_set_timeout(tc1_3, 1800);
 srunner_set_log(sr, "cpfloat_test.log");
 
 /*
