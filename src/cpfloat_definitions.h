@@ -35,7 +35,12 @@
 
 #if defined(_OPENMP)
 #include <omp.h>
-#endif
+#endif /* #if defined(_OPENMP) */
+
+/**
+ * @brief Prefix for all library function names.
+ */
+#define MAINFUNNAME cpfloat
 
 /**
  * @brief Data type for specifying number of precision bits in target format.

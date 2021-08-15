@@ -57,9 +57,6 @@
 #define GENBIT(seed) (rand_r(seed) & (1U << 30))
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
 
-/* Prefix of all library functions. */
-#define MAINFUNNAME cpfloat
-
 
 
 
@@ -1267,7 +1264,6 @@ GENERATE_UNIVARIATE_MATH_H(fabs, fabs)
 GENERATE_TRIVARIATE_MATH_H(fma, fma)
 
 /* Undefine local macros. */
-
 #undef NOOP
 #undef NOARG
 #undef UNUSED
@@ -1287,8 +1283,6 @@ GENERATE_TRIVARIATE_MATH_H(fma, fma)
 #undef INITBIT_SEQ
 #undef INITBIT_PAR
 #undef GENBIT
-
-#undef MAINFUNNAME
 
 #undef ADDSUFFIXTO
 #undef FPUNION
