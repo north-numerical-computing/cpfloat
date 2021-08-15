@@ -128,7 +128,7 @@ int cpfloat(double *X,
 #include "cpfloat_template.h"
 /** @endcond */
 
-#endif // _CPFLOAT_BINARY64_
+#endif  /* #ifndef _CPFLOAT_BINARY64_ */
 
 /*
  * CPFloat - Custom Precision Floating-point numbers.

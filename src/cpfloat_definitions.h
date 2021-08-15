@@ -284,7 +284,7 @@ typedef struct {
   cpfloat_randseed_t *randseed;
 } optstruct;
 
-#endif // _CHOPFAST_DEFINITIONS_
+#endif /* #ifndef _CHOPFAST_DEFINITIONS_ */
 
 /*
  * CPFloat - Custom Precision Floating-point numbers.

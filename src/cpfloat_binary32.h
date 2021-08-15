@@ -129,7 +129,7 @@ int cpfloatf(float *X,
 #include "cpfloat_template.h"
 /** @endcond */
 
-#endif // _CPFLOAT_BINARY32_
+#endif /* #ifndef _CPFLOAT_BINARY32_ */
 
 /*
  * CPFloat - Custom Precision Floating-point numbers.

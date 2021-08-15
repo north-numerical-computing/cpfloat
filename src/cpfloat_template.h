@@ -17,7 +17,7 @@
  ****************************
  ****************************/
 
-/* Define a no-operation empty macro. */
+/* Define empty macros. */
 #define NOOP
 #define NOARG
 #define UNUSED(x) (void)(x);
@@ -160,7 +160,7 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
 
   int retval;
 
-  // Set retval to -1 if format is not valid.
+  /* Set retval to -1 if format is not valid. */
   const char *valid_formats [] = {"",
                                   "bfloat", "bf16", "b",
                                   "binary16", "fp16", "half", "h",
@@ -181,27 +181,27 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
       retval = 0;
   }
 
-  //Return 2 if precision is invalid (either nonpositive or too large).
+  /* Return 2 if precision is invalid (either nonpositive or too large). */
   if (fpopts->precision > DEFPREC || fpopts->precision <= 0)
     return 2;
 
-  // Set retval to -2 if double rounding may occur.
+  /* Set retval to -2 if double rounding may occur. */
   if (fpopts->precision > (fpopts->round<=1 ? floor((DEFPREC-2)/2) : DEFPREC-1))
     retval = -2;
 
-  // Return 3 if emax is invalid (either nonpositive or too large).
+  /* Return 3 if emax is invalid (either nonpositive or too large). */
   if (fpopts->emax > DEFEMAX || fpopts->emax <= 0)
     return 3;
 
-  // Set retval to -4 if rounding mode is set to no rounding.
+  /* Set retval to -4 if rounding mode is set to no rounding. */
   if (fpopts->round == CPFLOAT_NO_RND)
     retval = -4;
 
-  // Return 5 if p is required but is not a valid probability.
+  /* Return 5 if p is required but is not a valid probability. */
   if (fpopts->flip == CPFLOAT_SOFTERR && (fpopts->p > 1 || fpopts->p < 0))
     return 5;
 
-  // Return 0 or warning value.
+  /* Return 0 or warning value. */
   return retval;
 }
 
@@ -210,7 +210,7 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
 static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
                                              int *retval) {
 
-  // Actual precision and exponent range.
+  /* Actual precision and exponent range. */
   *retval = 0;
   cpfloat_precision_t precision = fpopts->precision;
   cpfloat_exponent_t emax = fpopts->explim == CPFLOAT_EXPRANGE_TARG ?
@@ -225,17 +225,17 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
     *retval = 2;
   }
 
-  // Derived floating point parameters.
+  /* Derived floating point parameters. */
   int emin = 1-emax;
-  FPTYPE xmin = ldexp(1., emin);               // Smallest pos. normal.
-  FPTYPE xmins = ldexp(1., emin-precision+1); // Smallest pos. subnormal.
+  FPTYPE xmin = ldexp(1., emin);              /* Smallest pos. normal. */
+  FPTYPE xmins = ldexp(1., emin-precision+1); /* Smallest pos. subnormal. */
   FPTYPE ftzthreshold = (fpopts->subnormal == CPFLOAT_SUBN_USE) ? xmins : xmin;
   FPTYPE xmax = ldexp(1., emax) * (2-ldexp(1., 1-precision));
   FPTYPE xbnd = ldexp(1., emax) * (2-ldexp(1., -precision));
 
-  // Bitmasks.
-  INTTYPE leadmask = FULLMASK << (DEFPREC-precision); // Bits to keep
-  INTTYPE trailmask = leadmask ^ FULLMASK; // Bits to discard.
+  /* Bitmasks. */
+  INTTYPE leadmask = FULLMASK << (DEFPREC-precision); /* Bits to keep. */
+  INTTYPE trailmask = leadmask ^ FULLMASK;            /* Bits to discard. */
 
   FPPARAMS params = {precision, emax, emin, fpopts->subnormal, fpopts->round,
                      ftzthreshold, xmin, xmax, xbnd,
@@ -248,9 +248,9 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
 #define UPDATE_GLOBAL_BITMASKS ADDSUFFIXTO(update_global_bitmasks)
 static inline void UPDATE_GLOBAL_BITMASKS(FPPARAMS *params) {
 
-  // Bitmasks.
-  params->leadmask = FULLMASK << (DEFPREC-params->precision); // Bits to keep
-  params->trailmask = params->leadmask ^ FULLMASK; // Bits to discard.
+  /* Bitmasks. */
+  params->leadmask = FULLMASK << (DEFPREC-params->precision); /* Bits to keep. */
+  params->trailmask = params->leadmask ^ FULLMASK; /* Bits to discard. */
 }
 
 /* Compute floating point parameters required for rounding subnormals. */
@@ -307,9 +307,9 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   } else if (ABS(y) >= p->xbnd) { /* Overflow */                               \
     *(x) = FPOF(SIGN(y) | INTOFCONST(INFINITY));                               \
   } else {                                                                     \
-    UPDATE_LOCAL_PARAMS(y, p, &lp);                                            \
+    UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
     *(x) = FPOF((INTOF(y) +                                                    \
-                 (INTCONST(1) << (DEFPREC-1-lp.precision))) & lp.leadmask);    \
+                 (INTCONST(1) << (DEFPREC-1-lp->precision))) & lp->leadmask);  \
   }
 
 /* Round-to-nearest with ties-to-zero. */
@@ -331,8 +331,8 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   } else if (ABS(y) > p->xbnd) { /* Overflow */                                \
     *(x) = FPOF(SIGN(y) | INTOFCONST(INFINITY));                               \
   } else {                                                                     \
-    UPDATE_LOCAL_PARAMS(y, p, &lp);                                            \
-    *(x) = FPOF((INTOF(y) + (lp.trailmask>>1)) & lp.leadmask);                 \
+    UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
+    *(x) = FPOF((INTOF(y) + (lp->trailmask>>1)) & lp->leadmask);               \
   }
 
 /* Round-to-nearest with ties-to-even. */
@@ -358,10 +358,10 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   } else if (ABS(y) >= p->xbnd) { /* Overflow */                               \
     *(x) = FPOF(SIGN(y) | INTOFCONST(INFINITY));                               \
   } else {                                                                     \
-    UPDATE_LOCAL_PARAMS(y, p, &lp);                                            \
-    INTTYPE LSB = ((INTOF(y) >> (DEFPREC-lp.precision)) & INTCONST(1))         \
-      | (lp.precision == 1 && DEFEMAX != p->emax); /* Hidden bit is one. */    \
-    *(x) = FPOF((INTOF(y) + ((lp.trailmask >> 1) + LSB)) & lp.leadmask);       \
+    UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
+    INTTYPE LSB = ((INTOF(y) >> (DEFPREC-lp->precision)) & INTCONST(1))        \
+      | (lp->precision == 1 && DEFEMAX != p->emax); /* Hidden bit is one. */   \
+    *(x) = FPOF((INTOF(y) + ((lp->trailmask >> 1) + LSB)) & lp->leadmask);     \
   }
 
 /* Round-to-plus-infinity (also known as round-up). */
@@ -389,11 +389,11 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     else /* *(y) == -INFINITY */                                               \
       *(x) = -INFINITY;                                                        \
   } else {                                                                     \
-    UPDATE_LOCAL_PARAMS(y, p, &lp);                                            \
+    UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
     if (SIGN(y) == 0) /* Add ulp if x is positive.  */                         \
-      *(x) = FPOF((INTOF(y) + lp.trailmask) & lp.leadmask);                    \
+      *(x) = FPOF((INTOF(y) + lp->trailmask) & lp->leadmask);                  \
     else                                                                       \
-      *(x) = FPOF(INTOF(y) & lp.leadmask);                                     \
+      *(x) = FPOF(INTOF(y) & lp->leadmask);                                    \
   }
 
 /* Round-to-minus-infinity (also known as round-down). */
@@ -421,11 +421,11 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     else /* *(y) == INFINITY */                                                \
       *(x) = INFINITY;                                                         \
   } else {                                                                     \
-    UPDATE_LOCAL_PARAMS(y, p, &lp);                                            \
+    UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
     if (SIGN(y)) /* Subtract ulp if x is positive. */                          \
-      *(x) = FPOF((INTOF(y) + lp.trailmask) & lp.leadmask);                    \
+      *(x) = FPOF((INTOF(y) + lp->trailmask) & lp->leadmask);                  \
     else                                                                       \
-      *(x) = FPOF(INTOF(y) & lp.leadmask);                                     \
+      *(x) = FPOF(INTOF(y) & lp->leadmask);                                    \
   }
 
 /* Round-to-zero (also known as truncation). */
@@ -441,8 +441,8 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   } else if (ABS(y) > p->xmax && ABS(y) != INFINITY) { /* Overflow */          \
     *(x) = FPOF(SIGN(y) | INTOFCONST(p->xmax));                                \
   } else {                                                                     \
-    UPDATE_LOCAL_PARAMS(y, p, &lp);                                            \
-    *(x) = FPOF(INTOF(y) & lp.leadmask);                                       \
+    UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
+    *(x) = FPOF(INTOF(y) & lp->leadmask);                                      \
   }
 
 /* Stochastic rounding with proportional probabilities. */
@@ -476,13 +476,13 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
       continue;                                                                \
     }                                                                          \
   } else if (ABS(y) < p->xbnd) { /* Rounding possibly required. */             \
-    UPDATE_LOCAL_PARAMS(y, p, &lp);                                            \
-    INTTYPE rndbuf = GENRAND(p->RANDSEED) & lp.trailmask;                      \
+    UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
+    INTTYPE rndbuf = GENRAND(p->RANDSEED) & lp->trailmask;                     \
     if (ABS(y) > p->xmax) {                                                    \
       rndbuf = rndbuf >> 1;                                                    \
-      lp.leadmask = (lp.leadmask >> 1) | SIGNMASK;                             \
+      lp->leadmask = (lp->leadmask >> 1) | SIGNMASK;                           \
     }                                                                          \
-    *(x) = FPOF((INTOF(y) + rndbuf) & lp.leadmask);                            \
+    *(x) = FPOF((INTOF(y) + rndbuf) & lp->leadmask);                           \
   } else {                                                                     \
     *(x) = *(y);                                                               \
   }                                                                            \
@@ -491,18 +491,18 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 /* Stochastic rounding with equal probabilities. */
 #define RS_EQUI_SCALAR(x, y, p, lp)                                            \
-  UPDATE_LOCAL_PARAMS(y, p, &lp);                                              \
+  UPDATE_LOCAL_PARAMS(y, p, lp);                                               \
   if (ABS(y) < p->ftzthreshold && *(y) != 0) { /* Underflow */                 \
     randombit = GENBIT(p->BITSEED);                                            \
-    *(x) = FPOF( SIGN(y) | INTOFCONST(randombit ? p->ftzthreshold : 0));       \
+    *(x) = FPOF(SIGN(y) | INTOFCONST(randombit ? p->ftzthreshold : 0));        \
   } else if (ABS(y) > p->xmax && ABS(y) != INFINITY) { /* Overflow */          \
     randombit = GENBIT(p->BITSEED);                                            \
-    *(x) = FPOF( SIGN(y) | INTOFCONST(randombit ? INFINITY : p->xmax));        \
-  } else if ((INTOF(y) & lp.trailmask)) { /* Not exactly representable. */     \
+    *(x) = FPOF(SIGN(y) | INTOFCONST(randombit ? INFINITY : p->xmax));         \
+  } else if ((INTOF(y) & lp->trailmask)) { /* Not exactly representable. */    \
     randombit = GENBIT(p->BITSEED);                                            \
-    *(x) = FPOF(INTOF(y) & lp.leadmask);                                       \
+    *(x) = FPOF(INTOF(y) & lp->leadmask);                                      \
     if (randombit)                                                             \
-      *(x) = FPOF(INTOF(x) + (INTCONST(1) << (DEFPREC-lp.precision)));         \
+      *(x) = FPOF(INTOF(x) + (INTCONST(1) << (DEFPREC-lp->precision)));        \
   } else /* *(y) exactly representable, no rounding necessary. */              \
     *(x) = *(y);
 
@@ -513,13 +513,13 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   } else if (ABS(y) > p->xmax && ABS(y) != INFINITY) { /* Overflow */          \
     *(x) = FPOF(SIGN(y) | INTOFCONST(p->xmax));                                \
   } else {                                                                     \
-    UPDATE_LOCAL_PARAMS(y, p, &lp);                                            \
-    if ((lp.trailmask & INTOF(y)) /* Not exactly representable. */             \
-        && (lp.precision > 1)) /* Set last bit to 1 if stored explicitly. */   \
-      *(x) = FPOF((INTOF(y) & lp.leadmask) |                                   \
-                  (INTCONST(1) << (DEFPREC-lp.precision)));                    \
+    UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
+    if ((lp->trailmask & INTOF(y)) /* Not exactly representable. */            \
+        && (lp->precision > 1)) /* Set last bit to 1 if stored explicitly. */  \
+      *(x) = FPOF((INTOF(y) & lp->leadmask) |                                  \
+                  (INTCONST(1) << (DEFPREC-lp->precision)));                   \
     else                                                                       \
-      *(x) = FPOF(INTOF(y) & lp.leadmask);                                     \
+      *(x) = FPOF(INTOF(y) & lp->leadmask);                                    \
   }
 
 /******************************
@@ -531,163 +531,125 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
  *   + FPTYPE *X, array where the rounded numbers are stored;
  *   + FPTYPE *Y, array where the numbers to be rounded are stored;
  *   + (string) PREPROC, pre-processing as *(Y+i) = f(*(A+i), *(B+i), ...);
- *   + (string) POSTPROC, post-processing as *(Z+i) = f(*(X+i));
+ *   + (string) POSTPROC, post-processing as *(X+i) = f(*(X+i));
+ *   + (string) PARALLEL, either SEQ (for sequential) or PAR (for parallel);
  *   + size_t numlelem, number of elements in the arrays;
  *   + FPPARAMS *p, address where the target format parameters are stored;
- *   + (string) PARALLEL, either SEQ (for sequential) or PAR (for parallel).
+ *   + LOCPARAMS *lp, address where the parameters for subnormals are stored.
  */
+
+#define PARALLEL_STRING(PARALLEL) PARALLEL_STRING_##PARALLEL
+#define PARALLEL_STRING_SEQ
+#define PARALLEL_STRING_PAR _Pragma("omp parallel shared(X, A, fpopts)")
 
 #define FOR_STRING(PARALLEL) FOR_STRING_##PARALLEL
 #define FOR_STRING_SEQ
-#define FOR_STRING_PAR  _Pragma("omp for")
+#define FOR_STRING_PAR  Pragma("omp for")
+
+#define VECTOR_ROUNDING_FUNCTION(X, Y, PREPROC, POSTPROC, SCALARFUN, PARALLEL, \
+                                 numelem, p, lp)                               \
+  PARALLEL_STRING(PARALLEL)                                                    \
+  {                                                                            \
+    if (p->emax == DEFEMAX) {                                                  \
+      FOR_STRING(PARALLEL)                                                     \
+      for (size_t i=0; i<numelem; i++) {                                       \
+        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
+        CONCATENATE(SCALARFUN, _SCALAR_SAME_EXP)(X+i, Y+i, p)                  \
+        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
+      }                                                                        \
+    } else {                                                                   \
+      FOR_STRING(PARALLEL)                                                     \
+      for (size_t i=0; i<numelem; i++) {                                       \
+        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
+        CONCATENATE(SCALARFUN, _SCALAR_OTHER_EXP)(X+i, Y+i, p, lp)             \
+        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
+      }                                                                        \
+    }                                                                          \
+  }
 
 /* Round-to-nearest with ties-to-away. */
-#define RN_TIES_TO_AWAY(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL)         \
-  if (p->emax == DEFEMAX) {                                                    \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RN_TIES_TO_AWAY_SCALAR_SAME_EXP(X+i, Y+i, p)                           \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  } else {                                                                     \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RN_TIES_TO_AWAY_SCALAR_OTHER_EXP(X+i, Y+i, p, lp)                      \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  }
+#define RN_TIES_TO_AWAY(X, Y, PREPROC, POSTPROC, PARALLEL, numelem, p, lp)     \
+  VECTOR_ROUNDING_FUNCTION(X, Y, PREPROC, POSTPROC, RN_TIES_TO_AWAY, PARALLEL, \
+                           numelem, p, lp)
 
 /* Round-to-nearest with ties-to-zero. */
-#define RN_TIES_TO_ZERO(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL)         \
-  if (p->emax == DEFEMAX) {                                                    \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RN_TIES_TO_ZERO_SCALAR_SAME_EXP(X+i, Y+i, p)                           \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  } else {                                                                     \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RN_TIES_TO_ZERO_SCALAR_OTHER_EXP(X+i, Y+i, p, lp)                      \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  }
+#define RN_TIES_TO_ZERO(X, Y, PREPROC, POSTPROC, PARALLEL, numelem, p, lp)     \
+  VECTOR_ROUNDING_FUNCTION(X, Y, PREPROC, POSTPROC, RN_TIES_TO_ZERO, PARALLEL, \
+                           numelem, p, lp)
 
 /* Round-to-nearest with ties-to-even. */
-#define RN_TIES_TO_EVEN(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL)         \
-  if (p->emax == DEFEMAX) {                                                    \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RN_TIES_TO_EVEN_SCALAR_SAME_EXP(X+i, Y+i, p)                           \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  } else {                                                                     \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RN_TIES_TO_EVEN_SCALAR_OTHER_EXP(X+i, Y+i, p, lp)                      \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  }
+#define RN_TIES_TO_EVEN(X, Y, PREPROC, POSTPROC, PARALLEL, numelem, p, lp) \
+  VECTOR_ROUNDING_FUNCTION(X, Y, PREPROC, POSTPROC, RN_TIES_TO_EVEN, PARALLEL, \
+                           numelem, p, lp)
 
 /* Round-to-plus-infinity (also known as round-up). */
-#define RD_TWD_PINF(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL)             \
-  if (p->emax == DEFEMAX) {                                                    \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RD_TWD_PINF_SCALAR_SAME_EXP(X+i, Y+i, p)                               \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  } else {                                                                     \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RD_TWD_PINF_SCALAR_OTHER_EXP(X+i, Y+i, p, lp)                          \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  }
+#define RD_TWD_PINF(X, Y, PREPROC, POSTPROC, PARALLEL, numelem, p, lp)         \
+  VECTOR_ROUNDING_FUNCTION(X, Y, PREPROC, POSTPROC, RD_TWD_PINF, PARALLEL,     \
+                           numelem, p, lp)
 
 /* Round-to-minus-infinity (also known as round-down). */
-#define RD_TWD_NINF(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL)             \
-  if (p->emax == DEFEMAX) {                                                    \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RD_TWD_NINF_SCALAR_SAME_EXP(X+i, Y+i, p)                               \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  } else {                                                                     \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RD_TWD_NINF_SCALAR_OTHER_EXP(X+i, Y+i, p, lp)                          \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  }
+#define RD_TWD_NINF(X, Y, PREPROC, POSTPROC, PARALLEL, numelem, p, lp)         \
+  VECTOR_ROUNDING_FUNCTION(X, Y, PREPROC, POSTPROC, RD_TWD_NINF, PARALLEL,     \
+                           numelem, p, lp)
 
 /* Round-to-zero (also known as truncation). */
-#define RD_TWD_ZERO(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL)             \
-  if (p->emax == DEFEMAX) {                                                    \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RD_TWD_ZERO_SCALAR_SAME_EXP (X+i, Y+i, p)                              \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  } else {                                                                     \
-    FOR_STRING(PARALLEL)                                                       \
-      for (size_t i=0; i<numelem; i++) {                                       \
-        DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        RD_TWD_ZERO_SCALAR_OTHER_EXP (X+i, Y+i, p, lp)                         \
-        DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
-      }                                                                        \
-  }
+#define RD_TWD_ZERO(X, Y, PREPROC, POSTPROC, PARALLEL, numelem, p, lp)         \
+  VECTOR_ROUNDING_FUNCTION(X, Y, PREPROC, POSTPROC, RD_TWD_ZERO, PARALLEL,     \
+                           numelem, p, lp)
 
 /* Stochastic rounding with proportional probabilities. */
-#define RS_PROP(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL, INIT_RANDSEED)  \
+#define RS_PROP(X, Y, PREPROC, POSTPROC, PARALLEL, INIT_RANDSEED,              \
+                numelem, p, lp)                                                \
   INIT_RANDSEED(p);                                                            \
-  FOR_STRING(PARALLEL)                                                         \
+  PARALLEL_STRING(PARALLEL)                                                    \
+  {                                                                            \
+    FOR_STRING(PARALLEL)                                                       \
     for (size_t i=0; i<numelem; i++) {                                         \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
       RS_PROP_SCALAR(X+i, Y+i, p, lp)                                          \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
-    }
+    }                                                                          \
+  }
+
 
 /* Stochastic rounding with equal probabilities. */
-#define RS_EQUI(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL, INIT_BITSEED)   \
+#define RS_EQUI(X, Y, PREPROC, POSTPROC, PARALLEL, INIT_BITSEED,               \
+                numelem, p, lp)                                                \
   INIT_BITSEED(p);                                                             \
   BITTYPE randombit;                                                           \
-  FOR_STRING(PARALLEL)                                                         \
+  PARALLEL_STRING(PARALLEL)                                                    \
+  {                                                                            \
+    FOR_STRING(PARALLEL)                                                       \
     for (size_t i=0; i<numelem; i++) {                                         \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
       RS_EQUI_SCALAR(X+i, Y+i, p, lp)                                          \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
-    }
+    }                                                                          \
+  }
 
 /* Round-to-odd. */
-#define RO(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL)                      \
-  FOR_STRING(PARALLEL)                                                         \
+#define RO(X, Y, PREPROC, POSTPROC, PARALLEL, numelem, p, lp)                  \
+  PARALLEL_STRING(PARALLEL)                                                    \
+  {                                                                            \
+    FOR_STRING(PARALLEL)                                                       \
     for (size_t i=0; i<numelem; i++) {                                         \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
       RO_SCALAR(X+i, Y+i, p, lp)                                               \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
-    }
+    }                                                                          \
+  }
 
 /* No rounding. */
-/* Round-to-odd. */
-#define NO_ROUND(X, Y, PREPROC, POSTPROC, numelem, p, PARALLEL)                \
-  FOR_STRING(PARALLEL)                                                         \
+#define NO_ROUND(X, Y, PREPROC, POSTPROC, PARALLEL, numelem)                   \
+  PARALLEL_STRING(PARALLEL)                                                    \
+  {                                                                            \
+    FOR_STRING(PARALLEL)                                                       \
     for (size_t i=0; i<numelem; i++) {                                         \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
       *(X+i) = *(Y+i);                                                         \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
-    }
+    }                                                                          \
+  }
 
 /********************************************************
  * Macros that define rounding or arithmetic functions. *
@@ -698,10 +660,6 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX)                         \
   CONCATENATE(GENERATE_FUN_NAME(FUNNAME), PARALLEL_SUFFIX)
 
-#define PARALLEL_STRING(PARALLEL) PARALLEL_STRING_##PARALLEL
-#define PARALLEL_STRING_SEQ
-#define PARALLEL_STRING_PAR _Pragma("omp parallel shared(X, A, fpopts)")
-
 /*
  * Macros that generates CPFloat functions. They will have name:
  *    <MAINFUNNAME>_<FUNNAME><TYPESUFFIX><PARALLEL_SUFFIX>
@@ -711,7 +669,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
  *    + (string) FPINPUT, the input arrays(s);
  *    + size_t numelem, the number of elements in the input and output arrays;
  *    + optstruct *fpopts, address of parameters of target format.
- * The pre-processing and post-processing should go in the strings:
+ * The pre-processing and post-processing code should go in the strings:
  *    + PREPROC, featuring Y on the LHS and FPINPUT on the RHS;
  *    + POSTPROC, featuring FPOUTPUT on the LHS and X on the RHS.
  *
@@ -737,56 +695,52 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
    DEPARENTHESIZE_MAYBE(FTEMP),                                                \
    DEPARENTHESIZE_MAYBE(FINPUT),                                               \
    const size_t numelem, const optstruct *fpopts) {                            \
-    UNUSED(A)                                                                  \
+    UNUSED(A) /* Only to silence compiler warning. */                          \
     int retval = 0;                                                            \
-    PARALLEL_STRING(PARALLEL_TYPE)                                             \
-      {                                                                        \
-        FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);              \
-        LOCPARAMS lp;                                                          \
-        FPPARAMS *paramsptr = &params;                                         \
-        DEPARENTHESIZE_MAYBE(INIT_STRING)                                      \
-        switch (paramsptr->round) {                                            \
-        case CPFLOAT_RND_NA: /* round-to-nearest with ties-to-away  */         \
-          RN_TIES_TO_AWAY(X, Y, PREPROC, POSTPROC, numelem, paramsptr,         \
-                          PARALLEL_TYPE);                                      \
-          break;                                                               \
-        case CPFLOAT_RND_NZ: /* round-to-nearest with ties-to-zero */          \
-          RN_TIES_TO_ZERO(X, Y, PREPROC, POSTPROC, numelem, paramsptr,         \
-                          PARALLEL_TYPE);                                      \
-          break;                                                               \
-        case CPFLOAT_RND_NE: /* round-to-nearest with ties-to-even */          \
-          RN_TIES_TO_EVEN(X, Y, PREPROC, POSTPROC, numelem, paramsptr,         \
-                          PARALLEL_TYPE);                                      \
-          break;                                                               \
-        case CPFLOAT_RND_TP: /* round-toward-positive */                       \
-          RD_TWD_PINF(X, Y, PREPROC, POSTPROC, numelem, paramsptr,             \
-                      PARALLEL_TYPE);                                          \
-          break;                                                               \
-        case CPFLOAT_RND_TN: /* round-toward-negative */                       \
-          RD_TWD_NINF(X, Y, PREPROC, POSTPROC, numelem, paramsptr,             \
-                      PARALLEL_TYPE);                                          \
-          break;                                                               \
-        case CPFLOAT_RND_TZ: /* round-toward-zero */                           \
-          RD_TWD_ZERO(X, Y, PREPROC, POSTPROC, numelem, paramsptr,             \
-                      PARALLEL_TYPE);                                          \
-          break;                                                               \
-        case CPFLOAT_RND_SP: /* stochastic rounding (proportional) */          \
-          RS_PROP(X, Y, PREPROC, POSTPROC, numelem, paramsptr,                 \
-                  PARALLEL_TYPE, INIT_RAND_STRING);                            \
-          break;                                                               \
-        case CPFLOAT_RND_SE: /* stochastic rounding (equal) */                 \
-          RS_EQUI(X, Y, PREPROC, POSTPROC, numelem, paramsptr,                 \
-                  PARALLEL_TYPE, INIT_BIT_STRING);                             \
-          break;                                                               \
-        case CPFLOAT_RND_OD: /* round-to-odd */                                \
-          RO(X, Y, PREPROC, POSTPROC, numelem, paramsptr, PARALLEL_TYPE);      \
-          break;                                                               \
-        default: /* No rounding if unknown mode specified. */                  \
-          NO_ROUND(X, Y, PREPROC, POSTPROC, numelem, paramsptr,                \
-                   PARALLEL_TYPE);                                             \
-          break;                                                               \
-        }                                                                      \
-      }                                                                        \
+    FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);                  \
+    LOCPARAMS lp;                                                              \
+    DEPARENTHESIZE_MAYBE(INIT_STRING)                                          \
+    switch (params.round) {                                                    \
+    case CPFLOAT_RND_NA: /* round-to-nearest with ties-to-away  */             \
+      RN_TIES_TO_AWAY(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE,                  \
+                      numelem, (&params), (&lp));                              \
+      break;                                                                   \
+    case CPFLOAT_RND_NZ: /* round-to-nearest with ties-to-zero */              \
+      RN_TIES_TO_ZERO(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE,                  \
+                      numelem, (&params), (&lp));                              \
+      break;                                                                   \
+    case CPFLOAT_RND_NE: /* round-to-nearest with ties-to-even */              \
+      RN_TIES_TO_EVEN(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE,                  \
+                      numelem, (&params), (&lp));                              \
+      break;                                                                   \
+    case CPFLOAT_RND_TP: /* round-toward-positive */                           \
+      RD_TWD_PINF(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE,                      \
+                      numelem, (&params), (&lp));                              \
+      break;                                                                   \
+    case CPFLOAT_RND_TN: /* round-toward-negative */                           \
+      RD_TWD_NINF(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE,                      \
+                      numelem, (&params), (&lp));                              \
+      break;                                                                   \
+    case CPFLOAT_RND_TZ: /* round-toward-zero */                               \
+      RD_TWD_ZERO(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE,                      \
+                      numelem, (&params), (&lp));                              \
+      break;                                                                   \
+    case CPFLOAT_RND_SP: /* stochastic rounding (proportional) */              \
+      RS_PROP(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE, INIT_RAND_STRING,        \
+              numelem, (&params), (&lp));                                      \
+      break;                                                                   \
+    case CPFLOAT_RND_SE: /* stochastic rounding (equal) */                     \
+      RS_EQUI(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE, INIT_BIT_STRING,         \
+              numelem, (&params), (&lp));                                      \
+      break;                                                                   \
+    case CPFLOAT_RND_OD: /* round-to-odd */                                    \
+      RO(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE,                               \
+         numelem, (&params), (&lp));                                           \
+      break;                                                                   \
+    default: /* No rounding if unknown mode specified. */                      \
+      NO_ROUND(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE, numelem);               \
+      break;                                                                   \
+    }                                                                          \
     /* Introduce bit flips. */                                                 \
     if (fpopts->flip == CPFLOAT_SOFTERR) {                                     \
       FOR_STRING(PARALLEL_TYPE)                                                \
@@ -826,63 +780,63 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define INIT_RAND_STRING_PAR INIT_RANDSEED_PAR
 #define INIT_BIT_STRING_PAR INIT_BITSEED_PAR
 
-#define GENERATE_INTERFACE_SUBFUNCTIONS_PAR(FUNNAME,                    \
-                                            FOUTPUT,                    \
-                                            FTEMP,                      \
-                                            FINPUT,                     \
-                                            INIT_STRING, PREPROC, POSTPROC) \
-  GENERATE_INTERFACE_SUBFUNCTIONS(FUNNAME,                              \
-                                  FOUTPUT,                              \
-                                  FTEMP,                                \
-                                  FINPUT,                               \
-                                  INIT_STRING,                          \
-                                  PREPROC,                              \
-                                  POSTPROC,                             \
-                                  PAR,                                  \
-                                  PARALLEL_SUFFIX_PAR,                  \
-                                  INIT_RAND_STRING_PAR,                 \
+#define GENERATE_INTERFACE_SUBFUNCTIONS_PAR(FUNNAME,                           \
+                                            FOUTPUT,                           \
+                                            FTEMP,                             \
+                                            FINPUT,                            \
+                                            INIT_STRING, PREPROC, POSTPROC)    \
+  GENERATE_INTERFACE_SUBFUNCTIONS(FUNNAME,                                     \
+                                  FOUTPUT,                                     \
+                                  FTEMP,                                       \
+                                  FINPUT,                                      \
+                                  INIT_STRING,                                 \
+                                  PREPROC,                                     \
+                                  POSTPROC,                                    \
+                                  PAR,                                         \
+                                  PARALLEL_SUFFIX_PAR,                         \
+                                  INIT_RAND_STRING_PAR,                        \
                                   INIT_BIT_STRING_PAR)
 
-// Partial results before rounding are store in the vector X.
-#define GENERATE_INTERFACE(FUNNAME, FOUTPUT, FTEMP, FINPUT,             \
-                           FCALLOUT, FCALLTEMP, FCALLIN,                \
-                           INIT_STRING, PREPROC, POSTPROC)              \
-  GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME, FOUTPUT, FTEMP, FINPUT,  \
-                                      INIT_STRING, PREPROC, POSTPROC)   \
-       GENERATE_INTERFACE_SUBFUNCTIONS_PAR(FUNNAME, FOUTPUT, FTEMP, FINPUT, \
-                                           INIT_STRING, PREPROC, POSTPROC) \
-  static inline int                                                     \
-  GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),             \
-                             DEPARENTHESIZE_MAYBE(FINPUT),              \
-                             const size_t numelem,                      \
-                             const optstruct *fpopts) {                 \
-    if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))               \
-      return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)         \
-        (DEPARENTHESIZE_MAYBE(FCALLOUT),                                \
-         DEPARENTHESIZE_MAYBE(FCALLTEMP),                               \
-         DEPARENTHESIZE_MAYBE(FCALLIN),                                 \
-         numelem, fpopts);                                              \
-    else                                                                \
-      return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_PAR)         \
-        (DEPARENTHESIZE_MAYBE(FCALLOUT),                                \
-         DEPARENTHESIZE_MAYBE(FCALLTEMP),                               \
-         DEPARENTHESIZE_MAYBE(FCALLIN),                                 \
-         numelem, fpopts);                                              \
+/* Partial results before rounding are store in the vector X. */
+#define GENERATE_INTERFACE(FUNNAME, FOUTPUT, FTEMP, FINPUT,                    \
+                           FCALLOUT, FCALLTEMP, FCALLIN,                       \
+                           INIT_STRING, PREPROC, POSTPROC)                     \
+  GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME, FOUTPUT, FTEMP, FINPUT,         \
+                                      INIT_STRING, PREPROC, POSTPROC)          \
+  GENERATE_INTERFACE_SUBFUNCTIONS_PAR(FUNNAME, FOUTPUT, FTEMP, FINPUT,         \
+                                           INIT_STRING, PREPROC, POSTPROC)     \
+  static inline int                                                            \
+  GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),                    \
+                             DEPARENTHESIZE_MAYBE(FINPUT),                     \
+                             const size_t numelem,                             \
+                             const optstruct *fpopts) {                        \
+    if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))                      \
+      return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
+        (DEPARENTHESIZE_MAYBE(FCALLOUT),                                       \
+         DEPARENTHESIZE_MAYBE(FCALLTEMP),                                      \
+         DEPARENTHESIZE_MAYBE(FCALLIN),                                        \
+         numelem, fpopts);                                                     \
+    else                                                                       \
+      return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_PAR)                \
+        (DEPARENTHESIZE_MAYBE(FCALLOUT),                                       \
+         DEPARENTHESIZE_MAYBE(FCALLTEMP),                                      \
+         DEPARENTHESIZE_MAYBE(FCALLIN),                                        \
+         numelem, fpopts);                                                     \
   }
 #else /* #ifdef _OPENMP */
-#define GENERATE_INTERFACE(FUNNAME, FOUTPUT, FTEMP, FINPUT,             \
-                           FCALLOUT, FCALLTEMP, FCALLIN,                \
-                           INIT_STRING, PREPROC, POSTPROC)              \
-  GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME, FOUTPUT, FTEMP, FINPUT,  \
-                                      INIT_STRING, PREPROC, POSTPROC)   \
-       static inline int                                                \
-       GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),        \
-                                  DEPARENTHESIZE_MAYBE(FINPUT),         \
-                                  const size_t numelem,                 \
-                                  const optstruct *fpopts) {            \
-    return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)           \
-      (DEPARENTHESIZE_MAYBE(FCALLOUT),                                  \
-       DEPARENTHESIZE_MAYBE(FCALLTEMP),                                 \
+#define GENERATE_INTERFACE(FUNNAME, FOUTPUT, FTEMP, FINPUT,                    \
+                           FCALLOUT, FCALLTEMP, FCALLIN,                       \
+                           INIT_STRING, PREPROC, POSTPROC)                     \
+  GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME, FOUTPUT, FTEMP, FINPUT,         \
+                                      INIT_STRING, PREPROC, POSTPROC)          \
+       static inline int                                                       \
+       GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),               \
+                                  DEPARENTHESIZE_MAYBE(FINPUT),                \
+                                  const size_t numelem,                        \
+                                  const optstruct *fpopts) {                   \
+    return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                  \
+      (DEPARENTHESIZE_MAYBE(FCALLOUT),                                         \
+       DEPARENTHESIZE_MAYBE(FCALLTEMP),                                        \
        DEPARENTHESIZE_MAYBE(FCALLIN),                                          \
        numelem, fpopts);                                                       \
   }
@@ -948,7 +902,6 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
    const size_t numelem, const optstruct *fpopts) {                            \
     int retval = 0;                                                            \
     FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);                  \
-    FPPARAMS *paramsptr = &params;                                             \
     LOCPARAMS lp;                                                              \
     PARALLEL_STRING(PARALLEL_TYPE)                                             \
       {                                                                        \
@@ -957,9 +910,9 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
           int rounddir = *(B+i) > *(A+i);                                      \
           *(Y+i) = ADDSUFFIXTO(FUNNAME)(*(A+i), *(B+i));                       \
           if (rounddir) {                                                      \
-            RD_TWD_PINF_SCALAR_OTHER_EXP(X+i, Y+i, paramsptr, lp)              \
+            RD_TWD_PINF_SCALAR_OTHER_EXP(X+i, Y+i, (&params), (&lp))           \
           } else {                                                             \
-            RD_TWD_NINF_SCALAR_OTHER_EXP(X+i, Y+i, paramsptr, lp)              \
+            RD_TWD_NINF_SCALAR_OTHER_EXP(X+i, Y+i, (&params), (&lp))           \
           }                                                                    \
         }                                                                      \
       }                                                                        \
@@ -1104,63 +1057,62 @@ GENERATE_UNIVARIATE_MATH_H(lgamma, lgamma)
 #define FIND_ROUNDING_PRECISION                                                \
   (int temp = ADDSUFFIXTO(ilogb)(*(A+i));                                      \
    if (temp == FP_ILOGB0 || temp == FP_ILOGBNAN || temp == INT_MAX) {          \
-     paramsptr->precision = DEFPREC-1;                                         \
-     paramsptr->emax = DEFEMAX;                                                \
-     paramsptr->emax = DEFEMIN;                                                \
+     params.precision = DEFPREC-1;                                             \
+     params.emax = DEFEMAX;                                                    \
+     params.emax = DEFEMIN;                                                    \
    } else {                                                                    \
-     paramsptr->precision = temp + 1;                                          \
-     paramsptr->ftzthreshold = 1.0;                                            \
-     paramsptr->xmin = 1.0;                                                    \
+     params.precision = temp + 1;                                              \
+     params.ftzthreshold = 1.0;                                                \
+     params.xmin = 1.0;                                                        \
    }                                                                           \
-   UPDATE_GLOBAL_BITMASKS(paramsptr);)
+   UPDATE_GLOBAL_BITMASKS((&params));)
 
 #define RINT_INIT_STRING                                                       \
   (if (fpopts->round == CPFLOAT_RND_NE) {                                      \
-    paramsptr->subnormal = CPFLOAT_SUBN_USE;                                   \
-    paramsptr->emax = DEFEMAX - 1;                                             \
+    params.subnormal = CPFLOAT_SUBN_USE;                                       \
+    params.emax = DEFEMAX - 1;                                                 \
   } else {                                                                     \
-    paramsptr->subnormal = CPFLOAT_SUBN_RND;                                   \
-    paramsptr->emax = DEFEMAX;                                                 \
+    params.subnormal = CPFLOAT_SUBN_RND;                                       \
+    params.emax = DEFEMAX;                                                     \
   }                                                                            \
-  paramsptr->xmax = ldexp(1., fpopts->emax) *                                  \
-    (2-ldexp(1., 1-fpopts->precision));)
+  params.xmax = ldexp(1., fpopts->emax) * (2-ldexp(1., 1-fpopts->precision));)
 
 GENERATE_INTERFACE(ceil,
                    FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
                    X, ((FPTYPE *) A), A,
-                   paramsptr->round = CPFLOAT_RND_TP;,
+                   params.round = CPFLOAT_RND_TP;,
                    FIND_ROUNDING_PRECISION,
                    NOOP)
 GENERATE_INTERFACE(floor,
                    FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
                    X, ((FPTYPE *) A), A,
-                   paramsptr->round = CPFLOAT_RND_TN;,
+                   params.round = CPFLOAT_RND_TN;,
                    FIND_ROUNDING_PRECISION,
                    NOOP)
 GENERATE_BIVARIATE_PREFIX_MATH_H(fmod, fmod)
 GENERATE_INTERFACE(trunc,
                    FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
                    X, ((FPTYPE *) A), A,
-                   paramsptr->round = CPFLOAT_RND_TZ;,
+                   params.round = CPFLOAT_RND_TZ;,
                    FIND_ROUNDING_PRECISION,
                    NOOP)
 
 GENERATE_INTERFACE(round,
                    FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
                    X, ((FPTYPE *) A), A,
-                   paramsptr->round = CPFLOAT_RND_NA;,
+                   params.round = CPFLOAT_RND_NA;,
                    FIND_ROUNDING_PRECISION,
                    NOOP)
 GENERATE_INTERFACE(lround, // TODO: spurious output array X
                    (long *r, FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
                    (r, X), ((FPTYPE *) A), A,
-                   paramsptr->round = CPFLOAT_RND_NA;,
+                   params.round = CPFLOAT_RND_NA;,
                    FIND_ROUNDING_PRECISION,
                    *(r+i) = (long)*(X+i);)
 GENERATE_INTERFACE(llround, // TODO: spurious output array X
                    (long long *r, FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
                    (r, X), ((FPTYPE *) A), A,
-                   paramsptr->round = CPFLOAT_RND_NA;,
+                   params.round = CPFLOAT_RND_NA;,
                    FIND_ROUNDING_PRECISION,
                    *(r+i) = (long long)*(X+i);)
 
@@ -1207,7 +1159,7 @@ GENERATE_INTERFACE(remquo,
 
 /* floating-point manipulation functions. */
 GENERATE_BIVARIATE_PREFIX_MATH_H(copysign, copysign)
-// nan NOT IMPLEMENTED as not relevant.
+/* nan NOT IMPLEMENTED as not relevant. */
 GENERATE_NEXTAFTER_INTERFACE(nextafter, FPTYPE)
 GENERATE_NEXTAFTER_INTERFACE(nexttoward, long double)
 
@@ -1223,7 +1175,7 @@ GENERATE_INTERFACE(fpclassify, // TODO: spurious output array X
                    NOOP, NOOP,
                    if (*(X+i) == 0)
                      *(r+i) = FP_ZERO;
-                   else if (ABS(X+i) < paramsptr->xmin)
+                   else if (ABS(X+i) < params.xmin)
                      *(r+i) = FP_SUBNORMAL;
                    else if (ABS(X+i) < INFINITY)
                      *(r+i) = FP_NORMAL;
@@ -1247,17 +1199,18 @@ GENERATE_INTERFACE(isnormal, // TODO: spurious output array X
                    (int *r,FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
                    (r, X), ((FPTYPE *) A), A,
                    NOOP, NOOP,
-                   *(r+i) = ABS(X+i) >= paramsptr->xmin && !isinf(*(X+i));)
-// signbit NOT IMPLEMENTED as rounding doesn't interfere with it.
+                   *(r+i) = ABS(X+i) >= params.xmin && !isinf(*(X+i));)
+/* signbit NOT IMPLEMENTED as rounding doesn't interfere with it. */
 
-/* Comparison. */
-/* Not implemented as they don't seem to be meaningful for vectors. */
-// isgreater NOT IMPLEMENTED
-// isgreaterequal NOT IMPLEMENTED
-// isless NOT IMPLEMENTED
-// islessequal NOT IMPLEMENTED
-// islessgreater NOT IMPLEMENTED
-// isunordered NOT IMPLEMENTED
+/* Comparison.
+ * Not implemented as they don't seem to be meaningful for vectors.
+ *isgreater NOT IMPLEMENTED
+ *isgreaterequal NOT IMPLEMENTED
+ *isless NOT IMPLEMENTED
+ *islessequal NOT IMPLEMENTED
+ *islessgreater NOT IMPLEMENTED
+ *isunordered NOT IMPLEMENTED
+ */
 
 /* Other functions. */
 GENERATE_UNIVARIATE_MATH_H(fabs, fabs)
