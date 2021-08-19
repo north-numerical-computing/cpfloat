@@ -34,22 +34,17 @@
 #define FRACMASK 0x007FFFFFU
 
 #ifdef PCG_VARIANTS_H_INCLUDED
-#define INITRAND_SEQ(seed)                  \
-  pcg32_srandom_r(seed,                     \
-                  time(NULL),               \
-                  (intptr_t)seed)
-#define INITRAND_PAR(seed)                                      \
-  pcg32_srandom_r(seed,                                         \
-                  omp_get_thread_num() * 13254 + time(NULL),    \
-                  (intptr_t)seed)
+#define INITRAND(seed) pcg32_srandom_r(seed, time(NULL), (intptr_t)seed);
+#define ADVANCERAND(seed, thread, nloc)                                        \
+  pcg32_advance_r(seed, thread * nloc - 1);
 #define GENRAND(seed) pcg32_random_r(seed)
 #else /* #ifdef PCG_VARIANTS_H_INCLUDED */
 #warning "The default C random number generator is being used."
-#warning "Please compile with the option --include <path-to-pcg_variants.h>."
-#define INITRAND_SEQ(seed) *seed = time(NULL)
-#define INITRAND_PAR(seed) *seed = omp_get_thread_num() * 13254 + time(NULL)
-#define GENRAND(seed) (INTTYPE)rand_r((unsigned int *)seed)
-#endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
+#warning "Please compile with -include <path-to-pcg_variants.h>"
+#warning "and link with -L <path-to-libpcg_random.a> -lpcg_random."
+#define INITRAND(seed) *seed = time(NULL);
+#define GEN_SINGLE_RAND(seed) ((INTTYPE)rand_r((unsigned int *)seed))
+#endif /* #ifndef PCG_VARIANTS_H_INCLUDED */
 /** @endcond */
 
 /**
@@ -121,7 +116,7 @@ static inline
 int cpfloatf(float *X,
              const float *A,
              const size_t numelem,
-             const optstruct *fpopts);
+             optstruct *fpopts);
 
 #include "cpfloat_threshold_binary32.h"
 

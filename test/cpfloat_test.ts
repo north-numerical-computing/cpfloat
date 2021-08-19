@@ -479,6 +479,7 @@ void check_array_stoc_double(double *tmpin, double *tmpout,
         ck_abort_msg("Not rounding to either closest number.");
     fpopts->round = mode;
     if (fabs(counter[0]/NREPS - prounddown[i % 3]) > 0.1) {
+      printf("%e\n", fabs(counter[0]/NREPS - prounddown[i % 3]));
       ck_abort_msg("Error in stochasting rounding.");
     }
   }
@@ -509,6 +510,7 @@ void check_array_stoc_float(float *tmpin, float *tmpout,
         ck_abort_msg("Not rounding to either closest number.");
     fpopts->round = mode;
     if (fabs(counter[0]/(double)NREPS - prounddown[i % 3]) > 0.1) {
+      printf("%e\n", fabs(counter[0]/NREPS - prounddown[i % 3]));
       ck_abort_msg("Error in stochasting rounding.");
     }
   }
@@ -529,6 +531,7 @@ void check_array_equi_double(double *tmpin, double *tmpout,
       else
         counter[0]++;
     if (fabs(counter[0]/NREPS - *prounddown) > 0.1) {
+      printf("%e\n", fabs(counter[0]/NREPS - prounddown[i % 3]));
       ck_abort_msg("Error in stochasting rounding.");
     }
   }
@@ -549,6 +552,7 @@ void check_array_equi_float(float *tmpin, float *tmpout,
       else
         counter[0]++;
     if (fabs(counter[0]/(double)NREPS - *prounddown) > 0.1) {
+      printf("%e\n", fabs(counter[0]/NREPS - prounddown[i % 3]));
       ck_abort_msg("Error in stochasting rounding.");
     }
   }
@@ -770,7 +774,7 @@ void test_univariate_arith_op_double(double* xd,
                               int (*cpf_fun)(double *,
                                              const double *,
                                              const size_t,
-                                             const optstruct *),
+                                             optstruct *),
                               double (*fun)(double)) {
   for (size_t i = 0; i < n; i++)
     ref[i] = fun(a[i]);
@@ -788,7 +792,7 @@ void test_bivariate_arith_op_double(double* xd,
                                             const double *,
                                             const double *,
                                             const size_t,
-                                            const optstruct *),
+                                            optstruct *),
                              double (*fun)(double, double)) {
   for (size_t i = 0; i < n; i++)
     ref[i] = fun(a[i], b[i]);
@@ -808,7 +812,7 @@ void test_trivariate_arith_op_double(double* xd,
                                              const double *,
                                              const double *,
                                              const size_t,
-                                             const optstruct *),
+                                             optstruct *),
                               double (*fun)(double, double, double)) {
   for (size_t i = 0; i < n; i++)
     ref[i] = fun(a[i], b[i], c[i]);
@@ -824,7 +828,7 @@ void test_univariate_arith_op_float(float* xd,
                                     int (*cpf_fun)(float *,
                                                    const float *,
                                                    const size_t,
-                                                   const optstruct *),
+                                                   optstruct *),
                                     float (*fun)(float)) {
   for (size_t i = 0; i < n; i++)
     ref[i] = fun(a[i]);
@@ -842,7 +846,7 @@ void test_bivariate_arith_op_float(float* xd,
                                                   const float *,
                                                   const float *,
                                                   const size_t,
-                                                  const optstruct *),
+                                                  optstruct *),
                                    float (*fun)(float, float)) {
   for (size_t i = 0; i < n; i++)
     ref[i] = fun(a[i], b[i]);
@@ -862,7 +866,7 @@ void test_trivariate_arith_op_float(float* xd,
                                                    const float *,
                                                    const float *,
                                                    const size_t,
-                                                   const optstruct *),
+                                                   optstruct *),
                                     float (*fun)(float, float, float)) {
   for (size_t i = 0; i < n; i++)
     ref[i] = fun(a[i], b[i], c[i]);
@@ -2123,6 +2127,7 @@ for (size_t i = 0; i < nformats; i++) {
   fpopts->emax = emax[i];
   for (size_t i = 0; i < n_roundings; i++) {
     fpopts->round = det_roundings[i];
+
     // Univariate functions.
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
                                     cpfloat_cos, cos);

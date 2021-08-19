@@ -10,28 +10,29 @@
 % If the string is left empty, the default C compiler will be used.
 compilerpath = '';
 
-% Download PCG Library header file.
+% Download and compile the PCG Library.
 try
-  urlwrite(['https://raw.githubusercontent.com/',...
-            'imneme/pcg-c/master/include/pcg_variants.h'],...
-           '../include/pcg_variants.h');
+  unzip('https://codeload.github.com/imneme/pcg-c/zip/refs/heads/master');
+  cd('pcg-c-master/src/');
+  system('make libpcg_random.a');
+  cd('../../');
 catch
   if ~exist('../include/pcg_variants.h', 'file')
-        warning('Unable to downlaod the PCG Library header file.');
+    warning('Unable to downlaod the PCG Library header file.');
     warning('The standard C library RNG will be used.');
   end
 end
 
 % Compile MEX interface.
 retval = cpfloat_compile('cpfloatdir', '../src/',...
-                         'pcgpath', '../include/pcg_variants.h',...
+                         'pcgpath', './pcg-c-master/',...
                          'compilerpath', compilerpath);
 
 % If parallel compilation was successful, auto-tune the threshold.
 if retval
   cpfloat_autotune('cpfloatdir', '../src/');
   cpfloat_compile('cpfloatdir', '../src/',...
-                  'pcgpath', '../include/pcg_variants.h',...
+                  'pcgpath', './pcg-c-master/',...
                   'compilerpath', compilerpath);
 end
 

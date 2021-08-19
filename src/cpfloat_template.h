@@ -17,6 +17,9 @@
  ****************************
  ****************************/
 
+#ifndef TYPE_INDEPENDENT_MACROS_INCLUDED
+#define TYPE_INDEPENDENT_MACROS_INCLUDED
+
 /* Define empty macros. */
 #define NOOP
 #define NOARG
@@ -37,27 +40,61 @@
 #define BITSEED bitseed
 #define BITSEEDTYPE cpfloat_bitseed_t
 #define BITTYPE unsigned int
+
 #ifdef PCG_VARIANTS_H_INCLUDED
-#define INITBIT_SEQ(seed)                       \
-  pcg32_srandom_r(seed,                         \
-                  time(NULL),                   \
-                  (intptr_t)seed)
-#ifdef _OPENMP
-#define INITBIT_PAR(seed)                                       \
-  pcg32_srandom_r(seed,                                         \
-                  omp_get_thread_num() * 13254 + time(NULL),    \
-                  (intptr_t)seed)
-#endif /* #ifdef _OPENMP */
+#define INITBIT(seed) pcg32_srandom_r(seed, time(NULL), (intptr_t)seed);
+#define ADVANCEBIT(seed, thread, nloc) \
+  pcg32_advance_r(seed, thread * nloc - 1);
 #define GENBIT(seed) (pcg32_random_r(seed) & (1U << 31))
 #else /* #ifdef PCG_VARIANTS_H_INCLUDED */
-#define INITBIT_SEQ(seed) *seed = time(NULL)
+#define INITBIT(seed) *seed = time(NULL);
+#define GEN_SINGLE_BIT(seed) (rand_r(seed) & (1U << 30))
 #ifdef _OPENMP
-#define INITBIT_PAR(seed) *seed = omp_get_thread_num() * 13254 + time(NULL)
+#define PRNG_ADVANCE_BIT prng_advance_bit
+static inline BITTYPE PRNG_ADVANCE_BIT(BITSEEDTYPE *seed, size_t delta) {
+  for (size_t i=0; i<delta; i++)
+    rand_r(seed);
+  return GEN_SINGLE_BIT(seed);
+}
+#define ADVANCEBIT(seed, thread, nloc) PRNG_ADVANCE_BIT(seed, thread);
+#define GENBIT(seed) PRNG_ADVANCE_BIT(seed, nthreads)
+#else /* #ifdef _OPENMP */
+#define GENBIT(seed) (GEN_SINGLE_BIT(seed))
 #endif /* #ifdef _OPENMP */
-#define GENBIT(seed) (rand_r(seed) & (1U << 30))
-#endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
+#endif  /* #ifdef PCG_VARIANTS_H_INCLUDED */
 
+#define PRNG_BIT_INIT                                                          \
+  if (fpopts->BITSEED == NULL) {                                               \
+    fpopts->BITSEED= malloc(sizeof(*fpopts->BITSEED));                         \
+    INITBIT(fpopts->BITSEED)                                                   \
+  }
 
+#define PRNG_BIT_ADVANCE(PARALLEL) PRNG_BIT_ADVANCE_##PARALLEL
+#define PRNG_BIT_ADVANCE_SEQ                                                   \
+  size_t nthreads = 1;                                                         \
+  UNUSED(nthreads)                                                             \
+  size_t istart = 0;                                                           \
+  size_t iend = numelem;                                                       \
+  params.BITSEED = fpopts->BITSEED;
+#define PRNG_BIT_ADVANCE_PAR                                                   \
+  size_t nthreads = omp_get_num_threads();                                     \
+  size_t nloc = ceil((double)numelem / nthreads);                              \
+  size_t thread = omp_get_thread_num();                                        \
+  size_t istart = nloc * thread;                                               \
+  size_t iend = nloc * (thread + 1);                                           \
+  iend = iend > numelem ? numelem : iend;                                      \
+  BITSEEDTYPE tmp_bitseed = *(fpopts->BITSEED);                                \
+  params.BITSEED = &tmp_bitseed;                                               \
+  ADVANCEBIT(params.BITSEED, thread, nloc)
+
+#define PRNG_BIT_UPDATE(PARALLEL) PRNG_BIT_UPDATE_##PARALLEL
+#define PRNG_BIT_UPDATE_SEQ
+#define PRNG_BIT_UPDATE_PAR                                                    \
+  if (thread == nthreads - 1) {                                                \
+    *(fpopts->BITSEED) = *(params.BITSEED);                                    \
+  }
+
+#endif /* #ifndef TYPE_INDEPENDENT_MACROS_INCLUDED */
 
 
 
@@ -116,43 +153,52 @@ typedef struct {
 #define SIGN(x)(SIGNMASK & INTOF(x))
 #define ABS(x)(FPOF((INTTYPE)(ABSMASK & INTOF(x))))
 
+#ifndef PCG_VARIANTS_H_INCLUDED
+#ifdef _OPENMP
+#define PRNG_ADVANCE_RAND ADDSUFFIXTO(prng_advance_rand)
+static inline INTTYPE PRNG_ADVANCE_RAND(RANDSEEDTYPE *seed, size_t delta) {
+  for (size_t i=0; i<delta; i++)
+    rand_r((unsigned int *)seed);
+  return GEN_SINGLE_RAND(seed);
+}
+#define ADVANCERAND(seed, thread, nloc) PRNG_ADVANCE_RAND(seed, thread);
+#define GENRAND(seed) PRNG_ADVANCE_RAND(seed, nthreads)
+#else /* #ifdef _OPENMP */
+#define GENRAND(seed) (GEN_SINGLE_RAND(seed))
+#endif /* #ifdef _OPENMP */
+#endif  /* #ifdef PCG_VARIANTS_H_INCLUDED */
+
 /* Functions to initialize the pseudo-random number generator. */
-#ifdef _OPENMP
-#define INIT_RANDSEED_PAR CONCATENATE(ADDSUFFIXTO(init_randseed), _par)
-static inline void INIT_RANDSEED_PAR (FPPARAMS *params) {
-  if (params->RANDSEED == NULL) {
-    params->RANDSEED = malloc(sizeof(*params->RANDSEED));
-    INITRAND_PAR(params->RANDSEED);
+#define PRNG_RAND_INIT                                                         \
+  if (fpopts->RANDSEED == NULL) {                                              \
+    fpopts->RANDSEED = malloc(sizeof(*fpopts->RANDSEED));                      \
+    INITRAND(fpopts->RANDSEED)                                                 \
   }
-}
-#endif /* #ifdef _OPENMP */
 
-/* Functions to initialize the pseudo-random bit generator. */
-#ifdef _OPENMP
-#define INIT_BITSEED_PAR CONCATENATE(ADDSUFFIXTO(init_bitseed), _par)
-static inline void INIT_BITSEED_PAR (FPPARAMS *params) {
-  if (params->BITSEED == NULL) {
-    params->BITSEED = malloc(sizeof(*params->BITSEED));
-    INITBIT_PAR(params->BITSEED);
-  }
-}
-#endif /* #ifdef _OPENMP */
+#define PRNG_RAND_ADVANCE(PARALLEL) PRNG_RAND_ADVANCE_##PARALLEL
+#define PRNG_RAND_ADVANCE_SEQ                                                  \
+  size_t nthreads = 1;                                                         \
+  UNUSED(nthreads)                                                             \
+  size_t istart = 0;                                                           \
+  size_t iend = numelem;                                                       \
+  params.RANDSEED = fpopts->RANDSEED;
+#define PRNG_RAND_ADVANCE_PAR                                                  \
+  size_t nthreads = omp_get_num_threads();                                     \
+  size_t nloc = ceil((double)numelem / nthreads);                              \
+  size_t thread = omp_get_thread_num();                                        \
+  size_t istart = nloc * thread;                                               \
+  size_t iend = nloc * (thread + 1);                                           \
+  iend = iend > numelem ? numelem : iend;                                      \
+  RANDSEEDTYPE tmp_randseed = *(fpopts->RANDSEED);                             \
+  params.RANDSEED = &tmp_randseed;                                             \
+  ADVANCERAND(params.RANDSEED, thread, nloc)
 
-#define INIT_BITSEED_SEQ CONCATENATE(ADDSUFFIXTO(init_bitseed), _seq)
-static inline void INIT_BITSEED_SEQ (FPPARAMS *params) {
-  if (params->BITSEED == NULL) {
-    params->BITSEED = malloc(sizeof(*params->BITSEED));
-    INITBIT_SEQ(params->BITSEED);
+#define PRNG_RAND_UPDATE(PARALLEL) PRNG_RAND_UPDATE_##PARALLEL
+#define PRNG_RAND_UPDATE_SEQ
+#define PRNG_RAND_UPDATE_PAR                                                   \
+  if (thread == nthreads - 1) {                                                \
+    *(fpopts->RANDSEED) = *(params.RANDSEED);                                  \
   }
-}
-
-#define INIT_RANDSEED_SEQ CONCATENATE(ADDSUFFIXTO(init_randseed), _seq)
-static inline void INIT_RANDSEED_SEQ (FPPARAMS *params) {
-  if (params->RANDSEED == NULL) {
-    params->RANDSEED = malloc(sizeof(*params->RANDSEED));
-    INITRAND_SEQ(params->RANDSEED);
-  }
-}
 
 /* Function to validate floating-point options passed to CPFloat interfaces. */
 #define VALIDATE_INPUT CONCATENATE(ADDSUFFIXTO(MAINFUNNAME),_validate_optstruct)
@@ -239,7 +285,7 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
 
   FPPARAMS params = {precision, emax, emin, fpopts->subnormal, fpopts->round,
                      ftzthreshold, xmin, xmax, xbnd,
-                     leadmask, trailmask, fpopts->BITSEED, fpopts->RANDSEED};
+                     leadmask, trailmask, NULL, NULL};
 
   return params;
 }
@@ -540,11 +586,12 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 #define PARALLEL_STRING(PARALLEL) PARALLEL_STRING_##PARALLEL
 #define PARALLEL_STRING_SEQ
-#define PARALLEL_STRING_PAR _Pragma("omp parallel shared(X, A, fpopts)")
+#define PARALLEL_STRING_PAR                                                    \
+  _Pragma("omp parallel shared(X, A, fpopts) firstprivate(params) private (lp)")
 
 #define FOR_STRING(PARALLEL) FOR_STRING_##PARALLEL
 #define FOR_STRING_SEQ
-#define FOR_STRING_PAR  Pragma("omp for")
+#define FOR_STRING_PAR _Pragma("omp for")
 
 #define VECTOR_ROUNDING_FUNCTION(X, Y, PREPROC, POSTPROC, SCALARFUN, PARALLEL, \
                                  numelem, p, lp)                               \
@@ -600,31 +647,32 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 /* Stochastic rounding with proportional probabilities. */
 #define RS_PROP(X, Y, PREPROC, POSTPROC, PARALLEL, INIT_RANDSEED,              \
                 numelem, p, lp)                                                \
-  INIT_RANDSEED(p);                                                            \
+  PRNG_RAND_INIT                                                               \
   PARALLEL_STRING(PARALLEL)                                                    \
   {                                                                            \
-    FOR_STRING(PARALLEL)                                                       \
-    for (size_t i=0; i<numelem; i++) {                                         \
+    PRNG_RAND_ADVANCE(PARALLEL)                                                \
+    for (size_t i=istart; i<iend; i++) {                                       \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
       RS_PROP_SCALAR(X+i, Y+i, p, lp)                                          \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
     }                                                                          \
-  }
-
+    PRNG_RAND_UPDATE(PARALLEL)                                                 \
+  }                                                                            \
 
 /* Stochastic rounding with equal probabilities. */
 #define RS_EQUI(X, Y, PREPROC, POSTPROC, PARALLEL, INIT_BITSEED,               \
                 numelem, p, lp)                                                \
-  INIT_BITSEED(p);                                                             \
+  PRNG_BIT_INIT                                                                \
   BITTYPE randombit;                                                           \
   PARALLEL_STRING(PARALLEL)                                                    \
   {                                                                            \
-    FOR_STRING(PARALLEL)                                                       \
-    for (size_t i=0; i<numelem; i++) {                                         \
+    PRNG_BIT_ADVANCE(PARALLEL)                                                 \
+    for (size_t i=istart; i<iend; i++) {                                       \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
       RS_EQUI_SCALAR(X+i, Y+i, p, lp)                                          \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
     }                                                                          \
+    PRNG_BIT_UPDATE(PARALLEL)                                                  \
   }
 
 /* Round-to-odd. */
@@ -694,7 +742,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   (DEPARENTHESIZE_MAYBE(FOUTPUT),                                              \
    DEPARENTHESIZE_MAYBE(FTEMP),                                                \
    DEPARENTHESIZE_MAYBE(FINPUT),                                               \
-   const size_t numelem, const optstruct *fpopts) {                            \
+   const size_t numelem, optstruct *fpopts) {                                  \
     UNUSED(A) /* Only to silence compiler warning. */                          \
     int retval = 0;                                                            \
     FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);                  \
@@ -809,7 +857,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),                    \
                              DEPARENTHESIZE_MAYBE(FINPUT),                     \
                              const size_t numelem,                             \
-                             const optstruct *fpopts) {                        \
+                             optstruct *fpopts) {                              \
     if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))                      \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
         (DEPARENTHESIZE_MAYBE(FCALLOUT),                                       \
@@ -833,7 +881,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
        GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),               \
                                   DEPARENTHESIZE_MAYBE(FINPUT),                \
                                   const size_t numelem,                        \
-                                  const optstruct *fpopts) {                   \
+                                  optstruct *fpopts) {                         \
     return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                  \
       (DEPARENTHESIZE_MAYBE(FCALLOUT),                                         \
        DEPARENTHESIZE_MAYBE(FCALLTEMP),                                        \
@@ -899,7 +947,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   static inline int                                                            \
   GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX)                               \
   (FPTYPE *X, FPTYPE *Y, FPTYPE *A, TYPETO *B,                                 \
-   const size_t numelem, const optstruct *fpopts) {                            \
+   const size_t numelem, optstruct *fpopts) {                                  \
     int retval = 0;                                                            \
     FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);                  \
     LOCPARAMS lp;                                                              \
@@ -925,7 +973,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   GENERATE_NEXTAFTER_SUBFUNCTIONS(FUNNAME, TYPETO, PAR, PARALLEL_SUFFIX_PAR)   \
   static inline int                                                            \
        GENERATE_FUN_NAME(FUNNAME)(FPTYPE *X, FPTYPE *A, TYPETO *B,             \
-                             const size_t numelem, const optstruct *fpopts) {  \
+                             const size_t numelem, optstruct *fpopts) {        \
     if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))                      \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
         (X, X, A, B, numelem, fpopts);                                         \
@@ -938,7 +986,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   GENERATE_NEXTAFTER_SUBFUNCTIONS(FUNNAME, TYPETO, SEQ, PARALLEL_SUFFIX_SEQ)   \
   static inline int                                                            \
   GENERATE_FUN_NAME(FUNNAME)(FPTYPE *X, FPTYPE *A, TYPETO *B,                  \
-                             const size_t numelem, const optstruct *fpopts) {  \
+                             const size_t numelem, optstruct *fpopts) {        \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
         (X, X, A, B, numelem, fpopts);                                         \
   }
@@ -959,13 +1007,13 @@ static inline
 int ADDSUFFIXTO(cpfloat)(FPTYPE *X,
                          const FPTYPE *A,
                          const size_t numelem,
-                         const optstruct *fpopts) {
+                         optstruct *fpopts) {
   return GENERATE_FUN_NAME(fpround)(X, A, numelem, fpopts);
 }
 int CONCATENATE(ADDSUFFIXTO(cpfloat),_sequential)(FPTYPE *X,
                                     const FPTYPE *A,
                                     const size_t numelem,
-                                    const optstruct *fpopts) {
+                                    optstruct *fpopts) {
   return GENERATE_SUBFUN_NAME(fpround, PARALLEL_SUFFIX_SEQ)
     (X, (FPTYPE *)A, A, numelem, fpopts);
 }
@@ -973,7 +1021,7 @@ int CONCATENATE(ADDSUFFIXTO(cpfloat),_sequential)(FPTYPE *X,
 int CONCATENATE(ADDSUFFIXTO(cpfloat),_parallel)(FPTYPE *X,
                                   const FPTYPE *A,
                                   const size_t numelem,
-                                  const optstruct *fpopts) {
+                                  optstruct *fpopts) {
   return GENERATE_SUBFUN_NAME(fpround, PARALLEL_SUFFIX_PAR)
     (X, (FPTYPE *)A, A, numelem, fpopts);
 }
@@ -1216,44 +1264,44 @@ GENERATE_INTERFACE(isnormal, // TODO: spurious output array X
 GENERATE_UNIVARIATE_MATH_H(fabs, fabs)
 GENERATE_TRIVARIATE_MATH_H(fma, fma)
 
+
+
+
+
 /* Undefine local macros. */
-#undef NOOP
-#undef NOARG
-#undef UNUSED
-
-#undef DO_REMOVE_PARENTHESES
-#undef EXPAND_INTERIOR
-#undef REMOVE_INTERIOR_
-#undef REMOVE_PARENTHESES
-#undef DEPARENTHESIZE_MAYBE
-
-#undef CONCATENATE_INNER
-#undef CONCATENATE
-
-#undef BITSEED
-#undef BITSEEDTYPE
-#undef BITTYPE
-#undef INITBIT_SEQ
-#undef INITBIT_PAR
-#undef GENBIT
-
 #undef ADDSUFFIXTO
 #undef FPUNION
-#undef RANDSEED
-#undef RANDSEEDTYPE
-#undef FPPARAMS
-#undef LOCPARAMS
 #undef INTCONST
 #undef INTOF
 #undef INTOFCONST
 #undef FPOF
+
+#undef RANDSEED
+#undef RANDSEEDTYPE
+
+#undef FPPARAMS
+#undef LOCPARAMS
 #undef SIGN
 #undef ABS
 
-#undef INIT_RANDSEED_PAR
-#undef INIT_BITSEED_PAR
-#undef INIT_BITSEED_SEQ
-#undef INIT_RANDSEED_SEQ
+#ifndef PCG_VARIANTS_H_INCLUDED
+#ifdef _OPENMP
+#undef PRNG_ADVANCE_RAND
+#undef ADVANCERAND
+#endif /* #ifdef _OPENMP */
+#undef GENRAND
+#endif  /* #ifdef PCG_VARIANTS_H_INCLUDED */
+
+#undef PRNG_RAND_INIT
+
+#undef PRNG_RAND_ADVANCE
+#undef PRNG_RAND_ADVANCE_SEQ
+#undef PRNG_RAND_ADVANCE_PAR
+
+#undef PRNG_RAND_UPDATE
+#undef PRNG_RAND_UPDATE_SEQ
+#undef PRNG_RAND_UPDATE_PAR
+
 
 #undef VALIDATE_INPUT
 #undef COMPUTE_GLOBAL_PARAMS
@@ -1335,9 +1383,14 @@ GENERATE_TRIVARIATE_MATH_H(fma, fma)
 #undef EXPMASK
 #undef FRACMASK
 
-#undef INITRAND_SEQ
-#undef INITRAND_PAR
+#ifdef PCG_VARIANTS_H_INCLUDED
+#undef INITRAND
+#undef ADVANCERAND
 #undef GENRAND
+#else /* #ifdef PCG_VARIANTS_H_INCLUDED */
+#undef INITRAND
+#undef GEN_SINGLE_RAND
+#endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
 
 /*
  * CPFloat - Custom Precision Floating-point numbers.

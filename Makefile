@@ -37,12 +37,12 @@ OCTAVE:=octave
 WFLAGS=-Wall -Wextra -pedantic
 ARCHFLAGS=-mfma -march=native
 CFLAGS=$(WFLAGS) $(ARCHFLAGS) -I $(SRCDIR) \
-	-I /usr/local/include -L /usr/local/lib \
-	-include $(PCG_HEADER)
+	-I /usr/local/include -L /usr/local/lib
 CXXFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=c++11 -I $(INCDIR) -I $(INCDIR)FloatX/src/
 COPTIM=-O3 -mfma
 CCOVFLAGS=-Og -g -fprofile-arcs -ftest-coverage
 CLIBS=-lm -fopenmp
+PCG_FLAGS=-L $(INCDIR)pcg-c/src -lpcg_random -include $(PCG_HEADER)
 
 .PRECIOUS: %.o
 
@@ -63,6 +63,7 @@ init:
 		$(UNZIP) $(INCDIR)floatp.zip -d $(INCDIR)floatp; \
 		$(PATCH) -p0 < $(INCDIR)floatp.patch; \
 	fi
+	cd $(INCDIR)pcg-c; make
 
 makebin:
 	@if [ ! -d $(BINDIR) ]; then \
@@ -70,9 +71,8 @@ makebin:
 	fi
 
 autotune: init makebin $(SRCDIR)cpfloat_autotune.c
-	$(CC) $(CFLAGS) $(COPTIM) $(CLIBS) \
-		-o $(BINDIR)cpfloat_autotune \
-		$(SRCDIR)cpfloat_autotune.c
+	$(CC) $(CFLAGS) $(COPTIM) -o $(BINDIR)cpfloat_autotune \
+		$(SRCDIR)cpfloat_autotune.c $(CLIBS) $(PCG_FLAGS)
 	$(BINDIR)cpfloat_autotune
 	$(MV) cpfloat_threshold_*.h $(SRCDIR)
 
@@ -82,21 +82,21 @@ ctestsrc: $(TESTDIR)cpfloat_test.ts
 	$(CHECKMK) clean_mode=1 $^ > $(TESTDIR)cpfloat_test.c
 
 ctest: init makebin ctestsrc
-	$(CC) $(CFLAGS) $(COPTIM) \
+	$(CC) $(CFLAGS) $(COPTIM) -fsanitize=undefined \
 		-o $(BINDIR)cpfloat_test $(TESTDIR)cpfloat_test.c \
-		-lcheck -lsubunit -lrt -lm -lpthread -fsanitize=undefined
+		-lcheck -lsubunit -lrt -lm -lpthread $(CLIBS) $(PCG_FLAGS)
 	$(BINDIR)cpfloat_test
 	$(MV) cpfloat_test.log $(TESTDIR)
 
 MEXSTRING="cd $(MEXDIR); \
 	retval = cpfloat_compile('cpfloatdir', '$(SRCDIR)', \
-		'pcgpath', '$(PCG_HEADER)', \
+		'pcgpath', '$(INCDIR)pcg-c/', \
 		'compilerpath', '$(CC)'); \
 	if retval \
 		rehash(); \
 		cpfloat_autotune('cpfloatdir', '$(SRCDIR)'); \
 		cpfloat_compile('cpfloatdir', '$(SRCDIR)', \
-			'pcgpath', '$(PCG_HEADER)', \
+			'pcgpath', '$(INCDIR)pcg-c/', \
 			'compilerpath', '$(CC)'); \
 	end; \
 	exit;"
@@ -135,16 +135,15 @@ docs:
 	$(DOXYGEN) doc/Doxyfile
 
 coverage: init ctestsrc
-	$(CC) $(CFLAGS) $(CCOVFLAGS) \
-		-o $(TESTDIR)cpfloat_test -lcheck $(TESTDIR)cpfloat_test.c
+	$(CC) $(CFLAGS) $(CCOVFLAGS) -o $(TESTDIR)cpfloat_test \
+		$(TESTDIR)cpfloat_test.c -lcheck $(CLIBS) $(PCG_FLAGS)
 	$(TESTDIR)cpfloat_test
 	$(CP) $(TESTDIR)cpfloat_test.c .
 	$(CCOV) cpfloat_test.c
 
 example: init makebin $(EXAMPLEDIR)example_manuscript.c
-	$(CC) $(CFLAGS) $(COPTIM) $(CLIBS) \
-		-o $(BINDIR)example_manuscript \
-		$(EXAMPLEDIR)example_manuscript.c
+	$(CC) $(CFLAGS) $(COPTIM) -o $(BINDIR)example_manuscript \
+		$(EXAMPLEDIR)example_manuscript.c $(CLIBS) $(PCG_FLAGS)
 
 
 

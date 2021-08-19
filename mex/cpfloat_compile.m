@@ -12,8 +12,15 @@ function retval = cpfloat_compile(varargin)
 %   COMPILE_CHOPFAST('cpfloatdir',CPFLOATDIR) looks for the header files of the
 %   CPFloat Library in CPFLOATDIR rather than in the current working directory.
 %
-%   COMPILE_CHOPFAST('pcgpath',PCGPATH) includes the header file PCGPATH instead
-%   of the file pcg_variants.h in the current working directory.
+%   COMPILE_CHOPFAST('pcgpath',PCGPATH) sets the root directory of the PCG
+%   random number generator to PCGPATH instead of ./pcg-c/.
+%
+%   COMPILE_CHOPFAST('pcgvariants',PCGVARIANTS) specifies that the path of the
+%   header file pcg_variants.h is PCGVARIANTS. The defauls value is
+%   PCGPATH/include/pcg_variants.h.
+%
+%   COMPILE_CHOPFAST('pcglib',PCGLIB) specifies that the path the static library
+%   libpcg_random.a is PCGLIB. The defauls value is PCGPATH/src/libpcg_random.a.
 %
 %   COMPILE_CHOPFAST('compilerpath',COMPILERPATH) uses the compiler COMPILERPATH
 %   instead of the default C compiler.
@@ -22,21 +29,36 @@ function retval = cpfloat_compile(varargin)
 
   p = inputParser;
   addParameter(p, 'cpfloatdir', '', @ischar);
-  addParameter(p, 'pcgpath', './pcg_variants.h', @ischar);
+  addParameter(p, 'pcgpath', './pcg-c/', @ischar);
+  addParameter(p, 'pcgvariants', '', @ischar);
+  addParameter(p, 'pcglib', '', @ischar);
   addParameter(p, 'compilerpath', '', @ischar);
   parse(p,varargin{:});
   cpfloatdir = p.Results.cpfloatdir;
   pcgpath = p.Results.pcgpath;
+  pcgvariants = p.Results.pcgvariants;
+  pcglib = p.Results.pcglib;
   compilerpath = p.Results.compilerpath;
 
   coptions = '-std=gnu99 -O3 -march=native';
-  if exist(pcgpath, 'file')
-    coptions = sprintf('%s -include %s', coptions, pcgpath);
+
+  % Try to find the PCG library.
+  if (isempty(pcgvariants))
+    pcgvariants = sprintf('%s/include/pcg_variants.h', pcgpath);
+  end
+  if (isempty(pcglib))
+    pcglib = sprintf('%s/src/libpcg_random.a', pcgpath);
+  end
+  if exist(pcgvariants, 'file') && exist(pcglib, 'file')
+    coptions = sprintf('%s -include%s', coptions, pcgvariants);
+    clibs = sprintf('-L%s/', fileparts(pcglib));
+  else
+    pcglib = '';
+    clibs = '';
   end
   if ~isempty(cpfloatdir)
-    coptions = sprintf('%s -I %s', coptions, cpfloatdir);
+    coptions = sprintf('-I%s %s', cpfloatdir, coptions);
   end
-  coptions_omp = sprintf('%s -fopenmp', coptions);
 
   usingoctave = exist('OCTAVE_VERSION', 'builtin');
   if usingoctave
@@ -45,15 +67,23 @@ function retval = cpfloat_compile(varargin)
       setenv("CXX", compilerpath);
       setenv("DL_LD", compilerpath);
     end
-    setenv("CFLAGS", coptions_omp);
-    setenv("LDFLAGS","-fopenmp");
-    [output, status] = mkoctfile('cpfloat.c', '--mex');
+    setenv("CFLAGS", sprintf("-fopenmp %s", coptions));
+    setenv("LDFLAGS", sprintf("-fopenmp %s", clibs));
+    if isempty(pcglib)
+      [output, status] = mkoctfile('cpfloat.c', '--mex', '--verbose');
+    else
+      [output, status] = mkoctfile('cpfloat.c', pcglib, '--mex', '--verbose');
+    end
     if status ~= 0
       warning('Compilation error, trying to compile without OpenMP.');
       retval = false;
       setenv("CFLAGS", coptions);
-      setenv("LDFLAGS","")
-      [output, status] = mkoctfile('cpfloat.c', '--mex');
+      setenv("LDFLAGS", clibs)
+      if isempty(pcglib)
+        [output, status] = mkoctfile('cpfloat.c', '--mex', '--verbose');
+      else
+        [output, status] = mkoctfile('cpfloat.c', pcglib, '--mex', '--verbose');
+      end
     end
   else
     if isempty(compilerpath)
@@ -62,16 +92,17 @@ function retval = cpfloat_compile(varargin)
       compiler_string = ['CC="' compilerpath '"'];
     end
     try
-      mex('cpfloat.c', '-silent',...
+      mex('cpfloat.c', pcglib, '-silent',...
           compiler_string,...
-          [sprintf('CFLAGS="$CFLAGS %s"', coptions_omp)],...
-          ['LDFLAGS="$LDFLAGS -fopenmp"']);
+          [sprintf('CFLAGS=$CFLAGS %s -fopenmp ', coptions)],...
+          [sprintf('LDFLAGS=$LDFLAGS %s -fopenmp ', clibs)]);
     catch
       warning('Compilation error, trying to compile without OpenMP.');
       retval = false;
-      mex('cpfloat.c', '-silent',...
+      mex('cpfloat.c', pcglib, '-silent',...
           compiler_string,...
-          [sprintf('CFLAGS="$CFLAGS %s"', coptions)]);
+          [sprintf('CFLAGS="$CFLAGS %s" ', coptions)],...
+          [sprintf('LDFLAGS="$LDFLAGS %s" ', clibs)]);
     end
   end
 end
