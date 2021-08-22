@@ -574,8 +574,8 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 /*
  * These macros round arrays of type FPTYPE. The input arguments are:
- *   + FPTYPE *X, array where the rounded numbers are stored;
- *   + FPTYPE *Y, array where the numbers to be rounded are stored;
+ *   + FPTYPE *X, pointer to memory for storing rounded number;
+ *   + FPTYPE *Y, pointer to memory where the number to be rounded is stored;
  *   + (string) PREPROC, pre-processing as *(Y+i) = f(*(A+i), *(B+i), ...);
  *   + (string) POSTPROC, post-processing as *(X+i) = f(*(X+i));
  *   + (string) PARALLEL, either SEQ (for sequential) or PAR (for parallel);
@@ -587,7 +587,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define PARALLEL_STRING(PARALLEL) PARALLEL_STRING_##PARALLEL
 #define PARALLEL_STRING_SEQ
 #define PARALLEL_STRING_PAR                                                    \
-  _Pragma("omp parallel shared(X, A, fpopts) firstprivate(params) private (lp)")
+  _Pragma("omp parallel firstprivate(params) private (lp)")
 
 #define FOR_STRING(PARALLEL) FOR_STRING_##PARALLEL
 #define FOR_STRING_SEQ
@@ -601,14 +601,14 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
       FOR_STRING(PARALLEL)                                                     \
       for (size_t i=0; i<numelem; i++) {                                       \
         DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        CONCATENATE(SCALARFUN, _SCALAR_SAME_EXP)(X+i, Y+i, p)                  \
+        CONCATENATE(SCALARFUN, _SCALAR_SAME_EXP)(X, Y, p)                      \
         DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
       }                                                                        \
     } else {                                                                   \
       FOR_STRING(PARALLEL)                                                     \
       for (size_t i=0; i<numelem; i++) {                                       \
         DEPARENTHESIZE_MAYBE(PREPROC)                                          \
-        CONCATENATE(SCALARFUN, _SCALAR_OTHER_EXP)(X+i, Y+i, p, lp)             \
+        CONCATENATE(SCALARFUN, _SCALAR_OTHER_EXP)(X, Y, p, lp)                 \
         DEPARENTHESIZE_MAYBE(POSTPROC)                                         \
       }                                                                        \
     }                                                                          \
@@ -653,7 +653,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     PRNG_RAND_ADVANCE(PARALLEL)                                                \
     for (size_t i=istart; i<iend; i++) {                                       \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
-      RS_PROP_SCALAR(X+i, Y+i, p, lp)                                          \
+      RS_PROP_SCALAR(X, Y, p, lp)                                              \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
     }                                                                          \
     PRNG_RAND_UPDATE(PARALLEL)                                                 \
@@ -669,7 +669,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     PRNG_BIT_ADVANCE(PARALLEL)                                                 \
     for (size_t i=istart; i<iend; i++) {                                       \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
-      RS_EQUI_SCALAR(X+i, Y+i, p, lp)                                          \
+      RS_EQUI_SCALAR(X, Y, p, lp)                                              \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
     }                                                                          \
     PRNG_BIT_UPDATE(PARALLEL)                                                  \
@@ -682,7 +682,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     FOR_STRING(PARALLEL)                                                       \
     for (size_t i=0; i<numelem; i++) {                                         \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
-      RO_SCALAR(X+i, Y+i, p, lp)                                               \
+      RO_SCALAR(X, Y, p, lp)                                                   \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
     }                                                                          \
   }
@@ -694,7 +694,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     FOR_STRING(PARALLEL)                                                       \
     for (size_t i=0; i<numelem; i++) {                                         \
       DEPARENTHESIZE_MAYBE(PREPROC)                                            \
-      *(X+i) = *(Y+i);                                                         \
+      *(X) = *(Y);                                                             \
       DEPARENTHESIZE_MAYBE(POSTPROC)                                           \
     }                                                                          \
   }
@@ -713,7 +713,6 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
  *    <MAINFUNNAME>_<FUNNAME><TYPESUFFIX><PARALLEL_SUFFIX>
  * and their argument list will include:
  *    + (string) FOUTPUT, the output array(s);
- *    + (string) FTEMP, temporary storage array(s);
  *    + (string) FPINPUT, the input arrays(s);
  *    + size_t numelem, the number of elements in the input and output arrays;
  *    + optstruct *fpopts, address of parameters of target format.
@@ -726,11 +725,25 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
  * in input and produce the vector X as output.
  */
 
+#define ADD_BITFLIP_CODE(BITFLIP_CODE) ADD_BITFLIP_CODE_##BITFLIP_CODE
+#define ADD_BITFLIP_CODE_NO_BITFLIP(PARALLEL_TYPE, X)
+#define ADD_BITFLIP_CODE_INTRODUCE_BITFLIP(PARALLEL_TYPE, X)                   \
+  /* Introduce bit flips. */                                                   \
+  if (fpopts->flip == CPFLOAT_SOFTERR) {                                       \
+    FOR_STRING(PARALLEL_TYPE)                                                  \
+    for (size_t i = 0; i < numelem; i++) {                                     \
+      if (rand() / (FPTYPE)RAND_MAX < fpopts->p) {                             \
+        *(X) = FPOF(INTOF(X) ^ (INTCONST(1) << rand() % (DEFPREC - 1)));       \
+      }                                                                        \
+    }                                                                          \
+  }
+
 #define GENERATE_INTERFACE_SUBFUNCTIONS(FUNNAME,                               \
                                         FOUTPUT,                               \
-                                        FTEMP,                                 \
                                         FINPUT,                                \
+                                        X, Y,                                  \
                                         INIT_STRING,                           \
+                                        BITFLIP_CODE,                          \
                                         PREPROC,                               \
                                         POSTPROC,                              \
                                         PARALLEL_TYPE,                         \
@@ -740,10 +753,8 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   static inline int                                                            \
   GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX)                               \
   (DEPARENTHESIZE_MAYBE(FOUTPUT),                                              \
-   DEPARENTHESIZE_MAYBE(FTEMP),                                                \
    DEPARENTHESIZE_MAYBE(FINPUT),                                               \
    const size_t numelem, optstruct *fpopts) {                                  \
-    UNUSED(A) /* Only to silence compiler warning. */                          \
     int retval = 0;                                                            \
     FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);                  \
     LOCPARAMS lp;                                                              \
@@ -789,16 +800,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
       NO_ROUND(X, Y, PREPROC, POSTPROC, PARALLEL_TYPE, numelem);               \
       break;                                                                   \
     }                                                                          \
-    /* Introduce bit flips. */                                                 \
-    if (fpopts->flip == CPFLOAT_SOFTERR) {                                     \
-      FOR_STRING(PARALLEL_TYPE)                                                \
-        for (size_t i=0; i<numelem; i++) {                                     \
-          if (rand() / (FPTYPE)RAND_MAX < fpopts->p) {                         \
-            X[i] = FPOF(INTOF(X+i) ^                                           \
-                        (INTCONST(1) << rand() % (DEFPREC - 1)));              \
-          }                                                                    \
-        }                                                                      \
-    }                                                                          \
+    ADD_BITFLIP_CODE(BITFLIP_CODE)(PARALLEL_TYPE, X)                           \
     return retval;                                                             \
   }
 
@@ -808,14 +810,16 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 #define GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME,                           \
                                             FOUTPUT,                           \
-                                            FTEMP,                             \
                                             FINPUT,                            \
-                                            INIT_STRING, PREPROC, POSTPROC)    \
+                                            X, Y,                              \
+                                            INIT_STRING, FINAL_STRING,         \
+                                            PREPROC, POSTPROC)                 \
   GENERATE_INTERFACE_SUBFUNCTIONS(FUNNAME,                                     \
                                   FOUTPUT,                                     \
-                                  FTEMP,                                       \
                                   FINPUT,                                      \
+                                  X, Y,                                        \
                                   INIT_STRING,                                 \
+                                  FINAL_STRING,                                \
                                   PREPROC,                                     \
                                   POSTPROC,                                    \
                                   SEQ,                                         \
@@ -830,14 +834,16 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 #define GENERATE_INTERFACE_SUBFUNCTIONS_PAR(FUNNAME,                           \
                                             FOUTPUT,                           \
-                                            FTEMP,                             \
                                             FINPUT,                            \
-                                            INIT_STRING, PREPROC, POSTPROC)    \
+                                            X, Y,                              \
+                                            INIT_STRING, FINAL_STRING,         \
+                                            PREPROC, POSTPROC)                 \
   GENERATE_INTERFACE_SUBFUNCTIONS(FUNNAME,                                     \
                                   FOUTPUT,                                     \
-                                  FTEMP,                                       \
                                   FINPUT,                                      \
+                                  X, Y,                                        \
                                   INIT_STRING,                                 \
+                                  FINAL_STRING,                                \
                                   PREPROC,                                     \
                                   POSTPROC,                                    \
                                   PAR,                                         \
@@ -846,13 +852,15 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                                   INIT_BIT_STRING_PAR)
 
 /* Partial results before rounding are store in the vector X. */
-#define GENERATE_INTERFACE(FUNNAME, FOUTPUT, FTEMP, FINPUT,                    \
-                           FCALLOUT, FCALLTEMP, FCALLIN,                       \
-                           INIT_STRING, PREPROC, POSTPROC)                     \
-  GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME, FOUTPUT, FTEMP, FINPUT,         \
-                                      INIT_STRING, PREPROC, POSTPROC)          \
-  GENERATE_INTERFACE_SUBFUNCTIONS_PAR(FUNNAME, FOUTPUT, FTEMP, FINPUT,         \
-                                           INIT_STRING, PREPROC, POSTPROC)     \
+#define GENERATE_INTERFACE(FUNNAME, FOUTPUT, FINPUT, X, Y,                     \
+                           FCALLOUT, FCALLIN,                                  \
+                           INIT_STRING, FINAL_STRING, PREPROC, POSTPROC)       \
+  GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME, FOUTPUT, FINPUT, X, Y,          \
+                                      INIT_STRING, FINAL_STRING,               \
+                                      PREPROC, POSTPROC)                       \
+  GENERATE_INTERFACE_SUBFUNCTIONS_PAR(FUNNAME, FOUTPUT, FINPUT, X, Y,          \
+                                      INIT_STRING, FINAL_STRING,               \
+                                      PREPROC, POSTPROC)                       \
   static inline int                                                            \
   GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),                    \
                              DEPARENTHESIZE_MAYBE(FINPUT),                     \
@@ -861,22 +869,22 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))                      \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
         (DEPARENTHESIZE_MAYBE(FCALLOUT),                                       \
-         DEPARENTHESIZE_MAYBE(FCALLTEMP),                                      \
          DEPARENTHESIZE_MAYBE(FCALLIN),                                        \
          numelem, fpopts);                                                     \
     else                                                                       \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_PAR)                \
         (DEPARENTHESIZE_MAYBE(FCALLOUT),                                       \
-         DEPARENTHESIZE_MAYBE(FCALLTEMP),                                      \
          DEPARENTHESIZE_MAYBE(FCALLIN),                                        \
          numelem, fpopts);                                                     \
   }
 #else /* #ifdef _OPENMP */
-#define GENERATE_INTERFACE(FUNNAME, FOUTPUT, FTEMP, FINPUT,                    \
-                           FCALLOUT, FCALLTEMP, FCALLIN,                       \
-                           INIT_STRING, PREPROC, POSTPROC)                     \
-  GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME, FOUTPUT, FTEMP, FINPUT,         \
-                                      INIT_STRING, PREPROC, POSTPROC)          \
+#define GENERATE_INTERFACE(FUNNAME, FOUTPUT, FINPUT, X, Y,                     \
+                           FCALLOUT, FCALLIN,                                  \
+                           INIT_STRING, FINAL_STRING,                          \
+                           PREPROC, POSTPROC)                                  \
+  GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME, FOUTPUT, FINPUT, X, Y,          \
+                                      INIT_STRING, FINAL_STRING,               \
+                                      PREPROC, POSTPROC)                       \
        static inline int                                                       \
        GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),               \
                                   DEPARENTHESIZE_MAYBE(FINPUT),                \
@@ -884,7 +892,6 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                                   optstruct *fpopts) {                         \
     return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                  \
       (DEPARENTHESIZE_MAYBE(FCALLOUT),                                         \
-       DEPARENTHESIZE_MAYBE(FCALLTEMP),                                        \
        DEPARENTHESIZE_MAYBE(FCALLIN),                                          \
        numelem, fpopts);                                                       \
   }
@@ -894,38 +901,43 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
    intermediate results of the computation. */
 #define GENERATE_UNIVARIATE(FUNNAME, OPSTRING)                                 \
   GENERATE_INTERFACE(FUNNAME, FPTYPE *X,                                       \
-                     FPTYPE *Y,                                                \
                      const FPTYPE *A,                                          \
-                     X, X, A,                                                  \
-                     NOOP, *(Y+i) = OPSTRING(*(A+i));, NOOP)
+                     X+i, X+i,                                                 \
+                     X, A,                                                     \
+                     NOOP, INTRODUCE_BITFLIP,                                  \
+                     *(X+i) = OPSTRING(*(A+i));, NOOP)
 
 #define GENERATE_BIVARIATE_PREFIX(FUNNAME, OPSTRING)                           \
   GENERATE_INTERFACE(FUNNAME, FPTYPE *X,                                       \
-                     FPTYPE *Y,                                                \
                      (const FPTYPE *A, const FPTYPE *B),                       \
-                     X, X, (A, B),                                             \
-                     NOOP, *(Y+i) = OPSTRING(*(A+i), *(B+i));, NOOP)
+                     X+i, X+i,                                                 \
+                     X, (A, B),                                                \
+                     NOOP, INTRODUCE_BITFLIP,                                  \
+                     *(X+i) = OPSTRING(*(A+i), *(B+i));, NOOP)
 
 #define GENERATE_BIVARIATE_INFIX(FUNNAME, OPSTRING)                            \
   GENERATE_INTERFACE(FUNNAME, FPTYPE *X,                                       \
-                     FPTYPE *Y,                                                \
                      (const FPTYPE *A, const FPTYPE *B),                       \
-                     X, X, (A, B),                                             \
-                     NOOP, *(Y+i) = *(A+i) OPSTRING *(B+i);, NOOP)
+                     X+i, X+i,                                                 \
+                     X, (A, B),                                                \
+                     NOOP, INTRODUCE_BITFLIP,                                  \
+                     *(X+i) = *(A+i) OPSTRING *(B+i);, NOOP)
 
 #define GENERATE_TRIVARIATE(FUNNAME, OPSTRING)                                 \
   GENERATE_INTERFACE(FUNNAME, FPTYPE *X,                                       \
-                     FPTYPE *Y,                                                \
                      (const FPTYPE *A, const FPTYPE *B, const FPTYPE *C),      \
-                     X, X, (A, B, C),                                          \
-                     NOOP, *(Y+i) = OPSTRING(*(A+i), *(B+i), *(C+i));, NOOP)
+                     X+i, X+i,                                                 \
+                     X, (A, B, C),                                             \
+                     NOOP, INTRODUCE_BITFLIP,                                  \
+                     *(X+i) = OPSTRING(*(A+i), *(B+i), *(C+i));, NOOP)
 
 #define GENERATE_UNIVARIATE_POSTPROCESSING(FUNNAME, OPSTRING)                  \
   GENERATE_INTERFACE(FUNNAME, FPTYPE *X,                                       \
-                     FPTYPE *Y,                                                \
                      const FPTYPE *A,                                          \
-                     X, X, A,                                                  \
-                     NOOP, NOOP, *(X+i) = OPSTRING(*(X+i));)
+                     X+i, A+i,                                                 \
+                     X, A,                                                     \
+                     NOOP, INTRODUCE_BITFLIP,                                  \
+                     NOOP, *(X+i) = OPSTRING(*(X+i));)
 
 /* The following macros use the default names in the math.h library, that is,
    they add the type prefix (f for float, nothing for double) to the name of the
@@ -946,7 +958,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                                         PARALLEL_SUFFIX)                       \
   static inline int                                                            \
   GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX)                               \
-  (FPTYPE *X, FPTYPE *Y, FPTYPE *A, TYPETO *B,                                 \
+  (FPTYPE *X, FPTYPE *A, TYPETO *B,                                            \
    const size_t numelem, optstruct *fpopts) {                                  \
     int retval = 0;                                                            \
     FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);                  \
@@ -956,11 +968,11 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
         FOR_STRING(PARALLEL_TYPE)                                              \
         for (size_t i=0; i<numelem; i++) {                                     \
           int rounddir = *(B+i) > *(A+i);                                      \
-          *(Y+i) = ADDSUFFIXTO(FUNNAME)(*(A+i), *(B+i));                       \
+          *(X+i) = ADDSUFFIXTO(FUNNAME)(*(A+i), *(B+i));                       \
           if (rounddir) {                                                      \
-            RD_TWD_PINF_SCALAR_OTHER_EXP(X+i, Y+i, (&params), (&lp))           \
+            RD_TWD_PINF_SCALAR_OTHER_EXP(X+i, X+i, (&params), (&lp))           \
           } else {                                                             \
-            RD_TWD_NINF_SCALAR_OTHER_EXP(X+i, Y+i, (&params), (&lp))           \
+            RD_TWD_NINF_SCALAR_OTHER_EXP(X+i, X+i, (&params), (&lp))           \
           }                                                                    \
         }                                                                      \
       }                                                                        \
@@ -976,10 +988,10 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                              const size_t numelem, optstruct *fpopts) {        \
     if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))                      \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
-        (X, X, A, B, numelem, fpopts);                                         \
+        (X, A, B, numelem, fpopts);                                            \
     else                                                                       \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_PAR)                \
-        (X, X, A, B, numelem, fpopts);                                         \
+        (X, A, B, numelem, fpopts);                                            \
   }
 #else /* #ifdef _OPENMP */
 #define GENERATE_NEXTAFTER_INTERFACE(FUNNAME, TYPETO)                          \
@@ -988,7 +1000,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   GENERATE_FUN_NAME(FUNNAME)(FPTYPE *X, FPTYPE *A, TYPETO *B,                  \
                              const size_t numelem, optstruct *fpopts) {        \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
-        (X, X, A, B, numelem, fpopts);                                         \
+        (X, A, B, numelem, fpopts);                                            \
   }
 #endif /* #ifdef _OPENMP */
 
@@ -999,10 +1011,10 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 /* Only rounding. */
 GENERATE_INTERFACE(fpround,
                    FPTYPE *X,
-                   FPTYPE *Y,
                    const FPTYPE *A,
-                   X, ((FPTYPE *)A), A,
-                   NOOP, NOOP, NOOP)
+                   X+i, A+i,
+                   X, A,
+                   NOOP, INTRODUCE_BITFLIP, NOOP, NOOP)
 static inline
 int ADDSUFFIXTO(cpfloat)(FPTYPE *X,
                          const FPTYPE *A,
@@ -1015,7 +1027,7 @@ int CONCATENATE(ADDSUFFIXTO(cpfloat),_sequential)(FPTYPE *X,
                                     const size_t numelem,
                                     optstruct *fpopts) {
   return GENERATE_SUBFUN_NAME(fpround, PARALLEL_SUFFIX_SEQ)
-    (X, (FPTYPE *)A, A, numelem, fpopts);
+    (X, A, numelem, fpopts);
 }
 #ifdef _OPENMP
 int CONCATENATE(ADDSUFFIXTO(cpfloat),_parallel)(FPTYPE *X,
@@ -1023,7 +1035,7 @@ int CONCATENATE(ADDSUFFIXTO(cpfloat),_parallel)(FPTYPE *X,
                                   const size_t numelem,
                                   optstruct *fpopts) {
   return GENERATE_SUBFUN_NAME(fpround, PARALLEL_SUFFIX_PAR)
-    (X, (FPTYPE *)A, A, numelem, fpopts);
+    (X, A, numelem, fpopts);
 }
 #endif /* #ifdef _OPENMP */
 
@@ -1055,39 +1067,54 @@ GENERATE_UNIVARIATE_MATH_H(atanh, atanh)
 /* Exponentiation and logarithmic functions. */
 GENERATE_UNIVARIATE_MATH_H(exp, exp)
 GENERATE_INTERFACE(frexp,
-                   (FPTYPE *X, int *exp), FPTYPE *Y, const FPTYPE *A,
-                   (X, exp), ((FPTYPE *) A), A,
-                   NOOP, NOOP, *(X+i) = ADDSUFFIXTO(frexp)(*(X+i), exp+i);)
+                   (FPTYPE *X, int *exp), const FPTYPE *A,
+                   X+i, A+i,
+                   (X, exp), A,
+                   NOOP, INTRODUCE_BITFLIP,
+                   NOOP, *(X+i) = ADDSUFFIXTO(frexp)(*(X+i), exp+i);)
 GENERATE_INTERFACE(ldexp,
-                   FPTYPE *X, FPTYPE *Y, (const FPTYPE *A, const int *exp),
-                   X, X, (A, exp),
-                   NOOP, *(X+i) = ADDSUFFIXTO(ldexp)(*(A+i), *(exp+i));, NOOP)
+                   FPTYPE *X, (const FPTYPE *A, const int *exp),
+                   X+i, X+i,
+                   X, (A, exp),
+                   NOOP, INTRODUCE_BITFLIP,
+                   *(X+i) = ADDSUFFIXTO(ldexp)(*(A+i), *(exp+i));, NOOP)
 GENERATE_UNIVARIATE_MATH_H(log, log)
 GENERATE_UNIVARIATE_MATH_H(log10, log10)
 GENERATE_INTERFACE(modf,
-                   (FPTYPE *X, FPTYPE *intpart), FPTYPE *Y, const FPTYPE *A,
-                   (X, intpart), ((FPTYPE *) A), A,
-                   NOOP, NOOP, *(X+i) = ADDSUFFIXTO(modf)(*(X+i), intpart+i);)
+                   (FPTYPE *X, FPTYPE *intpart), const FPTYPE *A,
+                   X+i, A+i,
+                   (X, intpart), A,
+                   NOOP, INTRODUCE_BITFLIP,
+                   NOOP, *(X+i) = ADDSUFFIXTO(modf)(*(X+i), intpart+i);)
 GENERATE_UNIVARIATE_MATH_H(exp2, exp2)
 GENERATE_UNIVARIATE_MATH_H(expm1, expm1)
-GENERATE_INTERFACE(ilogb, // TODO: spurious output array X
-                   (int *exp, FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
-                   (exp, X), ((FPTYPE *) A), A,
-                   NOOP, NOOP, *(exp+i) =  ADDSUFFIXTO(ilogb)(*(X+i));)
+GENERATE_INTERFACE(ilogb,
+                   int *exp, const FPTYPE *A,
+                   &loctmp, A+i,
+                   exp, A,
+                   NOOP, NO_BITFLIP,
+                   FPTYPE loctmp;, *(exp+i) =  ADDSUFFIXTO(ilogb)(loctmp);)
+
 GENERATE_UNIVARIATE_MATH_H(log1p, log1p)
 GENERATE_UNIVARIATE_MATH_H(log2, log2)
 GENERATE_INTERFACE(logb,
-                   FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
-                   X, ((FPTYPE *) A), A,
-                   NOOP, NOOP, *(X+i) = ADDSUFFIXTO(logb)(*(X+i));)
+                   FPTYPE *X, const FPTYPE *A,
+                   X+i, A+i,
+                   X, A,
+                   NOOP, INTRODUCE_BITFLIP,
+                   NOOP, *(X+i) = ADDSUFFIXTO(logb)(*(X+i));)
 GENERATE_INTERFACE(scalbn,
-                   FPTYPE *X, FPTYPE *Y, (const FPTYPE *A, const int *exp),
-                   X, ((FPTYPE *) A), (A, exp),
-                   NOOP, NOOP, *(X+i) = ADDSUFFIXTO(scalbn)(*(X+i), *(exp+i));)
+                   FPTYPE *X, (const FPTYPE *A, const int *exp),
+                   X+i, A+i,
+                   X, (A, exp),
+                   NOOP, INTRODUCE_BITFLIP,
+                   NOOP, *(X+i) = ADDSUFFIXTO(scalbn)(*(X+i), *(exp+i));)
 GENERATE_INTERFACE(scalbln,
-                   FPTYPE *X, FPTYPE *Y, (const FPTYPE *A, const long int *exp),
-                   X, ((FPTYPE *) A), (A, exp),
-                   NOOP, NOOP, *(X+i) = ADDSUFFIXTO(scalbln)(*(X+i), *(exp+i));)
+                   FPTYPE *X, (const FPTYPE *A, const long int *exp),
+                   X+i, A+i,
+                   X, (A, exp),
+                   NOOP, INTRODUCE_BITFLIP,
+                   NOOP, *(X+i) = ADDSUFFIXTO(scalbln)(*(X+i), *(exp+i));)
 
 /* Power functions. */
 GENERATE_BIVARIATE_PREFIX_MATH_H(pow, pow)
@@ -1102,8 +1129,9 @@ GENERATE_UNIVARIATE_MATH_H(tgamma, tgamma)
 GENERATE_UNIVARIATE_MATH_H(lgamma, lgamma)
 
 /* Rounding and remainder functions */
-#define FIND_ROUNDING_PRECISION                                                \
-  (int temp = ADDSUFFIXTO(ilogb)(*(A+i));                                      \
+#define FIND_ROUNDING_PRECISION(extra_instructions)                            \
+  (extra_instructions                                                          \
+   int temp = ADDSUFFIXTO(ilogb)(*(A+i));                                      \
    if (temp == FP_ILOGB0 || temp == FP_ILOGBNAN || temp == INT_MAX) {          \
      params.precision = DEFPREC-1;                                             \
      params.emax = DEFEMAX;                                                    \
@@ -1126,83 +1154,91 @@ GENERATE_UNIVARIATE_MATH_H(lgamma, lgamma)
   params.xmax = ldexp(1., fpopts->emax) * (2-ldexp(1., 1-fpopts->precision));)
 
 GENERATE_INTERFACE(ceil,
-                   FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
-                   X, ((FPTYPE *) A), A,
-                   params.round = CPFLOAT_RND_TP;,
-                   FIND_ROUNDING_PRECISION,
+                   FPTYPE *X, const FPTYPE *A,
+                   X+i, A+i,
+                   X, A,
+                   params.round = CPFLOAT_RND_TP;, INTRODUCE_BITFLIP,
+                   FIND_ROUNDING_PRECISION(),
                    NOOP)
 GENERATE_INTERFACE(floor,
-                   FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
-                   X, ((FPTYPE *) A), A,
-                   params.round = CPFLOAT_RND_TN;,
-                   FIND_ROUNDING_PRECISION,
+                   FPTYPE *X, const FPTYPE *A,
+                   X+i, A+i,
+                   X, A,
+                   params.round = CPFLOAT_RND_TN;, INTRODUCE_BITFLIP,
+                   FIND_ROUNDING_PRECISION(),
                    NOOP)
 GENERATE_BIVARIATE_PREFIX_MATH_H(fmod, fmod)
 GENERATE_INTERFACE(trunc,
-                   FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
-                   X, ((FPTYPE *) A), A,
-                   params.round = CPFLOAT_RND_TZ;,
-                   FIND_ROUNDING_PRECISION,
+                   FPTYPE *X, const FPTYPE *A,
+                   X+i, A+i,
+                   X, A,
+                   params.round = CPFLOAT_RND_TZ;, INTRODUCE_BITFLIP,
+                   FIND_ROUNDING_PRECISION(),
                    NOOP)
 
 GENERATE_INTERFACE(round,
-                   FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
-                   X, ((FPTYPE *) A), A,
-                   params.round = CPFLOAT_RND_NA;,
-                   FIND_ROUNDING_PRECISION,
+                   FPTYPE *X, const FPTYPE *A,
+                   X+i, A+i,
+                   X, A,
+                   params.round = CPFLOAT_RND_NA;, INTRODUCE_BITFLIP,
+                   FIND_ROUNDING_PRECISION(),
                    NOOP)
-GENERATE_INTERFACE(lround, // TODO: spurious output array X
-                   (long *r, FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
-                   (r, X), ((FPTYPE *) A), A,
-                   params.round = CPFLOAT_RND_NA;,
-                   FIND_ROUNDING_PRECISION,
-                   *(r+i) = (long)*(X+i);)
-GENERATE_INTERFACE(llround, // TODO: spurious output array X
-                   (long long *r, FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
-                   (r, X), ((FPTYPE *) A), A,
-                   params.round = CPFLOAT_RND_NA;,
-                   FIND_ROUNDING_PRECISION,
-                   *(r+i) = (long long)*(X+i);)
+GENERATE_INTERFACE(lround,
+                   long *r, const FPTYPE *A,
+                   &loctmp, A+i,
+                   r, A,
+                   params.round = CPFLOAT_RND_NA;, NO_BITFLIP,
+                   FIND_ROUNDING_PRECISION(FPTYPE loctmp;),
+                   *(r+i) = (long)loctmp;)
+GENERATE_INTERFACE(llround,
+                   long long *r, const FPTYPE *A,
+                   &loctmp, A+i,
+                   r, A,
+                   params.round = CPFLOAT_RND_NA;, NO_BITFLIP,
+                   FIND_ROUNDING_PRECISION(FPTYPE loctmp;),
+                   *(r+i) = (long long)loctmp;)
 
 GENERATE_INTERFACE(rint,
-                   (FPTYPE *X, int *exception), FPTYPE *Y, const FPTYPE *A,
-                   (X, exception), ((FPTYPE *) A), A,
-                   RINT_INIT_STRING,
-                   FIND_ROUNDING_PRECISION,
+                   (FPTYPE *X, int *exception), const FPTYPE *A,
+                   X+i, A+i,
+                   (X, exception), A,
+                   RINT_INIT_STRING, INTRODUCE_BITFLIP,
+                   FIND_ROUNDING_PRECISION(),
                    *(exception+i) = *(X+i) == *(A+i) ? 0 : FE_INEXACT;)
-GENERATE_INTERFACE(lrint, // TODO: spurious output array X
-                   (long *r, int *exception, FPTYPE *X),
-                   FPTYPE *Y,
+GENERATE_INTERFACE(lrint,
+                   (long *r, int *exception),
                    const FPTYPE *A,
-                   (r, exception, X), ((FPTYPE *) A), A,
-                   RINT_INIT_STRING,
-                   FIND_ROUNDING_PRECISION,
-                   (*(r+i) = (long)*(X+i);
+                   &loctmp, A+i,
+                   (r, exception), A,
+                   RINT_INIT_STRING, NO_BITFLIP,
+                   FIND_ROUNDING_PRECISION(FPTYPE loctmp;),
+                   (*(r+i) = (long)loctmp;
                     *(exception+i) = *(r+i) == *(A+i) ? 0 : FE_INEXACT;))
-GENERATE_INTERFACE(llrint, // TODO: spurious output array X
-                   (long long *r, int *exception, FPTYPE *X),
-                   FPTYPE *Y,
+GENERATE_INTERFACE(llrint,
+                   (long long *r, int *exception),
                    const FPTYPE *A,
-                   (r, exception, X), ((FPTYPE *) A), A,
-                   RINT_INIT_STRING,
-                   FIND_ROUNDING_PRECISION,
-                   (*(r+i) = (long long)*(X+i);
+                   &loctmp, A+i,
+                   (r, exception), A,
+                   RINT_INIT_STRING, NO_BITFLIP,
+                   FIND_ROUNDING_PRECISION(FPTYPE loctmp;),
+                   (*(r+i) = (long long)loctmp;
                     *(exception+i) = *(r+i) == *(A+i) ? 0 : FE_INEXACT;))
 GENERATE_INTERFACE(nearbyint,
-                   FPTYPE *X, FPTYPE *Y, const FPTYPE *A,
-                   X, ((FPTYPE *) A), A,
-                   RINT_INIT_STRING,
-                   FIND_ROUNDING_PRECISION,
+                   FPTYPE *X, const FPTYPE *A,
+                   X+i, A+i,
+                   X, A,
+                   RINT_INIT_STRING, INTRODUCE_BITFLIP,
+                   FIND_ROUNDING_PRECISION(),
                    NOOP)
 GENERATE_BIVARIATE_PREFIX_MATH_H(remainder, remainder)
 
 GENERATE_INTERFACE(remquo,
                    (FPTYPE *X, int *quot),
-                   FPTYPE *Y,
                    (const FPTYPE *A, const FPTYPE *B),
-                   (X, quot), X, (A, B),
-                   NOOP,
-                   *(Y+i) = ADDSUFFIXTO(remquo)(*(A+i), *(B+i), quot+i);,
+                   X+i, X+i,
+                   (X, quot), (A, B),
+                   NOOP, INTRODUCE_BITFLIP,
+                   *(X+i) = ADDSUFFIXTO(remquo)(*(A+i), *(B+i), quot+i);,
                    NOOP)
 
 /* floating-point manipulation functions. */
@@ -1217,37 +1253,45 @@ GENERATE_BIVARIATE_PREFIX_MATH_H(fmax, fmax)
 GENERATE_BIVARIATE_PREFIX_MATH_H(fmin, fmin)
 
 /* Classification. */
-GENERATE_INTERFACE(fpclassify, // TODO: spurious output array X
-                   (int *r,FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
-                   (r, X), ((FPTYPE *) A), A,
-                   NOOP, NOOP,
-                   if (*(X+i) == 0)
+GENERATE_INTERFACE(fpclassify,
+                   int *r, const FPTYPE *A,
+                   &loctmp, A+i,
+                   r, A,
+                   NOOP, NO_BITFLIP, FPTYPE loctmp;,
+                   if (loctmp == 0)
                      *(r+i) = FP_ZERO;
-                   else if (ABS(X+i) < params.xmin)
+                   else if (ABS(&loctmp) < params.xmin)
                      *(r+i) = FP_SUBNORMAL;
-                   else if (ABS(X+i) < INFINITY)
+                   else if (ABS(&loctmp) < INFINITY)
                      *(r+i) = FP_NORMAL;
-                   else if (isinf(*(X+i)))
+                   else if (isinf(loctmp))
                      *(r+i) = FP_INFINITE;
                    else
                      *(r+i) = FP_NAN;)
-GENERATE_INTERFACE(isfinite, // TODO: spurious output array X
-                   (int *r,FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
-                   (r, X), ((FPTYPE *) A), A,
-                   NOOP, NOOP, *(r+i) = isfinite(*(X+i));)
-GENERATE_INTERFACE(isinf, // TODO: spurious output array X
-                   (int *r,FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
-                   (r, X), ((FPTYPE *) A), A,
-                   NOOP, NOOP, *(r+i) = isinf(*(X+i));)
-GENERATE_INTERFACE(isnan, // TODO: spurious output array X
-                   (int *r,FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
-                   (r, X), ((FPTYPE *) A), A,
-                   NOOP, NOOP, *(r+i) = isnan(*(X+i));)
-GENERATE_INTERFACE(isnormal, // TODO: spurious output array X
-                   (int *r,FPTYPE *X), FPTYPE *Y, const FPTYPE *A,
-                   (r, X), ((FPTYPE *) A), A,
-                   NOOP, NOOP,
-                   *(r+i) = ABS(X+i) >= params.xmin && !isinf(*(X+i));)
+GENERATE_INTERFACE(isfinite,
+                   int *r, const FPTYPE *A,
+                   &loctmp, A+i,
+                   r, A,
+                   NOOP, NO_BITFLIP,
+                   FPTYPE loctmp;, *(r+i) = isfinite(loctmp);)
+GENERATE_INTERFACE(isinf,
+                   int *r, const FPTYPE *A,
+                   &loctmp, A+i,
+                   r, A,
+                   NOOP,  NO_BITFLIP,
+                   FPTYPE loctmp;, *(r+i) = isinf(loctmp);)
+GENERATE_INTERFACE(isnan,
+                   int *r, const FPTYPE *A,
+                   &loctmp, A+i,
+                   r, A,
+                   NOOP,  NO_BITFLIP,
+                   FPTYPE loctmp;, *(r+i) = isnan(loctmp);)
+GENERATE_INTERFACE(isnormal,
+                   int *r, const FPTYPE *A,
+                   &loctmp, A+i,
+                   r, A,
+                   NOOP,  NO_BITFLIP, FPTYPE loctmp;,
+                   *(r+i) = ABS(&loctmp) >= params.xmin && !isinf(loctmp);)
 /* signbit NOT IMPLEMENTED as rounding doesn't interfere with it. */
 
 /* Comparison.

@@ -2419,13 +2419,13 @@ for (size_t i = 0; i < nformats; i++) {
     check_equality_double(xd, refd, n);
 
     // These test would not work for +inf, -inf, and 0 because of the division.
-    cpfloat_ilogb(exp, xd, ad, n-3, fpopts);
+    cpfloat_ilogb(exp, ad, n-3, fpopts);
     cpfloat_scalbn(xd, oned, exp, n-3, fpopts);
     cpfloat_div(xd, ad, xd, n-3, fpopts);
     cpfloat_ldexp(xd, xd, exp, n-3, fpopts);
     check_equality_double(xd, refd, n-3);
 
-    cpfloat_ilogb(exp, xd, ad, n-3, fpopts);
+    cpfloat_ilogb(exp, ad, n-3, fpopts);
     for (size_t j = 0; j < n; j++)
       lexp[j] = (long)exp[j];
     cpfloat_scalbln(xd, oned, lexp, n-3, fpopts);
@@ -2434,20 +2434,20 @@ for (size_t i = 0; i < nformats; i++) {
     check_equality_double(xd, refd, n-3);
 
     // Removing nans and infs for this test.
-    cpfloat_ilogb(exp, xd, ad, n-4, fpopts);
+    cpfloat_ilogb(exp, ad, n-4, fpopts);
     cpfloat_logb(xd, ad, n-4, fpopts);
     for (size_t j = 0; j < n-4; j++)
       ck_assert(nan_safe_compare_double(xd[j], (double) exp[j]));
 
-    cpfloat_isfinite(exp, xd, ad, n, fpopts);
+    cpfloat_isfinite(exp, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resd_isfinite[j]));
 
-    cpfloat_isinf(exp, xd, ad, n, fpopts);
+    cpfloat_isinf(exp, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resd_isinf[j]));
 
-    cpfloat_isnan(exp, xd, ad, n, fpopts);
+    cpfloat_isnan(exp, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resd_isnan[j]));
 
@@ -2456,15 +2456,10 @@ for (size_t i = 0; i < nformats; i++) {
     // reference results.
     fpopts->explim = CPFLOAT_EXPRANGE_TARG;
     fpopts->subnormal = CPFLOAT_SUBN_USE;
-    cpfloat_isnormal(exp, xd, ad, n, fpopts);
+    cpfloat_isnormal(exp, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
-<<<<<<< Updated upstream
-      ck_assert(exp[j] == resd_isnormal[j]);
-    cpfloat_fpclassify(exp, xd, ad, n, fpopts);
-=======
       ck_assert(both_true_or_false(exp[j], resd_isnormal[j]));
     cpfloat_fpclassify(exp, ad, n, fpopts);
->>>>>>> Stashed changes
     for (size_t j = 0; j < n; j++)
       ck_assert(exp[j] == resd_fpclassify[j]);
     fpopts->subnormal = CPFLOAT_SUBN_RND;
@@ -2518,13 +2513,13 @@ for (size_t i = 0; i < nformats; i++) {
 
     // These test would not work for +inf, -inf, and 0 because of the division.
     // Subnormals that would cause underflow are also removed.
-    cpfloat_ilogbf(exp, xf, af, n-5, fpopts);
+    cpfloat_ilogbf(exp, af, n-5, fpopts);
     cpfloat_scalbnf(xf, onef, exp, n-5, fpopts);
     cpfloat_divf(xf, af, xf, n-5, fpopts);
     cpfloat_ldexpf(xf, xf, exp, n-5, fpopts);
     check_equality_float(xf, reff, n-5);
 
-    cpfloat_ilogbf(exp, xf, af, n-5, fpopts);
+    cpfloat_ilogbf(exp, af, n-5, fpopts);
     for (size_t j = 0; j < n-5; j++)
       lexp[j] = (long)exp[j];
     cpfloat_scalblnf(xf, onef, lexp, n-5, fpopts);
@@ -2533,21 +2528,21 @@ for (size_t i = 0; i < nformats; i++) {
     check_equality_float(xf, reff, n-5);
 
     // Removing nans and infs for this test.
-    cpfloat_ilogbf(exp, xf, af, n-6, fpopts);
+    cpfloat_ilogbf(exp, af, n-6, fpopts);
     cpfloat_logbf(xf, af, n-6, fpopts);
     for (size_t j = 0; j < n-6; j++) {
       ck_assert(nan_safe_compare_float(xf[j], (float) exp[j]));
     }
 
-    cpfloat_isfinitef(exp, xf, af, n, fpopts);
+    cpfloat_isfinitef(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resf_isfinite[j]));
 
-    cpfloat_isinff(exp, xf, af, n, fpopts);
+    cpfloat_isinff(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resf_isinf[j]));
 
-    cpfloat_isnanf(exp, xf, af, n, fpopts);
+    cpfloat_isnanf(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resf_isnan[j]));
 
@@ -2556,10 +2551,10 @@ for (size_t i = 0; i < nformats; i++) {
     // reference results.
     fpopts->explim = CPFLOAT_EXPRANGE_TARG;
     fpopts->subnormal = CPFLOAT_SUBN_USE;
-    cpfloat_isnormalf(exp, xf, af, n, fpopts);
+    cpfloat_isnormalf(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(exp[j] == resf_isnormal[j]);
-    cpfloat_fpclassifyf(exp, xf, af, n, fpopts);
+    cpfloat_fpclassifyf(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(exp[j] == resf_fpclassify[j]);
     fpopts->subnormal = CPFLOAT_SUBN_RND;
@@ -2822,18 +2817,18 @@ double rd1[] = {-3.00, -3.00, -3.00, -2.00,
 
 cpfloat_round(xd, ad, n, fpopts);
 check_equality_double(rd1, xd, n);
-cpfloat_lround(xl, xd, ad, n-3, fpopts);
+cpfloat_lround(xl, ad, n-3, fpopts);
 check_equality_double_long(rd1, xl, n-3);
-cpfloat_llround(xll, xd, ad, n-3, fpopts);
+cpfloat_llround(xll, ad, n-3, fpopts);
 check_equality_double_long_long(rd1, xll, n-3);
 
 cpfloat_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd1, xd, n);
 cpfloat_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd1, xd, n);
-cpfloat_lrint(xl, xi, xd, ad, n-3, fpopts);
+cpfloat_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd1, xl, n-3);
-cpfloat_llrint(xll, xi, xd, ad, n-3, fpopts);
+cpfloat_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd1, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_NZ;
@@ -2850,9 +2845,9 @@ cpfloat_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd2, xd, n);
 cpfloat_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd2, xd, n);
-cpfloat_lrint(xl, xi, xd, ad, n-3, fpopts);
+cpfloat_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd2, xl, n-3);
-cpfloat_llrint(xll, xi, xd, ad, n-3, fpopts);
+cpfloat_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd2, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_NE;
@@ -2869,9 +2864,9 @@ cpfloat_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd3, xd, n);
 cpfloat_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd3, xd, n);
-cpfloat_lrint(xl, xi, xd, ad, n-3, fpopts);
+cpfloat_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd3, xl, n-3);
-cpfloat_llrint(xll, xi, xd, ad, n-3, fpopts);
+cpfloat_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd3, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_TP;
@@ -2890,9 +2885,9 @@ cpfloat_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd4, xd, n);
 cpfloat_ceil(xd, ad, n, fpopts);
 check_equality_double(rd4, xd, n);
-cpfloat_lrint(xl, xi, xd, ad, n-3, fpopts);
+cpfloat_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd4, xl, n-3);
-cpfloat_llrint(xll, xi, xd, ad, n-3, fpopts);
+cpfloat_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd4, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_TN;
@@ -2911,9 +2906,9 @@ cpfloat_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd5, xd, n);
 cpfloat_floor(xd, ad, n, fpopts);
 check_equality_double(rd5, xd, n);
-cpfloat_lrint(xl, xi, xd, ad, n-3, fpopts);
+cpfloat_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd5, xl, n-3);
-cpfloat_llrint(xll, xi, xd, ad, n-3, fpopts);
+cpfloat_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd5, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_TZ;
@@ -2932,9 +2927,9 @@ cpfloat_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd6, xd, n);
 cpfloat_trunc(xd, ad, n, fpopts);
 check_equality_double(rd6, xd, n);
-cpfloat_lrint(xl, xi, xd, ad, n-3, fpopts);
+cpfloat_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd6, xl, n-3);
-cpfloat_llrint(xll, xi, xd, ad, n-3, fpopts);
+cpfloat_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd6, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_OD;
@@ -2951,9 +2946,9 @@ cpfloat_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd7, xd, n);
 cpfloat_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd7, xd, n);
-cpfloat_lrint(xl, xi, xd, ad, n-3, fpopts);
+cpfloat_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd7, xl, n-3);
-cpfloat_llrint(xll, xi, xd, ad, n-3, fpopts);
+cpfloat_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd7, xll, n-3);
 
 
