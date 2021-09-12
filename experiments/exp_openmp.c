@@ -49,8 +49,7 @@ int main() {
   }
   sizes[9*(i-1)] = mult*10;
 
-  static optstruct *fpopts;
-  fpopts = malloc(sizeof(optstruct));
+  optstruct *fpopts = init_optstruct();
 
   fpopts->subnormal = CPFLOAT_SUBN_USE;
   fpopts->explim = CPFLOAT_EXPRANGE_TARG;
@@ -151,6 +150,8 @@ int main() {
   fclose(fidd);
   fclose(fidpd);
   fclose(fidsd);
+
+  free_optstruct(fpopts);
 
   return 0;
 }

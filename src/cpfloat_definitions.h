@@ -284,6 +284,23 @@ typedef struct {
   cpfloat_randseed_t *randseed;
 } optstruct;
 
+optstruct *init_optstruct() {
+  optstruct *fpopts = malloc(sizeof(*fpopts));
+  fpopts->bitseed = NULL;
+  fpopts->randseedf = NULL;
+  fpopts->randseed = NULL;
+  return fpopts;
+}
+
+int free_optstruct(optstruct *fpopts) {
+  if(fpopts == NULL)
+    return -1;
+  else {
+    free(fpopts);
+    return 0;
+  }
+}
+
 #endif /* #ifndef _CHOPFAST_DEFINITIONS_ */
 
 /*

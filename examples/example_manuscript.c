@@ -7,8 +7,7 @@
 int main ()
 {
   // Allocate the data structure for target formats and rounding parameters.
-  static optstruct *fpopts;
-  fpopts = malloc(sizeof(optstruct));
+  optstruct *fpopts = init_optstruct();
 
   // Set up the parameters for binary16 target format.
   fpopts->precision = 11;                 // Bits in the significand + 1.
@@ -43,6 +42,8 @@ int main ()
   cpfloat(&Y[0], &X[0], 4, fpopts);
   printf("Rounded to bfloat16:\n %.15e %.15e\n %.15e %.15e \n",
          Y[0], Y[1], Y[2], Y[3]);
+
+  free_optstruct(fpopts);
 
   return 0;
 }

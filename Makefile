@@ -70,6 +70,11 @@ makebin:
 		$(MKDIR) $(BINDIR); \
 	fi
 
+makedat:
+	@if [ ! -d $(DATDIR) ]; then \
+		$(MKDIR) $(DATDIR); \
+	fi
+
 autotune: init makebin $(SRCDIR)cpfloat_autotune.c
 	$(CC) $(CFLAGS) $(COPTIM) -o $(BINDIR)cpfloat_autotune \
 		$(SRCDIR)cpfloat_autotune.c $(CLIBS) $(PCG_FLAGS)
@@ -153,36 +158,36 @@ example: init makebin $(EXAMPLEDIR)example_manuscript.c
 experiments: run_exp_ccomp run_exp_openmp run_exp_overhead run_exp_matlab
 
 exp_comp_cpfloat: init makebin $(EXPDIR)exp_comp_cpfloat.c
-	$(CC) $(CFLAGS) $(COPTIM) $(CLIBS) -I $(SRCDIR) \
-		-o $(BINDIR)$@ $(EXPDIR)exp_comp_cpfloat.c
+	$(CC) $(CFLAGS) $(COPTIM) $(EXPDIR)exp_comp_cpfloat.c \
+		$(CLIBS) $(PCG_FLAGS) -I $(SRCDIR) -o $(BINDIR)$@
 
 exp_comp_mpfr: init makebin $(EXPDIR)exp_comp_mpfr.c
-	$(CC) $(CFLAGS) $(COPTIM) $(CLIBS) -lmpfr -I $(SRCDIR) \
-		-o $(BINDIR)$@ $(EXPDIR)exp_comp_mpfr.c
+	$(CC) $(CFLAGS) $(COPTIM) $(EXPDIR)exp_comp_mpfr.c \
+		 $(CLIBS) -lmpfr -I $(SRCDIR) -o $(BINDIR)$@
 
 exp_comp_floatx: init makebin $(EXPDIR)exp_comp_floatx.cpp
 	$(CXX) $(CXXFLAGS) $(COPTIM) -I $(SRCDIR)/FloatX/src \
 		-o $(BINDIR)$@ $(EXPDIR)exp_comp_floatx.cpp
 
-run_exp_ccomp: exp_comp_cpfloat exp_comp_mpfr exp_comp_floatx
+run_exp_ccomp: makedat exp_comp_cpfloat exp_comp_mpfr exp_comp_floatx
 	$(BINDIR)exp_comp_cpfloat
 	$(BINDIR)exp_comp_mpfr
 	$(BINDIR)exp_comp_floatx
 	$(MV) *.dat $(DATDIR)
 
 exp_openmp: init makebin $(EXPDIR)exp_openmp.c
-	$(CC) $(CFLAGS) $(COPTIM) $(CLIBS) \
-		-o $(BINDIR)$@ $(EXPDIR)exp_openmp.c
+	$(CC) $(CFLAGS) $(COPTIM) $(EXPDIR)exp_openmp.c \
+		$(CLIBS) $(PCG_FLAGS) -o $(BINDIR)$@
 
-run_exp_openmp: exp_openmp
+run_exp_openmp: makedat exp_openmp
 	$(BINDIR)exp_openmp
 	$(MV) *.dat $(DATDIR)
 
 exp_overhead: init makebin $(EXPDIR)exp_overhead.c
-	$(CC) $(CFLAGS) $(COPTIM) $(CLIBS) \
-		-o $(BINDIR)$@ $(EXPDIR)exp_overhead.c
+	$(CC) $(CFLAGS) $(COPTIM) $(EXPDIR)exp_overhead.c \
+		$(CLIBS) $(PCG_FLAGS) -o $(BINDIR)$@
 
-run_exp_overhead: exp_overhead
+run_exp_overhead: makedat exp_overhead
 	$(BINDIR)exp_overhead
 	$(MV) *.dat $(DATDIR)
 
@@ -194,7 +199,7 @@ run_exp_matlab: EXPSTRING="addpath('$(INCDIR)chop'); \
 		run_exps; \
 		exit;"
 
-run_exp_matlab: mexmat
+run_exp_matlab: makedat mexmat
 	$(MATLAB) -r $(EXPSTRING)
 
 clean_experiments:

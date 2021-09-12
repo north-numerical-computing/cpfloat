@@ -48,8 +48,7 @@ int main() {
 
   size_t ntests = 10;
 
-  static optstruct *fpopts;
-  fpopts = malloc(sizeof(optstruct));
+  optstruct *fpopts = init_optstruct();
 
   strcpy(fpopts->format, "h");
   fpopts->precision = 11; // t
@@ -59,7 +58,6 @@ int main() {
   fpopts->round = CPFLOAT_RND_NE;
   fpopts->flip = CPFLOAT_NO_SOFTERR;
   fpopts->p = 0.5;
-
 
   float fmin = ldexpf(1.,-14);
 
@@ -142,6 +140,8 @@ int main() {
 
   free(timing);
   free(medtimings);
+
+  free_optstruct(fpopts);
 
   return 0;
 }

@@ -29,8 +29,7 @@ int main() {
   }
   sizes[9*(i-1)] = mult*10;
 
-  static optstruct *fpopts;
-  fpopts = malloc(sizeof(optstruct));
+  optstruct *fpopts = init_optstruct();
 
   strcpy(fpopts->format, "h");
   fpopts->precision = 11; // t
@@ -134,6 +133,8 @@ int main() {
   }
   fclose(fidp);
   fclose(fids);
+
+  free_optstruct(fpopts);
 
   return 0;
 }
