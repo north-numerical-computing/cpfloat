@@ -280,8 +280,8 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
   FPTYPE xbnd = ldexp(1., emax) * (2-ldexp(1., -precision));
 
   /* Bitmasks. */
-  INTTYPE leadmask = FULLMASK << (DEFPREC-precision); /* Bits to keep. */
-  INTTYPE trailmask = leadmask ^ FULLMASK;            /* Bits to discard. */
+  INTTYPE leadmask = FULLMASK << (DEFPREC-precision); /* To keep. */
+  INTTYPE trailmask = leadmask ^ FULLMASK;            /* To discard. */
 
   FPPARAMS params = {precision, emax, emin, fpopts->subnormal, fpopts->round,
                      ftzthreshold, xmin, xmax, xbnd,
@@ -295,8 +295,8 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
 static inline void UPDATE_GLOBAL_BITMASKS(FPPARAMS *params) {
 
   /* Bitmasks. */
-  params->leadmask = FULLMASK << (DEFPREC-params->precision); /* Bits to keep. */
-  params->trailmask = params->leadmask ^ FULLMASK; /* Bits to discard. */
+  params->leadmask = FULLMASK << (DEFPREC-params->precision); /* To keep. */
+  params->trailmask = params->leadmask ^ FULLMASK;            /* To discard. */
 }
 
 /* Compute floating point parameters required for rounding subnormals. */
@@ -331,6 +331,15 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
  *   + FPTYPE *y, address where the input is stored;
  *   + FPPARAMS *p, address where the target format parameters are stored;
  *   + LOCPARAMS *lp, address where the parameters for subnormals are stored.
+ *
+ * For some of the rounding modes, it is possible to simplify the algorithms
+ * when storage and target format have the same exponent range. For each of
+ * these rounding modes, we provide two macros: one with the suffix _SAME_EXP,
+ * which assumes that storage and target format dedicate the same number of bits
+ * to the exponent field, and one with the suffix _OTHER_EXP, which only assumes
+ * that the exponent range of the target format is a subrange of that of the
+ * storage format.
+ *
  */
 
 /* Round-to-nearest with ties-to-away. */
@@ -538,7 +547,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 /* Stochastic rounding with equal probabilities. */
 #define RS_EQUI_SCALAR(x, y, p, lp)                                            \
   UPDATE_LOCAL_PARAMS(y, p, lp);                                               \
-  if (ABS(y) < p->ftzthreshold && *(y) != 0) { /* Underflow */                 \
+  if (ABS(y) < p->ftzthreshold && *(y) != 0) {         /* Underflow */         \
     randombit = GENBIT(p->BITSEED);                                            \
     *(x) = FPOF(SIGN(y) | INTOFCONST(randombit ? p->ftzthreshold : 0));        \
   } else if (ABS(y) > p->xmax && ABS(y) != INFINITY) { /* Overflow */          \
@@ -549,12 +558,12 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     *(x) = FPOF(INTOF(y) & lp->leadmask);                                      \
     if (randombit)                                                             \
       *(x) = FPOF(INTOF(x) + (INTCONST(1) << (DEFPREC-lp->precision)));        \
-  } else /* *(y) exactly representable, no rounding necessary. */              \
+  } else /* Exactly representable, no rounding necessary. */                   \
     *(x) = *(y);
 
 /* Round-to-odd. */
 #define RO_SCALAR(x, y, p, lp)                                                 \
-  if (ABS(y) < p->ftzthreshold && *(y) != 0) { /* Underflow */                 \
+  if (ABS(y) < p->ftzthreshold && *(y) != 0) {         /* Underflow */         \
     *(x) =  FPOF(SIGN(y) | INTOFCONST(p->ftzthreshold));                       \
   } else if (ABS(y) > p->xmax && ABS(y) != INFINITY) { /* Overflow */          \
     *(x) = FPOF(SIGN(y) | INTOFCONST(p->xmax));                                \
@@ -582,6 +591,12 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
  *   + size_t numlelem, number of elements in the arrays;
  *   + FPPARAMS *p, address where the target format parameters are stored;
  *   + LOCPARAMS *lp, address where the parameters for subnormals are stored.
+ *
+ * Each element of the array is rounded using one of the scalar rounding macros
+ * above. When both a _SAME_EXP and an _OTHER_EXP variant of the scalar rounding
+ * function are available, the choice is made by checking whether the maximum
+ * exponent of the target format (p->emax) is the same as the maximum exponent
+ * of the storage format (DEFEMAX).
  */
 
 #define PARALLEL_STRING(PARALLEL) PARALLEL_STRING_##PARALLEL
@@ -644,7 +659,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   VECTOR_ROUNDING_FUNCTION(X, Y, PREPROC, POSTPROC, RD_TWD_ZERO, PARALLEL,     \
                            numelem, p, lp)
 
-/* Stochastic rounding with proportional probabilities. */
+/* Stochastic rounding with proportional probabilities ("mode 1"). */
 #define RS_PROP(X, Y, PREPROC, POSTPROC, PARALLEL, INIT_RANDSEED,              \
                 numelem, p, lp)                                                \
   PRNG_RAND_INIT                                                               \
@@ -659,7 +674,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     PRNG_RAND_UPDATE(PARALLEL)                                                 \
   }                                                                            \
 
-/* Stochastic rounding with equal probabilities. */
+/* Stochastic rounding with equal probabilities ("mode 2"). */
 #define RS_EQUI(X, Y, PREPROC, POSTPROC, PARALLEL, INIT_BITSEED,               \
                 numelem, p, lp)                                                \
   PRNG_BIT_INIT                                                                \
@@ -851,7 +866,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                                   INIT_RAND_STRING_PAR,                        \
                                   INIT_BIT_STRING_PAR)
 
-/* Partial results before rounding are store in the vector X. */
+/* Partial results before rounding are stored in the vector X. */
 #define GENERATE_INTERFACE(FUNNAME, FOUTPUT, FINPUT, X, Y,                     \
                            FCALLOUT, FCALLIN,                                  \
                            INIT_STRING, FINAL_STRING, PREPROC, POSTPROC)       \
@@ -885,11 +900,11 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   GENERATE_INTERFACE_SUBFUNCTIONS_SEQ(FUNNAME, FOUTPUT, FINPUT, X, Y,          \
                                       INIT_STRING, FINAL_STRING,               \
                                       PREPROC, POSTPROC)                       \
-       static inline int                                                       \
-       GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),               \
-                                  DEPARENTHESIZE_MAYBE(FINPUT),                \
-                                  const size_t numelem,                        \
-                                  optstruct *fpopts) {                         \
+  static inline int                                                            \
+  GENERATE_FUN_NAME(FUNNAME)(DEPARENTHESIZE_MAYBE(FOUTPUT),                    \
+                             DEPARENTHESIZE_MAYBE(FINPUT),                     \
+                             const size_t numelem,                             \
+                             optstruct *fpopts) {                              \
     return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                  \
       (DEPARENTHESIZE_MAYBE(FCALLOUT),                                         \
        DEPARENTHESIZE_MAYBE(FCALLIN),                                          \
@@ -897,8 +912,11 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   }
 #endif /* #ifdef _OPENMP */
 
-/* Function generators. These functions use the output matrix X to store the
-   intermediate results of the computation. */
+/* Function generators.
+ *
+ * If necessary, the generated functions use the output matrix X to store the
+ * intermediate results of the computation, then round in place.
+*/
 #define GENERATE_UNIVARIATE(FUNNAME, OPSTRING)                                 \
   GENERATE_INTERFACE(FUNNAME, FPTYPE *X,                                       \
                      const FPTYPE *A,                                          \
@@ -958,7 +976,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                                         PARALLEL_SUFFIX)                       \
   static inline int                                                            \
   GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX)                               \
-  (FPTYPE *X, FPTYPE *A, TYPETO *B,                                            \
+  (FPTYPE *X, FPTYPE *A, const TYPETO *B,                                      \
    const size_t numelem, optstruct *fpopts) {                                  \
     int retval = 0;                                                            \
     FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);                  \
@@ -984,7 +1002,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   GENERATE_NEXTAFTER_SUBFUNCTIONS(FUNNAME, TYPETO, SEQ, PARALLEL_SUFFIX_SEQ)   \
   GENERATE_NEXTAFTER_SUBFUNCTIONS(FUNNAME, TYPETO, PAR, PARALLEL_SUFFIX_PAR)   \
   static inline int                                                            \
-       GENERATE_FUN_NAME(FUNNAME)(FPTYPE *X, FPTYPE *A, TYPETO *B,             \
+       GENERATE_FUN_NAME(FUNNAME)(FPTYPE *X, FPTYPE *A, const TYPETO *B,       \
                              const size_t numelem, optstruct *fpopts) {        \
     if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))                      \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
@@ -1250,7 +1268,7 @@ GENERATE_INTERFACE(remquo,
                    *(X+i) = ADDSUFFIXTO(remquo)(*(A+i), *(B+i), quot+i);,
                    NOOP)
 
-/* floating-point manipulation functions. */
+/* Floating-point manipulation functions. */
 GENERATE_BIVARIATE_PREFIX_MATH_H(copysign, copysign)
 /* nan NOT IMPLEMENTED as not relevant. */
 GENERATE_NEXTAFTER_INTERFACE(nextafter, FPTYPE)

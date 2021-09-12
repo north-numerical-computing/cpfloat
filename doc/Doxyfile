@@ -256,9 +256,7 @@ WARN_NO_PARAMDOC       = YES
 
 INPUT = README.md \
         ./src/cpfloat_definitions.h \
-        ./src/cpfloat_threshold_binary32.h \
         ./src/cpfloat_binary32.h \
-        ./src/cpfloat_threshold_binary64.h \
         ./src/cpfloat_binary64.h
 
 INPUT_ENCODING         = UTF-8
@@ -900,6 +898,7 @@ LATEX_EMOJI_DIRECTORY  =
 #---------------------------------------------------------------------------
 
 MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = NO
 
 PREDEFINED             = _OPENMP
 

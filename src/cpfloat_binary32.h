@@ -3,18 +3,269 @@
 
 /**
  * @file cpfloat_binary32.h
- * @brief CPFloat functions for rounding `float` arrays.
- *
- * @details This header file defines the function cpfloatf() for rounding
- * `float` arrays to lower precision. When OpenMP support is specified at
- * compile time, the two functions cpfloatf_sequential() and
- * cpfloatf_parallel() are also defined.
+ * @brief CPFloat functions for `float` arrays.
  */
 
 #ifndef _CPFLOAT_BINARY32_
 #define _CPFLOAT_BINARY32_
 
 #include "cpfloat_definitions.h"
+#include "cpfloat_docmacros.h"
+
+/* Validation of floating-point parameters. */
+doc_cpfloat_validate_optstruct(double, 12, 24, 127)
+static inline int cpfloat_validate_optstructf(const optstruct *fpopts);
+
+/* Rounding functions. */
+doc_cpfloat(float, 24, 127)
+static inline int cpfloat_fproundf(float *X, const float *A,
+                                   const size_t numelem, optstruct *fpopts);
+doc_cpfloat(float, 24, 127)
+static inline int cpfloatf(float *X, const float *A, const size_t numelem,
+                           optstruct *fpopts);
+
+  /* Elementary arithmetic operations. */
+doc_cpfloat_bivariate(sum, X[i] = A[i] + B[i], 24, 127)
+static inline int cpfloat_addf(float *X, const float *A, const float *B,
+                               const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(difference, X[i] = A[i] - B[i], 24, 127)
+static inline int cpfloat_subf(float *X, const float *A, const float *B,
+                               const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(product, X[i] = A[i] * B[i], 24, 127)
+static inline int cpfloat_mulf(float *X, const float *A, const float *B,
+                               const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(ratio, X[i] = A[i] / B[i], 24, 127)
+static inline int cpfloat_divf(float *X, const float *A, const float *B,
+                               const size_t numelem, optstruct *fpopts);
+
+/* Trigonometric functions. */
+doc_cpfloat_univariate(trigonometric cosine, X[i] = cos(A[i]), 24, 127)
+static inline int cpfloat_cosf(float *X, const float *A,
+                               const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(trigonometric sine, X[i] = sin(A[i]), 24, 127)
+static inline int cpfloat_sinf(float *X, const float *A,
+                               const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(trigonometric tangent, X[i] = tan(A[i]), 24, 127)
+static inline int cpfloat_tanf(float *X, const float *A,
+                               const size_t numelem, optstruct *fpopts);
+
+doc_cpfloat_univariate(inverse trigonometric cosine,
+                       X[i] = acos(A[i]), 24, 127)
+static inline int cpfloat_acosf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(inverse trigonometric sine,
+                       X[i] = asin(A[i]), 24, 127)
+static inline int cpfloat_asinf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(inverse trigonometric tangent,
+                       X[i] = atan(A[i]), 24, 127)
+static inline int cpfloat_atanf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(2-argument arctangent,
+                      X[i] = atan2 (A[i], B[i]), 24, 127)
+static inline int cpfloat_atan2f(float *X, const float *A, const float *B,
+                                 const size_t numelem, optstruct *fpopts);
+
+/* Hyperbolic functions. */
+doc_cpfloat_univariate(hyperbolic cosine, X[i] = cosh(A[i]), 24, 127)
+static inline int cpfloat_coshf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(hyperbolic sine, X[i] = sinh(A[i]), 24, 127)
+static inline int cpfloat_sinhf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(hyperbolic tangent , X[i] = tanh(A[i]), 24, 127)
+static inline int cpfloat_tanhf(float *X, const float *A,
+                               const size_t numelem, optstruct *fpopts);
+
+doc_cpfloat_univariate(inverse hyperbolic cosine,
+                       X[i] = arcosh(A[i]), 24, 127)
+static inline int cpfloat_acoshf(float *X, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(inverse hyperbolic sine,
+                       X[i] = arsinh(A[i]), 24, 127)
+static inline int cpfloat_asinhf(float *X, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(inverse hyperbolic tangent,
+                       X[i] = artanh(A[i]), 24, 127)
+static inline int cpfloat_atanhf(float *X, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+
+/* Exponentiation and logarithmic functions. */
+doc_cpfloat_univariate(exponential, X[i] = exp(A[i]), 24, 127)
+static inline int cpfloat_expf(float *X, const float *A,
+                               const size_t numelem, optstruct *fpopts);
+
+doc_cpfloat_frexp(24, 127)
+static inline int cpfloat_frexpf(float *X, int *exp, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_scaling(2, 24, 127)
+static inline int cpfloat_ldexpf(float *X, const float *A, const int *exp,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(natural logarithm, X[i] = log(A[i]), 24, 127)
+static inline int cpfloat_logf(float *X, const float *A,
+                               const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(base-10 logarithm, X[i] = log10(A[i]), 24, 127)
+static inline int cpfloat_log10f(float *X, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_modf(24, 127)
+static inline int cpfloat_modff(float *X, float *intpart, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(base-2 exponential, X[i] = 2^(A[i]), 24, 127)
+static inline int cpfloat_exp2f(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(exp(x) - 1, X[i] = exp(A[i]) - 1, 24, 127)
+static inline int cpfloat_expm1f(float *X, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_ilogb(24, 127)
+static inline int cpfloat_ilogbf(int *exp, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+
+doc_cpfloat_univariate(natural logarithm of number shifted by one,
+                       X[i] = log(1+A[i]), 24, 127)
+static inline int cpfloat_log1pf(float *X, const float *A,
+                                 size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(base-2 logarithm, X[i] = log2(A[i]), 24, 127)
+static inline int cpfloat_log2f(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_scaling(FLT_RADIX, 24, 127)
+  static inline int cpfloat_scalbnf(float *X, const float *A, const int *exp,
+                                    const size_t numelem, optstruct *fpopts);
+doc_cpfloat_scaling(FLT_RADIX, 24, 127)
+  static inline int cpfloat_scalblnf(float *X, const float *A,
+                                     const long int *exp, const size_t numelem,
+                                     optstruct *fpopts);
+
+/* Power functions. */
+doc_cpfloat_bivariate(real powers, X[i] = A[i]^B[i], 24, 127)
+static inline int cpfloat_powf(float *X, const float *A, const float *B,
+                               const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(square root, X[i] = sqrt(A[i]), 24, 127)
+static inline int cpfloat_sqrtf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(cube root, X[i] = cbrt(A[i]), 24, 127)
+static inline int cpfloat_cbrtf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(hypotenuse of a right-angle triangle,
+                      X[i] = sqrt(A[i]^2 + B[i]^2), 24, 127)
+static inline int cpfloat_hypotf(float *X, const float *A, const float *B,
+                                 const size_t numelem, optstruct *fpopts);
+
+/* Error and gamma functions. */
+doc_cpfloat_univariate(error function, X[i] = erf(A[i]), 24, 127)
+static inline int cpfloat_erff(float *X, const float *A,
+                               const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(complementary error function, X[i] = erfc(A[i]), 24, 127)
+static inline int cpfloat_erfcf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(gamma function, X[i] = gamma(A[i]), 24, 127)
+static inline int cpfloat_tgammaf(float *X, const float *A,
+                                  const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(natural logarithm of absolute value of gamma function,
+                       X[i] = log(abs(gamma(A[i]))), 24, 127)
+static inline int cpfloat_lgammaf(float *X, const float *A,
+                                  const size_t numelem, optstruct *fpopts);
+
+/* Rounding and remainder functions. */
+doc_cpfloat_univariate(ceiling function, X[i] = ceil(A[i]), 24, 127)
+static inline int cpfloat_ceilf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(floor function, X[i] = floor(A[i]), 24, 127)
+static inline int cpfloat_floorf(float *X, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(integer truncation, X[i] = trunc(A[i]), 24, 127)
+static inline int cpfloat_truncf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+
+doc_cpfloat_univariate(closest integer (with round-to-nearest),
+                       X[i] = round(A[i]), 24, 127)
+static inline int cpfloat_roundf(float *X, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate(closest integer (with round-to-nearest),
+                       X[i] = round(A[i]), 24, 127)
+static inline int cpfloat_lroundf(long *X, const float *A,
+                                  const size_t numelem, optstruct *fpopts);
+doc_cpfloat_univariate_nobitflip(closest integer (with round-to-nearest),
+                       X[i] = round(A[i]), 24, 127)
+static inline int cpfloat_llroundf(long long *X, const float *A,
+                                   const size_t numelem, optstruct *fpopts);
+
+doc_cpfloat_rint(PMAX, EMAX)
+static inline int cpfloat_rintf(float *X, int *exception, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_rint(PMAX, EMAX)
+static inline int cpfloat_lrintf(long *X, int *exception, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_rint(PMAX, EMAX)
+static inline int cpfloat_llrintf(long long *X, int *exception, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_nearbyint(PMAX, EMAX)
+static inline int cpfloat_nearbyintf(float *X, const float *A,
+                                     const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(remainder of the floating point division,
+                      X[i] = A[i]^2 - k * B[i]
+                      for largest k such that k * B[i] < A[i], 24, 127)
+static inline int cpfloat_remainderf(float *X, const float *A, const float *B,
+                                     const size_t numelem, optstruct *fpopts);
+
+doc_cpfloat_remquo(PMAX, EMAX)
+static inline int cpfloat_remquof(float *X, int *quot,
+                                  const float *A, const float *B,
+                                  const size_t numelem, optstruct *fpopts);
+
+/* Floating-point manipulation functions. */
+doc_cpfloat_bivariate(number from magnitude and sign,
+                      X[i] = sign(A[i]) * abs(B[i]), 24, 127)
+static inline int cpfloat_copysignf(float *X, const float *A, const float *B,
+                                    const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(next floating-point number in specified direction,
+                      the floating-point number closest to A[i] in the
+                      direction of B[i], 24, 127)
+static inline int cpfloat_nextafterf(float *X, float *A, const float *B,
+                                     const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(next floating-point number in specified direction,
+                      the floating-point number closest to A[i] in the
+                      direction of B[i], 24, 127)
+static inline int cpfloat_nexttowardf(float *X, float *A,
+                                      const long double *B,
+                                      const size_t numelem,
+                                      optstruct *fpopts);
+
+/* Minimum, maximum, difference functions. */
+doc_cpfloat_bivariate(positive difference, X[i] = abs(A[i]) - B[i], 24, 127)
+static inline int cpfloat_fdimf(float *X, const float *A, const float *B,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(element-wise maximum, X[i] = max(A[i], B[i]), 24, 127)
+static inline int cpfloat_fmaxf(float *X, const float *A, const float *B,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_bivariate(element-wise minimum, X[i] = min(A[i], B[i]), 24, 127)
+static inline int cpfloat_fminf(float *X, const float *A, const float *B,
+                                const size_t numelem, optstruct *fpopts);
+
+/* Classification. */
+doc_cpfloat_fpclassify(24, 127)
+static inline int cpfloat_fpclassifyf(int *r, const float *A,
+                                      const size_t numelem, optstruct *fpopts);
+doc_cpfloat_isfun(finite, 24, 127)
+static inline int cpfloat_isfinitef(int *r, const float *A,
+                                    const size_t numelem, optstruct *fpopts);
+doc_cpfloat_isfun(infinite, 24, 127)
+static inline int cpfloat_isinff(int *r, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_isfun(not a number, 24, 127)
+static inline int cpfloat_isnanf(int *r, const float *A,
+                                 const size_t numelem, optstruct *fpopts);
+doc_cpfloat_isfun(normal, 24, 127)
+static inline int cpfloat_isnormalf(int *r, const float *A,
+                                    const size_t numelem, optstruct *fpopts);
+
+/* Other functions. */
+doc_cpfloat_univariate(absolute value, X[i] = abs(A[i]), 24, 127)
+static inline int cpfloat_fabsf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
+doc_cpfloat_trivariate(fused multiply-add , X[i] = A[i] * B[i] + C[i], 24, 127)
+static inline int cpfloat_fmaf(float *X, const float *A, const float *B,
+                               const float *C, const size_t numelem,
+                               optstruct *fpopts);
 
 /** @cond */
 #define FUNSUFFIX f
@@ -45,82 +296,8 @@
 #define INITRAND(seed) *seed = time(NULL);
 #define GEN_SINGLE_RAND(seed) ((INTTYPE)rand_r((unsigned int *)seed))
 #endif /* #ifndef PCG_VARIANTS_H_INCLUDED */
-/** @endcond */
-
-/**
- * @brief Validate fields of @ref optstruct struct for `float` storage format.
- *
- * @details This function checks whether the parameters stored in @p fpopts are
- * valid when `float` is used as storage format.
- *
- * @param[in] fpopts Parameters describing the target format, the rounding mode,
- * and the probability of soft errors striking the rounded values.
- *
- * @return The function returns @b 0 if all the parameters are valid, and a
- * positive number if at least one of them is not. A negative number should be
- * understood as a warning, and indicates that cpfloatf(),
- * cpfloatf_sequential(), and cpfloatf_parallel() will return @p 0 if @p fpopts
- * is used as fourth argument, but might not perform as intended.
- *
- * Possible return values are:
- * + @b -4 The rounding mode specified in @p fpopts->round does not correspond
- * to a valid choice, thus no rounding will be performed.
- * + @b -2 The required number of digits in @p fpopts->precision is between 12
- * and 24 inclusive, which might cause double rounding if round-to-nearest is
- * used.
- * + @b -1 The string in @p fpopts->format is not valid. This is not an error as
- * this value is not used by the C functions, but only by the MEX interface.
- * + @b  0 All the parameters in @p fpopts are valid.
- * + @b  2 The required number of digits in @p fpopts->precision is larger than
- * 24, the number of significant digits in a variable of type `float`.
- * + @b  3 The required maximum exponent in @p fpopts->emax is larger than 127,
- * the largest possible exponent for a variable of type `float`.
- * + @b  5 The value of @p fpopts->flip indicates that soft errors should be
- * introduced, but @p fpopts->p is not a real number between 0 and 1 and thus
- * does not represent a valid probability.
- *
- * Errors take precedence over warnings, thus a nonpositive return values
- * implies no errors. In case of multiple issues, the return value is that of
- * the first error (or warning, if no error is present) encountered in the order
- * given in the list above.
- */
-static inline
-int cpfloatf_validate_optstruct(const optstruct *fpopts);
-
-/**
- * @brief Round `float` array to lower precision.
- *
- * @details If the function executes without errors, then the array @p X
- * contains the @p numelem entries of the array @p A rounded to a
- * lower-precision target format. The parameters of the target format and the
- * rounding mode to be used are encoded in @p fpopts. If required, the function
- * flips one bit in some of the entries of @p X.
- *
- * If OpenMP support is specified when compiling the file that includes
- * cpfloat_binary32.h, then the function calls cpfloatf_sequential() if @p
- * numelem is below the threshold parameter #OPENMP_THRESHOLD_float and
- * cpfloatf_parallel() otherwise. When OpenMP is not supported, these two
- * functions are not defined and cpfloatf() implements only the sequential
- * algorithm.
- *
- * @param[out] X Array of rounded values.
- * @param[in] A Input array.
- * @param[in] numelem Number of elements in @p X and @p A.
- * @param[in] fpopts Parameters describing the target format, the rounding mode,
- * and the probability of soft errors striking the rounded values.
- *
- * @return The function returns @b 1 if @p fpopts->precision is larger than 24,
- * @b 2 if @p fpopts->emax is larger than 127, and @b 0 otherwise.
- */
-static inline
-int cpfloatf(float *X,
-             const float *A,
-             const size_t numelem,
-             optstruct *fpopts);
 
 #include "cpfloat_threshold_binary32.h"
-
-/** @cond */
 #include "cpfloat_template.h"
 /** @endcond */
 
