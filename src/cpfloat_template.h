@@ -201,7 +201,7 @@ static inline INTTYPE PRNG_ADVANCE_RAND(RANDSEEDTYPE *seed, size_t delta) {
   }
 
 /* Function to validate floating-point options passed to CPFloat interfaces. */
-#define VALIDATE_INPUT CONCATENATE(ADDSUFFIXTO(MAINFUNNAME),_validate_optstruct)
+#define VALIDATE_INPUT ADDSUFFIXTO(CONCATENATE(MAINFUNNAME,_validate_optstruct))
 static inline int VALIDATE_INPUT(const optstruct *fpopts) {
 
   int retval;
@@ -1022,18 +1022,27 @@ int ADDSUFFIXTO(cpfloat)(FPTYPE *X,
                          optstruct *fpopts) {
   return GENERATE_FUN_NAME(fpround)(X, A, numelem, fpopts);
 }
+
+/*
+ * The following two functions are used internally to autotune the size of the
+ * smallest vector on which multiple OpenMP threads can be used, and to perform
+ * some of the experiments in the experiments/ folder.
+ * They are not documented and should not be used directly.
+ */
+#ifdef _OPENMP
+static inline
 int CONCATENATE(ADDSUFFIXTO(cpfloat),_sequential)(FPTYPE *X,
-                                    const FPTYPE *A,
-                                    const size_t numelem,
-                                    optstruct *fpopts) {
+                                                  const FPTYPE *A,
+                                                  const size_t numelem,
+                                                  optstruct *fpopts) {
   return GENERATE_SUBFUN_NAME(fpround, PARALLEL_SUFFIX_SEQ)
     (X, A, numelem, fpopts);
 }
-#ifdef _OPENMP
+static inline
 int CONCATENATE(ADDSUFFIXTO(cpfloat),_parallel)(FPTYPE *X,
-                                  const FPTYPE *A,
-                                  const size_t numelem,
-                                  optstruct *fpopts) {
+                                                const FPTYPE *A,
+                                                const size_t numelem,
+                                                optstruct *fpopts) {
   return GENERATE_SUBFUN_NAME(fpround, PARALLEL_SUFFIX_PAR)
     (X, A, numelem, fpopts);
 }
