@@ -2,27 +2,27 @@
 % SPDX-License-Identifier: LGPL-2.1-or-later
 
 function retval = cpfloat_compile(varargin)
-%COMPILE_CHOPFAST    Compile MEX interface to the CPFloat Library.
-%   COMPILE_CHOPFAST() compiles the MEX function chopfast using the default C
+%CPFLOAT_COMPILE    Compile MEX interface to the CPFloat Library.
+%   CPFLOAT_COMPILE() compiles the MEX function chopfast using the default C
 %   compiler. The function expects all the header files of the CPFloat Library
 %   as well as the file pcg_variants.h from the PCG Library to be in the current
 %   working directory. The function attempts to use the OpenMP library, if
 %   available.
 %
-%   COMPILE_CHOPFAST('cpfloatdir',CPFLOATDIR) looks for the header files of the
+%   CPFLOAT_COMPILE('cpfloatdir',CPFLOATDIR) looks for the header files of the
 %   CPFloat Library in CPFLOATDIR rather than in the current working directory.
 %
-%   COMPILE_CHOPFAST('pcgpath',PCGPATH) sets the root directory of the PCG
+%   CPFLOAT_COMPILE('pcgpath',PCGPATH) sets the root directory of the PCG
 %   random number generator to PCGPATH instead of ./pcg-c/.
 %
-%   COMPILE_CHOPFAST('pcgvariants',PCGVARIANTS) specifies that the path of the
-%   header file pcg_variants.h is PCGVARIANTS. The defauls value is
+%   CPFLOAT_COMPILE('pcgvariants',PCGVARIANTS) specifies that the path of the
+%   header file pcg_variants.h is PCGVARIANTS. The default value is
 %   PCGPATH/include/pcg_variants.h.
 %
-%   COMPILE_CHOPFAST('pcglib',PCGLIB) specifies that the path the static library
-%   libpcg_random.a is PCGLIB. The defauls value is PCGPATH/src/libpcg_random.a.
+%   CPFLOAT_COMPILE('pcglib',PCGLIB) specifies that the path of the library
+%   libpcg_random.a is PCGLIB. The default value is PCGPATH/src/libpcg_random.a.
 %
-%   COMPILE_CHOPFAST('compilerpath',COMPILERPATH) uses the compiler COMPILERPATH
+%   CPFLOAT_COMPILE('compilerpath',COMPILERPATH) uses the compiler COMPILERPATH
 %   instead of the default C compiler.
 
   retval = true;

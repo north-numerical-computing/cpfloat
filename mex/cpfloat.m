@@ -26,7 +26,7 @@
 %       's', 'fp32', 'binary32', 'single'  for IEEE binary32 (single precision);
 %       'd', 'fp64', 'binary64', 'double'  for IEEE binary64 (double precision);
 %       'c', 'custom'                      for a custom-precision format.
-%     In order to use a custom precision, the parameters of the floating-point
+%     In order to use a custom format, the parameters of the floating-point
 %     format must be supplied using the FPOPTS.params field. The default value
 %     for this field is 'h'.
 %
@@ -57,9 +57,8 @@
 %        3 for round-toward-minus-infinity;
 %        4 for round-toward-zero;
 %        5 for round-stochastic with proportional probabilities;
-%        6 for round-stochastic with equal probabilities;
-%        7 for round-to-odd;
-%        8 for no rounding.
+%        6 for round-stochastic with equal probabilities; and
+%        7 for round-to-odd.
 %      Any other value results in no rounding. The default value for this field
 %      is 1.
 %
