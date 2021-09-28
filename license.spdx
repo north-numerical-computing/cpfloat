@@ -5,11 +5,11 @@
 SPDXVersion: SPDX-2.2
 DataLicense: CC0-1.0
 SPDXID: SPDXRef-DOCUMENT
-DocumentName: cpfloat-0.1.0
+DocumentName: cpfloat-0.2.0
 DocumentNamespace: https://raw.githubusercontent.com/mfasi/cpfloat/master/license.spdx
 Creator: Person: Massimiliano Fasi (massimiliano.fasi@oru.se)
 Creator: Person: Mantas Mikaitis (mantas.mikaitis@manchester.ac.uk)
-Created: 2021-04-20T11:47:41Z
+Created: 2021-09-28T06:29:53Z
 
 
 
@@ -19,9 +19,9 @@ Created: 2021-04-20T11:47:41Z
 
 PackageName: cpfloat
 SPDXID: SPDXRef-1
-PackageVersion: 0.1.0
+PackageVersion: 0.2.0
 PackageDownloadLocation: git://github.com/mfasi/cpfloat
-PackageVerificationCode: 2af617080358a46494cf30398f6b211a4e18c938 (excludes: ./license.spdx)
+PackageVerificationCode: 0eed418a4776955a4c012345fb7ebfb2c2a3ccb8 (excludes: ./license.spdx)
 PackageHomePage: https://github.com/mfasi/cpfloat
 PackageLicenseConcluded: LGPL-2.1-or-later
 PackageLicenseInfoFromFiles: LGPL-2.1-or-later
@@ -38,8 +38,8 @@ PackageSummary:<text>Custom Precision Floating-point numbers.</text>
 FileName: ./test/cpfloat_test.ts
 SPDXID: SPDXRef-1-1
 FileType: SOURCE
-FileChecksum: SHA1: 48d79219216d53da5f400d707a9b6d78a4831496
-FileChecksum: MD5: 0fad58290f020f018dea3a561bf900cc
+FileChecksum: SHA1: 27c6b3ba6a691f7f51ca0657123bf4c8ecf25efb
+FileChecksum: MD5: e3616704ae63006a4f274655314a9cd1
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
@@ -53,8 +53,8 @@ LicenseInfoInFile: LGPL-2.1-or-later
 
 FileName: ./util/generate_spdx.sh
 SPDXID: SPDXRef-1-3
-FileChecksum: SHA1: 4978dd36804327b51f42ad8112a0754cd9c12d6c
-FileChecksum: MD5: bf6fcd6d5b3a4d9af53f41dcf6e6b438
+FileChecksum: SHA1: a61d80be76dcbad0579fbd4323fba6641d97a2af
+FileChecksum: MD5: 14ae69897d89286715493b20fa8b8025
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: $file
 
@@ -77,8 +77,8 @@ LicenseInfoInFile: NONE
 FileName: ./Makefile
 SPDXID: SPDXRef-1-6
 FileType: OTHER
-FileChecksum: SHA1: 09fd896119b705c8844f9d75762bd92600b9458e
-FileChecksum: MD5: bf5d2cd63e7407850d6bc54634799b45
+FileChecksum: SHA1: 38f737e0e870208bf818df4e84710b3fb114a03e
+FileChecksum: MD5: d61ced3ca057b347c4c28adcfa5b8b01
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
@@ -220,16 +220,16 @@ LicenseInfoInFile: LGPL-2.1-or-later
 FileName: ./doc/Doxyfile
 SPDXID: SPDXRef-1-24
 FileType: DOCUMENTATION
-FileChecksum: SHA1: 07905de9809e17e1c2cac2be92b244a29fe57eb6
-FileChecksum: MD5: 72de56058d036875ea62d6873e3dd98f
+FileChecksum: SHA1: b16efafcd5ebbe90b87c5ce874684d047fc689b1
+FileChecksum: MD5: 510a326a7cd5904b5834ea90fb607a46
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: NONE
 
 FileName: ./mex/cpfloat.c
 SPDXID: SPDXRef-1-25
 FileType: SOURCE
-FileChecksum: SHA1: 7aa21a0916b72caaf470103567cdefe40a5696e5
-FileChecksum: MD5: a927c8b9f0856b6ca5946c48a1400253
+FileChecksum: SHA1: ba59aa9777a52c61e5757a465a8b064d1047b006
+FileChecksum: MD5: d258d602b09da70127f1afb16107fae3
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
@@ -268,8 +268,8 @@ LicenseInfoInFile: LGPL-2.1-or-later
 FileName: ./src/cpfloat_binary64.h
 SPDXID: SPDXRef-1-30
 FileType: SOURCE
-FileChecksum: SHA1: 885f660137acae011e732e26db38fd4caae8f79e
-FileChecksum: MD5: 554f3dcb22361b0652849e25dc9cfa2a
+FileChecksum: SHA1: 2b19b4b9caf983f99589ec8a8ab9d74670d9a813
+FileChecksum: MD5: 9fd096ce1517e803a013755cc88497a2
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
@@ -284,16 +284,16 @@ LicenseInfoInFile: NONE
 FileName: ./src/cpfloat_template.h
 SPDXID: SPDXRef-1-32
 FileType: SOURCE
-FileChecksum: SHA1: 767bcb04b2799e1368946cb34f0a8d1117f6b28d
-FileChecksum: MD5: b18e22e5acede5fd719b0dbc20cb55b8
+FileChecksum: SHA1: 46bdb6a376561ffbfe36c1a0aeab7d090a505a81
+FileChecksum: MD5: 3df6da2e8383e2ca7a23a4f9826266ac
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
 FileName: ./src/cpfloat_definitions.h
 SPDXID: SPDXRef-1-33
 FileType: SOURCE
-FileChecksum: SHA1: bc7d27b51e3fa3775a2ca9b7ffa82e770b4652ea
-FileChecksum: MD5: d2b47a82e160bacd07afd37ad444158d
+FileChecksum: SHA1: 8f4c98ffce8bc0f9041575533ae44e54fa370de4
+FileChecksum: MD5: 848a2b638687dee73cce27c6a9cd9240
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
@@ -316,7 +316,7 @@ LicenseInfoInFile: NONE
 FileName: ./src/cpfloat_binary32.h
 SPDXID: SPDXRef-1-36
 FileType: SOURCE
-FileChecksum: SHA1: 0015c999d8e80ef46f8914a35bdeb37028be3c1c
-FileChecksum: MD5: 672619eb981ef5949426b3cede46672e
+FileChecksum: SHA1: ff9e32b2740108d72bd01e5e140b2e9fd526b972
+FileChecksum: MD5: 32ddb63bade0f31c079055d8e685763a
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
