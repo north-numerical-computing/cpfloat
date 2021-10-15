@@ -35,11 +35,11 @@ MATLAB:=matlab -nodesktop -nosplash
 OCTAVE:=octave
 
 WFLAGS=-Wall -Wextra -pedantic
-ARCHFLAGS=-mfma -march=native
+ARCHFLAGS=-march=native
 CFLAGS=$(WFLAGS) $(ARCHFLAGS) -I $(SRCDIR) \
 	-I /usr/local/include -L /usr/local/lib
 CXXFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=c++11 -I $(INCDIR) -I $(INCDIR)FloatX/src/
-COPTIM=-O3 -mfma
+COPTIM=-O3
 CCOVFLAGS=-Og -g -fprofile-arcs -ftest-coverage
 CLIBS=-lm -fopenmp
 PCG_FLAGS=-L $(INCDIR)pcg-c/src -lpcg_random -include $(PCG_HEADER)
@@ -89,7 +89,7 @@ ctestsrc: $(TESTDIR)cpfloat_test.ts
 ctest: init makebin ctestsrc
 	$(CC) $(CFLAGS) $(COPTIM) -fsanitize=undefined \
 		-o $(BINDIR)cpfloat_test $(TESTDIR)cpfloat_test.c \
-		-lcheck -lsubunit -lrt -lm -lpthread $(CLIBS) $(PCG_FLAGS)
+		-lcheck -lm -lpthread $(CLIBS) $(PCG_FLAGS)
 	$(BINDIR)cpfloat_test
 	$(MV) cpfloat_test.log $(TESTDIR)
 
