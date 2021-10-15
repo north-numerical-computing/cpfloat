@@ -1,6 +1,6 @@
 #! /bin/zsh
 
-VERSION='0.2.0'
+VERSION='0.3.0'
 
 # Compute package hash using spdx-tools.
 CURL=curl

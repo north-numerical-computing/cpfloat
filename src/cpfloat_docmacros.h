@@ -1,3 +1,6 @@
+/* SPDX-FileCopyrightText: 2020 Massimiliano Fasi and Mantas Mikaitis */
+/* SPDX-License-Identifier: LGPL-2.1-or-later                         */
+
 #ifndef _CPFLOAT_DOCMACROS_
 #define _CPFLOAT_DOCMACROS_
 
