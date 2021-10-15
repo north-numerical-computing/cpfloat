@@ -40,7 +40,7 @@
 /**
  * @brief Prefix for all library function names.
  */
-#define MAINFUNNAME cpfloat
+#define MAINFUNNAME cpf
 
 /**
  * @brief Data type for specifying number of precision bits in target format.

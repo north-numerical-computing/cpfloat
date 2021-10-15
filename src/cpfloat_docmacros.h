@@ -63,7 +63,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
  */
 
-#define doc_cpfloat_univariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
+#define doc_cpf_univariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
 /** \
  @brief Compute MATHFUN rounded to lower precision. \
  \
@@ -86,7 +86,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_univariate_nobitflip(MATHFUN, FUNSTRING, PMAX, EMAX) \
+#define doc_cpf_univariate_nobitflip(MATHFUN, FUNSTRING, PMAX, EMAX) \
 /** \
  @brief Compute MATHFUN in lower precision. \
  \
@@ -108,7 +108,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_bivariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
+#define doc_cpf_bivariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
 /** \
  @brief Compute MATHFUN in lower precision. \
  \
@@ -132,7 +132,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_trivariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
+#define doc_cpf_trivariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
 /** \
  @brief Compute MATHFUN in lower precision. \
  \
@@ -157,7 +157,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_frexp(PMAX, EMAX) \
+#define doc_cpf_frexp(PMAX, EMAX) \
 /** \
  @brief Exponent and normalized fraction of rounded floating-point number. \
  \
@@ -185,7 +185,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_scaling(BASE, PMAX, EMAX) \
+#define doc_cpf_scaling(BASE, PMAX, EMAX) \
 /** \
  @brief Scale number by power of BASE in lower precision. \
  \
@@ -208,7 +208,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_modf(PMAX, EMAX) \
+#define doc_cpf_modf(PMAX, EMAX) \
 /** \
  @brief Compute integral and fractional part. \
  \
@@ -233,7 +233,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_ilogb(PMAX, EMAX) \
+#define doc_cpf_ilogb(PMAX, EMAX) \
 /** \
  @brief Compute integral part of the logarithm of the absolute value. \
  \
@@ -257,7 +257,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_rint(PMAX, EMAX) \
+#define doc_cpf_rint(PMAX, EMAX) \
 /** \
  @brief Compute the closest integer with specified rounding mode. \
  \
@@ -282,7 +282,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_nearbyint(PMAX, EMAX) \
+#define doc_cpf_nearbyint(PMAX, EMAX) \
 /** \
  @brief Compute the closest integer with specified rounding mode. \
  \
@@ -305,7 +305,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_rint(PMAX, EMAX) \
+#define doc_cpf_rint(PMAX, EMAX) \
 /** \
  @brief Compute the closest integer with specified rounding mode. \
  \
@@ -331,7 +331,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_remquo(PMAX, EMAX) \
+#define doc_cpf_remquo(PMAX, EMAX) \
 /** \
  @brief Compute reminder and quotient of rounded numbers. \
  \
@@ -357,7 +357,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_fpclassify(PMAX, EMAX) \
+#define doc_cpf_fpclassify(PMAX, EMAX) \
 /** \
  @brief Categorize floating-point values. \
  \
@@ -383,7 +383,7 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpfloat_isfun(STRING, PMAX, EMAX) \
+#define doc_cpf_isfun(STRING, PMAX, EMAX) \
 /** \
  @brief Check whether value is STRING in lower precision target format. \
  \

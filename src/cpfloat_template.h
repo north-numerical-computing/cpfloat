@@ -201,7 +201,7 @@ static inline INTTYPE PRNG_ADVANCE_RAND(RANDSEEDTYPE *seed, size_t delta) {
   }
 
 /* Function to validate floating-point options passed to CPFloat interfaces. */
-#define VALIDATE_INPUT ADDSUFFIXTO(CONCATENATE(MAINFUNNAME,_validate_optstruct))
+#define VALIDATE_INPUT ADDSUFFIXTO(CONCATENATE(cpfloat,_validate_optstruct))
 static inline int VALIDATE_INPUT(const optstruct *fpopts) {
 
   int retval;

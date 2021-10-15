@@ -2130,59 +2130,59 @@ for (size_t i = 0; i < nformats; i++) {
 
     // Univariate functions.
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_cos, cos);
+                                    cpf_cos, cos);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_sin, sin);
+                                    cpf_sin, sin);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_tan, tan);
+                                    cpf_tan, tan);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_acos, acos);
+                                    cpf_acos, acos);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_asin, asin);
+                                    cpf_asin, asin);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_atan, atan);
+                                    cpf_atan, atan);
 
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_cosh, cosh);
+                                    cpf_cosh, cosh);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_sinh, sinh);
+                                    cpf_sinh, sinh);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_tanh, tanh);
+                                    cpf_tanh, tanh);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_acosh, acosh);
+                                    cpf_acosh, acosh);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_asinh, asinh);
+                                    cpf_asinh, asinh);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_atanh, atanh);
+                                    cpf_atanh, atanh);
 
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_exp, exp);
+                                    cpf_exp, exp);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_log, log);
+                                    cpf_log, log);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_log10, log10);
+                                    cpf_log10, log10);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_exp2, exp2);
+                                    cpf_exp2, exp2);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_expm1, expm1);
+                                    cpf_expm1, expm1);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_log1p, log1p);
+                                    cpf_log1p, log1p);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_log2, log2);
+                                    cpf_log2, log2);
 
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_sqrt, sqrt);
+                                    cpf_sqrt, sqrt);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_cbrt, cbrt);
+                                    cpf_cbrt, cbrt);
 
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_erf, erf);
+                                    cpf_erf, erf);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_erfc, erfc);
+                                    cpf_erfc, erfc);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_tgamma, tgamma);
+                                    cpf_tgamma, tgamma);
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_lgamma, lgamma);
+                                    cpf_lgamma, lgamma);
 
     double *ones = malloc(n * sizeof(* ones));
     for (size_t j = 0; j < n; j++) {
@@ -2190,40 +2190,40 @@ for (size_t i = 0; i < nformats; i++) {
       refd[j] = ad[j] < 0 ? -1. : 1.;
     }
     test_bivariate_arith_op_double(xd, refd, ones, ad, n, fpopts,
-                                   cpfloat_copysign, copysign);
+                                   cpf_copysign, copysign);
     free(ones);
 
     test_univariate_arith_op_double(xd, refd, ad, n, fpopts,
-                                    cpfloat_fabs, fabs);
+                                    cpf_fabs, fabs);
 
     for (size_t j =0; j < n; j++) {
       // Bivariate functions.
       test_bivariate_arith_op_double(xd, refd, ad, bd, n, fpopts,
-                                     cpfloat_add, ref_add);
+                                     cpf_add, ref_add);
       test_bivariate_arith_op_double(xd, refd, ad, bd, n, fpopts,
-                                     cpfloat_sub, ref_sub);
+                                     cpf_sub, ref_sub);
       test_bivariate_arith_op_double(xd, refd, ad, bd, n, fpopts,
-                                     cpfloat_mul, ref_mul);
+                                     cpf_mul, ref_mul);
       test_bivariate_arith_op_double(xd, refd, ad, bd, n, fpopts,
-                                     cpfloat_div, ref_div);
+                                     cpf_div, ref_div);
 
       test_bivariate_arith_op_double(xd, refd, ad, bd, n, fpopts,
-                                     cpfloat_atan2, atan2);
+                                     cpf_atan2, atan2);
 
       test_bivariate_arith_op_double(xd, refd, ad, bd, n, fpopts,
-                                     cpfloat_pow, pow);
+                                     cpf_pow, pow);
 
       test_bivariate_arith_op_double(xd, refd, ad, bd, n, fpopts,
-                                     cpfloat_hypot, hypot);
+                                     cpf_hypot, hypot);
 
       test_bivariate_arith_op_double(xd, refd, ad, bd, n, fpopts,
-                                     cpfloat_fmod, fmod);
+                                     cpf_fmod, fmod);
 
       // Trivariate functions.
       for(size_t k = 0; k < n; k++) {
         test_trivariate_arith_op_double(xd, refd,
                                         ad, bd, cd, n, fpopts,
-                                        cpfloat_fma, fma);
+                                        cpf_fma, fma);
         double cfirst  = cd[0];
         for (size_t l = 0; l < n-1; l++)
           cd[l] = cd[l+1];
@@ -2262,59 +2262,59 @@ for (size_t i = 0; i < nformats; i++) {
     fpopts->round = det_roundings[i];
     // Univariate functions.
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_cosf, cosf);
+                                   cpf_cosf, cosf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_sinf, sinf);
+                                   cpf_sinf, sinf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_tanf, tanf);
+                                   cpf_tanf, tanf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_acosf, acosf);
+                                   cpf_acosf, acosf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_asinf, asinf);
+                                   cpf_asinf, asinf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_atanf, atanf);
+                                   cpf_atanf, atanf);
 
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_coshf, coshf);
+                                   cpf_coshf, coshf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_sinhf, sinhf);
+                                   cpf_sinhf, sinhf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_tanhf, tanhf);
+                                   cpf_tanhf, tanhf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_acoshf, acoshf);
+                                   cpf_acoshf, acoshf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_asinhf, asinhf);
+                                   cpf_asinhf, asinhf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_atanhf, atanhf);
+                                   cpf_atanhf, atanhf);
 
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_expf, expf);
+                                   cpf_expf, expf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_logf, logf);
+                                   cpf_logf, logf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_log10f, log10f);
+                                   cpf_log10f, log10f);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_exp2f, exp2f);
+                                   cpf_exp2f, exp2f);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_expm1f, expm1f);
+                                   cpf_expm1f, expm1f);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_log1pf, log1pf);
+                                   cpf_log1pf, log1pf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_log2f, log2f);
+                                   cpf_log2f, log2f);
 
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_sqrtf, sqrtf);
+                                   cpf_sqrtf, sqrtf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_cbrtf, cbrtf);
+                                   cpf_cbrtf, cbrtf);
 
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_erff, erff);
+                                   cpf_erff, erff);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_erfcf, erfcf);
+                                   cpf_erfcf, erfcf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_tgammaf, tgammaf);
+                                   cpf_tgammaf, tgammaf);
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_lgammaf, lgammaf);
+                                   cpf_lgammaf, lgammaf);
 
     float *ones = malloc(n * sizeof(* ones));
     for (size_t j = 0; j < n; j++) {
@@ -2322,40 +2322,40 @@ for (size_t i = 0; i < nformats; i++) {
       reff[j] = af[j] < 0 ? -1. : 1.;
     }
     test_bivariate_arith_op_float(xf, reff, ones, af, n, fpopts,
-                                   cpfloat_copysignf, copysignf);
+                                   cpf_copysignf, copysignf);
     free(ones);
 
     test_univariate_arith_op_float(xf, reff, af, n, fpopts,
-                                   cpfloat_fabsf, fabsf);
+                                   cpf_fabsf, fabsf);
 
     for (size_t j =0; j < n; j++) {
       // Bivariate functions.
       test_bivariate_arith_op_float(xf, reff, af, bf, n, fpopts,
-                                    cpfloat_addf, ref_addf);
+                                    cpf_addf, ref_addf);
       test_bivariate_arith_op_float(xf, reff, af, bf, n, fpopts,
-                                    cpfloat_subf, ref_subf);
+                                    cpf_subf, ref_subf);
       test_bivariate_arith_op_float(xf, reff, af, bf, n, fpopts,
-                                    cpfloat_mulf, ref_mulf);
+                                    cpf_mulf, ref_mulf);
       test_bivariate_arith_op_float(xf, reff, af, bf, n, fpopts,
-                                    cpfloat_divf, ref_divf);
+                                    cpf_divf, ref_divf);
 
       test_bivariate_arith_op_float(xf, reff, af, bf, n, fpopts,
-                                    cpfloat_atan2f, atan2f);
+                                    cpf_atan2f, atan2f);
 
       test_bivariate_arith_op_float(xf, reff, af, bf, n, fpopts,
-                                    cpfloat_powf, powf);
+                                    cpf_powf, powf);
 
       test_bivariate_arith_op_float(xf, reff, af, bf, n, fpopts,
-                                    cpfloat_hypotf, hypotf);
+                                    cpf_hypotf, hypotf);
 
       test_bivariate_arith_op_float(xf, reff, af, bf, n, fpopts,
-                                    cpfloat_fmodf, fmodf);
+                                    cpf_fmodf, fmodf);
 
       // Trivariate functions.
       for(size_t k = 0; k < n; k++) {
         test_trivariate_arith_op_float(xf, reff,
                                        af, bf, cf, n, fpopts,
-                                       cpfloat_fmaf, fmaf);
+                                       cpf_fmaf, fmaf);
         float cfirst  = cf[0];
         for (size_t l = 0; l < n-1; l++)
           cf[l] = cf[l+1];
@@ -2409,45 +2409,45 @@ for (size_t i = 0; i < nformats; i++) {
     fpopts->round = det_roundings[i];
 
     cpfloat(refd, ad, n, fpopts);
-    cpfloat_frexp(xd, exp, ad, n, fpopts);
-    cpfloat_ldexp(xd, xd, exp, n, fpopts);
+    cpf_frexp(xd, exp, ad, n, fpopts);
+    cpf_ldexp(xd, xd, exp, n, fpopts);
     check_equality_double(xd, refd, n);
 
-    cpfloat_modf(xd, intpartd, ad, n, fpopts);
+    cpf_modf(xd, intpartd, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
       xd[j] = xd[j] + intpartd[j];
     check_equality_double(xd, refd, n);
 
     // These test would not work for +inf, -inf, and 0 because of the division.
-    cpfloat_ilogb(exp, ad, n-3, fpopts);
-    cpfloat_scalbn(xd, oned, exp, n-3, fpopts);
-    cpfloat_div(xd, ad, xd, n-3, fpopts);
-    cpfloat_ldexp(xd, xd, exp, n-3, fpopts);
+    cpf_ilogb(exp, ad, n-3, fpopts);
+    cpf_scalbn(xd, oned, exp, n-3, fpopts);
+    cpf_div(xd, ad, xd, n-3, fpopts);
+    cpf_ldexp(xd, xd, exp, n-3, fpopts);
     check_equality_double(xd, refd, n-3);
 
-    cpfloat_ilogb(exp, ad, n-3, fpopts);
+    cpf_ilogb(exp, ad, n-3, fpopts);
     for (size_t j = 0; j < n; j++)
       lexp[j] = (long)exp[j];
-    cpfloat_scalbln(xd, oned, lexp, n-3, fpopts);
-    cpfloat_div(xd, ad, xd, n-3, fpopts);
-    cpfloat_ldexp(xd, xd, exp, n-3, fpopts);
+    cpf_scalbln(xd, oned, lexp, n-3, fpopts);
+    cpf_div(xd, ad, xd, n-3, fpopts);
+    cpf_ldexp(xd, xd, exp, n-3, fpopts);
     check_equality_double(xd, refd, n-3);
 
     // Removing nans and infs for this test.
-    cpfloat_ilogb(exp, ad, n-4, fpopts);
-    cpfloat_logb(xd, ad, n-4, fpopts);
+    cpf_ilogb(exp, ad, n-4, fpopts);
+    cpf_logb(xd, ad, n-4, fpopts);
     for (size_t j = 0; j < n-4; j++)
       ck_assert(nan_safe_compare_double(xd[j], (double) exp[j]));
 
-    cpfloat_isfinite(exp, ad, n, fpopts);
+    cpf_isfinite(exp, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resd_isfinite[j]));
 
-    cpfloat_isinf(exp, ad, n, fpopts);
+    cpf_isinf(exp, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resd_isinf[j]));
 
-    cpfloat_isnan(exp, ad, n, fpopts);
+    cpf_isnan(exp, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resd_isnan[j]));
 
@@ -2456,10 +2456,10 @@ for (size_t i = 0; i < nformats; i++) {
     // reference results.
     fpopts->explim = CPFLOAT_EXPRANGE_TARG;
     fpopts->subnormal = CPFLOAT_SUBN_USE;
-    cpfloat_isnormal(exp, ad, n, fpopts);
+    cpf_isnormal(exp, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resd_isnormal[j]));
-    cpfloat_fpclassify(exp, ad, n, fpopts);
+    cpf_fpclassify(exp, ad, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(exp[j] == resd_fpclassify[j]);
     fpopts->subnormal = CPFLOAT_SUBN_RND;
@@ -2502,47 +2502,47 @@ for (size_t i = 0; i < nformats; i++) {
 
     cpfloatf(reff, af, n, fpopts);
 
-    cpfloat_frexpf(xf, exp, af, n, fpopts);
-    cpfloat_ldexpf(xf, xf, exp, n, fpopts);
+    cpf_frexpf(xf, exp, af, n, fpopts);
+    cpf_ldexpf(xf, xf, exp, n, fpopts);
     check_equality_float(xf, reff, n);
 
-    cpfloat_modff(xf, intpartf, af, n, fpopts);
+    cpf_modff(xf, intpartf, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       xf[j] = xf[j] + intpartf[j];
     check_equality_float(xf, reff, n);
 
     // These test would not work for +inf, -inf, and 0 because of the division.
     // Subnormals that would cause underflow are also removed.
-    cpfloat_ilogbf(exp, af, n-5, fpopts);
-    cpfloat_scalbnf(xf, onef, exp, n-5, fpopts);
-    cpfloat_divf(xf, af, xf, n-5, fpopts);
-    cpfloat_ldexpf(xf, xf, exp, n-5, fpopts);
+    cpf_ilogbf(exp, af, n-5, fpopts);
+    cpf_scalbnf(xf, onef, exp, n-5, fpopts);
+    cpf_divf(xf, af, xf, n-5, fpopts);
+    cpf_ldexpf(xf, xf, exp, n-5, fpopts);
     check_equality_float(xf, reff, n-5);
 
-    cpfloat_ilogbf(exp, af, n-5, fpopts);
+    cpf_ilogbf(exp, af, n-5, fpopts);
     for (size_t j = 0; j < n-5; j++)
       lexp[j] = (long)exp[j];
-    cpfloat_scalblnf(xf, onef, lexp, n-5, fpopts);
-    cpfloat_divf(xf, af, xf, n-5, fpopts);
-    cpfloat_ldexpf(xf, xf, exp, n-5, fpopts);
+    cpf_scalblnf(xf, onef, lexp, n-5, fpopts);
+    cpf_divf(xf, af, xf, n-5, fpopts);
+    cpf_ldexpf(xf, xf, exp, n-5, fpopts);
     check_equality_float(xf, reff, n-5);
 
     // Removing nans and infs for this test.
-    cpfloat_ilogbf(exp, af, n-6, fpopts);
-    cpfloat_logbf(xf, af, n-6, fpopts);
+    cpf_ilogbf(exp, af, n-6, fpopts);
+    cpf_logbf(xf, af, n-6, fpopts);
     for (size_t j = 0; j < n-6; j++) {
       ck_assert(nan_safe_compare_float(xf[j], (float) exp[j]));
     }
 
-    cpfloat_isfinitef(exp, af, n, fpopts);
+    cpf_isfinitef(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resf_isfinite[j]));
 
-    cpfloat_isinff(exp, af, n, fpopts);
+    cpf_isinff(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resf_isinf[j]));
 
-    cpfloat_isnanf(exp, af, n, fpopts);
+    cpf_isnanf(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(both_true_or_false(exp[j], resf_isnan[j]));
 
@@ -2551,10 +2551,10 @@ for (size_t i = 0; i < nformats; i++) {
     // reference results.
     fpopts->explim = CPFLOAT_EXPRANGE_TARG;
     fpopts->subnormal = CPFLOAT_SUBN_USE;
-    cpfloat_isnormalf(exp, af, n, fpopts);
+    cpf_isnormalf(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(exp[j] == resf_isnormal[j]);
-    cpfloat_fpclassifyf(exp, af, n, fpopts);
+    cpf_fpclassifyf(exp, af, n, fpopts);
     for (size_t j = 0; j < n; j++)
       ck_assert(exp[j] == resf_fpclassify[j]);
     fpopts->subnormal = CPFLOAT_SUBN_RND;
@@ -2591,34 +2591,34 @@ for (size_t mode=2; mode<3; mode++) {
 
     init_fparray_double(refd, n, 0, minsubnormal(fpopts)); // 0 -> min. normal.
     copy_array_double(ad, refd, n);
-    cpfloat_nextafter(xd, ad, infd, n-1, fpopts);
+    cpf_nextafter(xd, ad, infd, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
     copy_array_double(ad, refd, n);
-    cpfloat_nexttoward(xd, ad, infl, n-1, fpopts);
+    cpf_nexttoward(xd, ad, infl, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
     csign_intarray_double((uint64_t *)infd, n);
     for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
     copy_array_double(ad, refd, n);
-    cpfloat_nextafter(xd, ad+1, infd, n-1, fpopts);
+    cpf_nextafter(xd, ad+1, infd, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
     copy_array_double(ad, refd, n);
-    cpfloat_nexttoward(xd, ad+1, infl, n-1, fpopts);
+    cpf_nexttoward(xd, ad+1, infl, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
 
     init_fparray_double(refd, n, 0, minsubnormal(fpopts)); // 0 -> min. normal.
     copy_array_double(ad, refd, n);
-    cpfloat_nextafter(xd, ad+1, infd, n-1, fpopts);
+    cpf_nextafter(xd, ad+1, infd, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
     copy_array_double(ad, refd, n);
-    cpfloat_nexttoward(xd, ad+1, infl, n-1, fpopts);
+    cpf_nexttoward(xd, ad+1, infl, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
     csign_intarray_double((uint64_t *) infd, n);
     for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
     copy_array_double(ad, refd, n);
-    cpfloat_nextafter(xd, ad, infd, n-1, fpopts);
+    cpf_nextafter(xd, ad, infd, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
     copy_array_double(ad, refd, n);
-    cpfloat_nexttoward(xd, ad, infl, n-1, fpopts);
+    cpf_nexttoward(xd, ad, infl, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
 
     free(ad);
@@ -2635,34 +2635,34 @@ for (size_t mode=2; mode<3; mode++) {
 
     init_fparray_float(reff, n, 0, minsubnormal(fpopts)); // 0 -> min. normal.
     copy_array_float(af, reff, n);
-    cpfloat_nextafterf(xf, af, inff, n-1, fpopts);
+    cpf_nextafterf(xf, af, inff, n-1, fpopts);
     check_equality_float(xf, reff+1, n-1);
     copy_array_float(af, reff, n);
-    cpfloat_nexttowardf(xf, af, infl, n-1, fpopts);
+    cpf_nexttowardf(xf, af, infl, n-1, fpopts);
     check_equality_float(xf, reff+1, n-1);
     csign_intarray_float((uint32_t *)inff, n);
     for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
     copy_array_float(af, reff, n);
-    cpfloat_nextafterf(xf, af+1, inff, n-1, fpopts);
+    cpf_nextafterf(xf, af+1, inff, n-1, fpopts);
     check_equality_float(xf, reff, n-1);
     copy_array_float(af, reff, n);
-    cpfloat_nexttowardf(xf, af+1, infl, n-1, fpopts);
+    cpf_nexttowardf(xf, af+1, infl, n-1, fpopts);
     check_equality_float(xf, reff, n-1);
 
     init_fparray_float(reff, n, 0, minsubnormal(fpopts)); // -min. normal. -> 0
     copy_array_float(af, reff, n);
-    cpfloat_nextafterf(xf, af+1, inff, n-1, fpopts);
+    cpf_nextafterf(xf, af+1, inff, n-1, fpopts);
     check_equality_float(xf, reff, n-1);
     copy_array_float(af, reff, n);
-    cpfloat_nexttowardf(xf, af+1, infl, n-1, fpopts);
+    cpf_nexttowardf(xf, af+1, infl, n-1, fpopts);
     check_equality_float(xf, reff, n-1);
     csign_intarray_float((uint32_t *) inff, n);
     for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
     copy_array_float(af, reff, n);
-    cpfloat_nextafterf(xf, af, inff, n-1, fpopts);
+    cpf_nextafterf(xf, af, inff, n-1, fpopts);
     check_equality_float(xf, reff+1, n-1);
     copy_array_float(af, reff, n);
-    cpfloat_nexttowardf(xf, af, infl, n-1, fpopts);
+    cpf_nexttowardf(xf, af, infl, n-1, fpopts);
     check_equality_float(xf, reff+1, n-1);
 
     free(af);
@@ -2695,34 +2695,34 @@ for (size_t mode=2; mode<3; mode++) {
     refd[n-1] = inf_double();
 
     copy_array_double(ad, refd, n);
-    cpfloat_nextafter(xd, ad, infd, n-1, fpopts);
+    cpf_nextafter(xd, ad, infd, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
     copy_array_double(ad, refd, n);
-    cpfloat_nexttoward(xd, ad, infl, n-1, fpopts);
+    cpf_nexttoward(xd, ad, infl, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
     csign_intarray_double((uint64_t *)infd, n);
     for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
     copy_array_double(ad, refd, n);
-    cpfloat_nextafter(xd, ad+1, infd, n-1, fpopts);
+    cpf_nextafter(xd, ad+1, infd, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
     copy_array_double(ad, refd, n);
-    cpfloat_nexttoward(xd, ad+1, infl, n-1, fpopts);
+    cpf_nexttoward(xd, ad+1, infl, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
 
     csign_intarray_double((uint64_t *)refd, n);
     copy_array_double(ad, refd, n);
-    cpfloat_nextafter(xd, ad, infd, n-1, fpopts);
+    cpf_nextafter(xd, ad, infd, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
     copy_array_double(ad, refd, n);
-    cpfloat_nexttoward(xd, ad, infl, n-1, fpopts);
+    cpf_nexttoward(xd, ad, infl, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
     csign_intarray_double((uint64_t *)infd, n);
     for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
     copy_array_double(ad, refd, n);
-    cpfloat_nextafter(xd, ad+1, infd, n-1, fpopts);
+    cpf_nextafter(xd, ad+1, infd, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
     copy_array_double(ad, refd, n);
-    cpfloat_nexttoward(xd, ad+1, infl, n-1, fpopts);
+    cpf_nexttoward(xd, ad+1, infl, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
 
     free(ad);
@@ -2743,34 +2743,34 @@ for (size_t mode=2; mode<3; mode++) {
     reff[n-1] = inf_double();
 
     copy_array_float(af, reff, n);
-    cpfloat_nextafterf(xf, af, inff, n-1, fpopts);
+    cpf_nextafterf(xf, af, inff, n-1, fpopts);
     check_equality_float(xf, reff+1, n-1);
     copy_array_float(af, reff, n);
-    cpfloat_nexttowardf(xf, af, infl, n-1, fpopts);
+    cpf_nexttowardf(xf, af, infl, n-1, fpopts);
     check_equality_float(xf, reff+1, n-1);
     csign_intarray_float((uint32_t *)inff, n);
     for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
     copy_array_float(af, reff, n);
-    cpfloat_nextafterf(xf, af+1, inff, n-1, fpopts);
+    cpf_nextafterf(xf, af+1, inff, n-1, fpopts);
     check_equality_float(xf, reff, n-1);
     copy_array_float(af, reff, n);
-    cpfloat_nexttowardf(xf, af+1, infl, n-1, fpopts);
+    cpf_nexttowardf(xf, af+1, infl, n-1, fpopts);
     check_equality_float(xf, reff, n-1);
 
     csign_intarray_float((uint32_t *) reff, n);
     copy_array_float(af, reff, n);
-    cpfloat_nextafterf(xf, af, inff, n-1, fpopts);
+    cpf_nextafterf(xf, af, inff, n-1, fpopts);
     check_equality_float(xf, reff+1, n-1);
     copy_array_float(af, reff, n);
-    cpfloat_nexttowardf(xf, af, infl, n-1, fpopts);
+    cpf_nexttowardf(xf, af, infl, n-1, fpopts);
     check_equality_float(xf, reff+1, n-1);
     csign_intarray_float((uint32_t *)inff, n);
     for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
     copy_array_float(af, reff, n);
-    cpfloat_nextafterf(xf, af+1, inff, n-1, fpopts);
+    cpf_nextafterf(xf, af+1, inff, n-1, fpopts);
     check_equality_float(xf, reff, n-1);
     copy_array_float(af, reff, n);
-    cpfloat_nexttowardf(xf, af+1, infl, n-1, fpopts);
+    cpf_nexttowardf(xf, af+1, infl, n-1, fpopts);
     check_equality_float(xf, reff, n-1);
 
     free(af);
@@ -2815,20 +2815,20 @@ double rd1[] = {-3.00, -3.00, -3.00, -2.00,
                 -1235.00, -1234.00, 1235.00, 1234.00,
                 -INFINITY, INFINITY, NAN};
 
-cpfloat_round(xd, ad, n, fpopts);
+cpf_round(xd, ad, n, fpopts);
 check_equality_double(rd1, xd, n);
-cpfloat_lround(xl, ad, n-3, fpopts);
+cpf_lround(xl, ad, n-3, fpopts);
 check_equality_double_long(rd1, xl, n-3);
-cpfloat_llround(xll, ad, n-3, fpopts);
+cpf_llround(xll, ad, n-3, fpopts);
 check_equality_double_long_long(rd1, xll, n-3);
 
-cpfloat_rint(xd, xi, ad, n, fpopts);
+cpf_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd1, xd, n);
-cpfloat_nearbyint(xd, ad, n, fpopts);
+cpf_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd1, xd, n);
-cpfloat_lrint(xl, xi, ad, n-3, fpopts);
+cpf_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd1, xl, n-3);
-cpfloat_llrint(xll, xi, ad, n-3, fpopts);
+cpf_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd1, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_NZ;
@@ -2841,13 +2841,13 @@ double rd2[] = {-3.00, -3.00, -2.00, -2.00,
                 2.00,  2.00,  2.00,  3.00,
                 -1235.00, -1234.00, 1235.00, 1234.00,
                 -INFINITY, INFINITY, NAN};
-cpfloat_rint(xd, xi, ad, n, fpopts);
+cpf_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd2, xd, n);
-cpfloat_nearbyint(xd, ad, n, fpopts);
+cpf_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd2, xd, n);
-cpfloat_lrint(xl, xi, ad, n-3, fpopts);
+cpf_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd2, xl, n-3);
-cpfloat_llrint(xll, xi, ad, n-3, fpopts);
+cpf_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd2, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_NE;
@@ -2860,13 +2860,13 @@ double rd3[] = {-3.00, -3.00, -2.00, -2.00,
                 2.00,  2.00,  2.00,  3.00,
                 -1235.00, -1234.00, 1235.00, 1234.00,
                 -INFINITY, INFINITY, NAN};
-cpfloat_rint(xd, xi, ad, n, fpopts);
+cpf_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd3, xd, n);
-cpfloat_nearbyint(xd, ad, n, fpopts);
+cpf_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd3, xd, n);
-cpfloat_lrint(xl, xi, ad, n-3, fpopts);
+cpf_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd3, xl, n-3);
-cpfloat_llrint(xll, xi, ad, n-3, fpopts);
+cpf_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd3, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_TP;
@@ -2879,15 +2879,15 @@ double rd4[] = {-3.00, -2.00, -2.00, -2.00,
                 2.00,  3.00,  3.00,  3.00,
                 -1234.00, -1234.00, 1235.00, 1235.00,
                 -INFINITY, INFINITY, NAN};
-cpfloat_rint(xd, xi, ad, n, fpopts);
+cpf_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd4, xd, n);
-cpfloat_nearbyint(xd, ad, n, fpopts);
+cpf_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd4, xd, n);
-cpfloat_ceil(xd, ad, n, fpopts);
+cpf_ceil(xd, ad, n, fpopts);
 check_equality_double(rd4, xd, n);
-cpfloat_lrint(xl, xi, ad, n-3, fpopts);
+cpf_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd4, xl, n-3);
-cpfloat_llrint(xll, xi, ad, n-3, fpopts);
+cpf_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd4, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_TN;
@@ -2900,15 +2900,15 @@ double rd5[] = {-3.00, -3.00, -3.00, -3.00,
                 2.00,  2.00,  2.00,  2.00,
                 -1235.00, -1235.00, 1234.00, 1234.00,
                 -INFINITY, INFINITY, NAN};
-cpfloat_rint(xd, xi, ad, n, fpopts);
+cpf_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd5, xd, n);
-cpfloat_nearbyint(xd, ad, n, fpopts);
+cpf_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd5, xd, n);
-cpfloat_floor(xd, ad, n, fpopts);
+cpf_floor(xd, ad, n, fpopts);
 check_equality_double(rd5, xd, n);
-cpfloat_lrint(xl, xi, ad, n-3, fpopts);
+cpf_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd5, xl, n-3);
-cpfloat_llrint(xll, xi, ad, n-3, fpopts);
+cpf_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd5, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_TZ;
@@ -2921,15 +2921,15 @@ double rd6[] = {-3.00, -2.00, -2.00, -2.00,
                 2.00,  2.00,  2.00,  2.00,
                 -1234.00, -1234.00, 1234.00, 1234.00,
                 -INFINITY, INFINITY, NAN};
-cpfloat_rint(xd, xi, ad, n, fpopts);
+cpf_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd6, xd, n);
-cpfloat_nearbyint(xd, ad, n, fpopts);
+cpf_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd6, xd, n);
-cpfloat_trunc(xd, ad, n, fpopts);
+cpf_trunc(xd, ad, n, fpopts);
 check_equality_double(rd6, xd, n);
-cpfloat_lrint(xl, xi, ad, n-3, fpopts);
+cpf_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd6, xl, n-3);
-cpfloat_llrint(xll, xi, ad, n-3, fpopts);
+cpf_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd6, xll, n-3);
 
 fpopts->round = CPFLOAT_RND_OD;
@@ -2942,13 +2942,13 @@ double rd7[] = {-3.00, -3.00, -3.00, -3.00,
                 2.00,  3.00,  3.00,  3.00,
                 -1235.00, -1235.00, 1235.00, 1235.00,
                 -INFINITY, INFINITY, NAN};
-cpfloat_rint(xd, xi, ad, n, fpopts);
+cpf_rint(xd, xi, ad, n, fpopts);
 check_equality_double(rd7, xd, n);
-cpfloat_nearbyint(xd, ad, n, fpopts);
+cpf_nearbyint(xd, ad, n, fpopts);
 check_equality_double(rd7, xd, n);
-cpfloat_lrint(xl, xi, ad, n-3, fpopts);
+cpf_lrint(xl, xi, ad, n-3, fpopts);
 check_equality_double_long(rd7, xl, n-3);
-cpfloat_llrint(xll, xi, ad, n-3, fpopts);
+cpf_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd7, xll, n-3);
 
 
@@ -2971,11 +2971,11 @@ init_intarray_rounding_double((uint64_t *)bd, n,
 init_intarray_rounding_double((uint64_t *)cd, n,
                               intminnormal_double(fpopts)+2*stepd, stepd);
 test_univariate_arith_op_double(xd, refd, ad, n,
-                                fpopts, cpfloat_cos, cos);
+                                fpopts, cpf_cos, cos);
 test_bivariate_arith_op_double(xd, refd, ad, bd, n,
-                               fpopts, cpfloat_add, ref_add);
+                               fpopts, cpf_add, ref_add);
 test_trivariate_arith_op_double(xd, refd, ad, bd, cd, n,
-                                fpopts, cpfloat_fma, fma);
+                                fpopts, cpf_fma, fma);
 free(ad);
 free(bd);
 free(cd);
@@ -2995,11 +2995,11 @@ init_intarray_rounding_float((uint32_t *)bf, n,
 init_intarray_rounding_float((uint32_t *)cf, n,
                              intminnormal_float(fpopts)+2*stepf, stepf);
 test_univariate_arith_op_float(xf, reff, af, n,
-                               fpopts, cpfloat_cosf, cosf);
+                               fpopts, cpf_cosf, cosf);
 test_bivariate_arith_op_float(xf, reff, af, bf, n,
-                              fpopts, cpfloat_addf, ref_addf);
+                              fpopts, cpf_addf, ref_addf);
 test_trivariate_arith_op_float(xf, reff, af, bf, cf, n,
-                               fpopts, cpfloat_fmaf, fmaf);
+                               fpopts, cpf_fmaf, fmaf);
 free(af);
 free(bf);
 free(cf);
