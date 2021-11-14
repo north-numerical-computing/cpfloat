@@ -13,7 +13,7 @@ int main ()
   fpopts->precision = 11;                 // Bits in the significand + 1.
   fpopts->emax = 15;                      // The maximum exponent value.
   fpopts->subnormal = CPFLOAT_SUBN_USE;   // Support for subnormals is on.
-  fpopts ->round = CPFLOAT_RND_TP;        // Round toward +infinity.
+  fpopts->round = CPFLOAT_RND_TP;         // Round toward +infinity.
   fpopts->flip = CPFLOAT_NO_SOFTERR;      // Bit flips are off.
   fpopts->p = 0;                          // Bit flip probability (not used).
   fpopts->explim = CPFLOAT_EXPRANGE_TARG; // Limited exponent in target format.
@@ -22,26 +22,38 @@ int main ()
   int retval = cpfloat_validate_optstruct(fpopts);
   printf("The validation function returned %d.\n", retval);
 
-  // Initialize a 2x2 matrix with four arbitrary elements
+  // Initialize a 2x2 matrix with four arbitrary elements.
   double X[4] = { (double)1/3, M_PI, M_E, M_SQRT2 };
-  double Y[4];
+  double Y[4] = { 1.5, 1.5, 1.5, 1.5 };
+  double Z[4];
+
   printf("Values in binary64:\n %.15e %.15e\n %.15e %.15e \n",
          X[0], X[1], X[2], X[3]);
 
-  // Round the values of X to the binary16 format and store in Y
-  cpfloat(&Y[0], &X[0], 4, fpopts);
+  // Round the values of X to the binary16 format and store in Y.
+  cpfloat(Z, X, 4, fpopts);
   printf("Rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
-         Y[0], Y[1], Y[2], Y[3]);
+         Z[0], Z[1], Z[2], Z[3]);
 
-  // Set the precision of the significand to 8 bits,
-  // and the maximum exponent to 127, which gives the bfloat16 format
-  fpopts ->precision = 8;
-  fpopts ->emax = 127;
+  // Round the sum of X and Y.
+  cpf_add(Z, Y, X, fpopts);
+  printf("Sum rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
+         Z[0], Z[1], Z[2], Z[3]);
 
-  // Round the values of X to the bfloat16 and store in Y
-  cpfloat(&Y[0], &X[0], 4, fpopts);
-  printf("Rounded to bfloat16:\n %.15e %.15e\n %.15e %.15e \n",
-         Y[0], Y[1], Y[2], Y[3]);
+  // Round the product of X and Y.
+  cpf_mul(Z, Y, X, fpopts);
+  printf("Sum rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
+         Z[0], Z[1], Z[2], Z[3]);
+
+  // Round the product of X and Y.
+  cpf_log(Z, X, fpopts);
+  printf("Logarithm rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
+         Z[0], Z[1], Z[2], Z[3]);
+
+  // Round the product of X and Y.
+  cpf_atan2(Z, Y, X, fpopts);
+  printf("Angle between ... rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
+         Z[0], Z[1], Z[2], Z[3]);
 
   free_optstruct(fpopts);
 
