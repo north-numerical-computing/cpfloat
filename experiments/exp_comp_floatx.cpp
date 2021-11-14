@@ -13,15 +13,57 @@
 #include "floatx.hpp"
 #include "timing_fun.h"
 
+template <short exp_bits, short sig_bits, typename backend_float>
+void run_floatx_test(backend_float *Xd, size_t n, size_t ntests,
+                     double *timing, FILE *fidx) {
+  struct timespec start, end;
+  for (size_t k = 0; k < ntests; k++) {
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    flx::floatx<exp_bits, sig_bits, backend_float> *Yd;
+    Yd = new flx::floatx<exp_bits, sig_bits, backend_float>[n];
+    for (size_t j = 0; j < n; j++)
+      Yd[j] = Xd[j];
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    delete[](Yd);
+    timing[k] = timedifference(&start, &end);
+  }
+  qsort(timing, ntests, sizeof(*timing), cmpfun);
+  double medtiming = timing[ntests / 2];
+  fprintf(fidx, " %10.5e", medtiming);
+  fprintf(stdout, " %10.5e", medtiming);
+}
+
+template <typename backend_float>
+void run_floatxr_test(short exp_bits, short sig_bits,
+                      backend_float *Xd, size_t n, size_t ntests,
+                      double *timing, FILE *fidx) {
+  struct timespec start, end;
+  for (size_t k = 0; k < ntests; k++) {
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    flx::floatxr<double, short> **Yd;
+    Yd = new flx::floatxr<double, short> *[n];
+    for (size_t j = 0; j < n; j++)
+      Yd[j] = new flx::floatxr<double, short>(exp_bits, sig_bits, Xd[j]);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    for (size_t j = 0; j < n; j++)
+      delete (Yd[j]);
+    delete[](Yd);
+    timing[k] = timedifference(&start, &end);
+  }
+  qsort(timing, ntests, sizeof(*timing), cmpfun);
+  double medtiming = timing[ntests / 2];
+  fprintf(fidx, " %10.5e", medtiming);
+  fprintf(stdout, " %10.5e", medtiming);
+}
+
 int main() {
 
   /* Input parameters. */
-  size_t i, j, k, l, n;
-  size_t ntests = 10;
-
-  size_t nsizes = 28;
+  const size_t ntests = 10;
+  const size_t nsizes = 28;
   size_t sizes [nsizes];
   size_t mult = 1;
+  size_t i, j;
   for (i = 1; i<=3; i++) {
     mult *= 10;
     for (j = 1; j<10; j++)
@@ -29,26 +71,23 @@ int main() {
   }
   sizes[9*(i-1)] = mult*10;
 
-  // size_t sizes [] = {10, 20, 50,
-  //                    100, 200, 500,
-  //                    1000, 2000, 5000,
-  //                    10000};
-  // size_t nsizes = 10;
-  float fmin = ldexpf(1.,-14);
+  constexpr size_t precision[3] = {11, 8, 11};
+  constexpr size_t exponent[3] = {5, 8, 8};
+  constexpr size_t nformats = 3;
 
-  struct timespec start, end;
+  // Smallest normal in binary16. Adding this to numbers generated in [0,1]
+  // ensures that values are normal in binary16, bfloat16, and TensorFloat-32.
+  double fmin = ldexpf(1.,-14);
 
-  double * medtimings;
-  medtimings = new double [nsizes];
-  double * timing;
+  double *timing;
   timing = new double[ntests];
 
-  /* FloatX */
+  /* Compile-time FloatX values (floatx class). */
   printf("\n*** FloatX compile-time ***\n");
   const char outfilefloatx [] = "./timing-floatx-seq.dat";
   FILE *fidx = fopen(outfilefloatx, "w");
   for (i = 0; i < nsizes; i++) {
-    n = sizes[i] * sizes[i];
+    size_t n = sizes[i] * sizes[i];
     double * Xd;
     Xd = new double [n];
     for (j=0; j<n; j++) // generate normal numbers
@@ -56,89 +95,34 @@ int main() {
     fprintf(fidx, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
 
-    for (k=0; k<ntests; k++) {
-      clock_gettime(CLOCK_MONOTONIC, &start);
-      flx::floatx<5, 11, double> * Yd;
-      Yd = new flx::floatx<5, 11, double> [n];
-      for (j=0; j<n; j++)
-        Yd[j] = Xd[j];
-      clock_gettime(CLOCK_MONOTONIC, &end);
-      delete[] (Yd);
-      timing[k] = timedifference(&start, &end);
-    }
-    qsort(timing, ntests, sizeof(*timing), cmpfun);
-    medtimings[i] = timing[ntests/2];
-    fprintf(fidx, " %10.5e", medtimings[i]);
-    fprintf(stdout, " %10.5e", medtimings[i]);
-
-    for (k=0; k<ntests; k++) {
-      clock_gettime(CLOCK_MONOTONIC, &start);
-      flx::floatx<8, 8, double> * Yd;
-      Yd = new flx::floatx<8, 8, double> [n];
-      for (j=0; j<n; j++)
-        Yd[j]= Xd[j];
-      clock_gettime(CLOCK_MONOTONIC, &end);
-      delete[] (Yd);
-      timing[k] = timedifference(&start, &end);
-    }
-    qsort(timing, ntests, sizeof(*timing), cmpfun);
-    medtimings[i] = timing[ntests/2];
-    fprintf(fidx, " %10.5e", medtimings[i]);
-    fprintf(stdout, " %10.5e", medtimings[i]);
-
-    for (k=0; k<ntests; k++) {
-      clock_gettime(CLOCK_MONOTONIC, &start);
-      flx::floatx<8, 11,double> * Yd;
-      Yd = new flx::floatx<8, 11, double> [n];
-      for (j=0; j<n; j++)
-        Yd[j]= Xd[j];
-      clock_gettime(CLOCK_MONOTONIC, &end);
-      delete[] (Yd);
-      timing[k] = timedifference(&start, &end);
-    }
-    qsort(timing, ntests, sizeof(*timing), cmpfun);
-    medtimings[i] = timing[ntests/2];
-    fprintf(fidx, " %10.5e", medtimings[i]);
-    fprintf(stdout, " %10.5e", medtimings[i]);
+    // binary16
+    run_floatx_test<5, 11, double>(Xd, n, ntests, timing, fidx);
+    // bfloat16
+    run_floatx_test<8, 8, double>(Xd, n, ntests, timing, fidx);
+    // TensorFloat-32
+    run_floatx_test<8, 11, double>(Xd, n, ntests, timing, fidx);
 
     fprintf(fidx, "\n");
     fprintf(stdout, "\n");
-    delete[] (Xd);
+    delete[](Xd);
   }
   fclose(fidx);
 
-  /* floatxr */
+  /* Run-time FloatX values (floatxr class). */
   printf("\n*** FloatX runtime ***\n");
-  size_t precision [] = {11, 8, 11};
-  size_t exponent [] = {5, 8, 8};
-  size_t nformats = 3;
   const char outfilefloatxr[] = "./timing-floatxr-seq.dat";
   FILE *fidxr = fopen(outfilefloatxr, "w");
   for (i = 0; i < nsizes; i++) {
-    n = sizes[i] * sizes[i];
+    size_t n = sizes[i] * sizes[i];
     double * Xd;
     Xd = new double [n];
     for (j=0; j<n; j++) // generate normal numbers
       Xd[j] = fmin + rand() / (double)RAND_MAX;
     fprintf(fidxr, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
-    for (l=0; l<nformats; l++) {
-      for (k=0; k<ntests; k++) {
-        clock_gettime(CLOCK_MONOTONIC, &start);
-        flx::floatxr<> ** Yd;
-        Yd = new flx::floatxr<>* [n];
-        for (j=0; j<n; j++)
-          Yd[j]= new flx::floatxr<>(exponent[l], precision[l], Xd[j]);
-        clock_gettime(CLOCK_MONOTONIC, &end);
-        for (j=0; j<n; j++)
-          delete (Yd[j]);
-        delete[] (Yd);
-        timing[k] = timedifference(&start, &end);
-      }
-      qsort(timing, ntests, sizeof(*timing), cmpfun);
-      medtimings[i] = timing[ntests/2];
-      fprintf(fidxr, " %10.5e", medtimings[i]);
-      fprintf(stdout, " %10.5e", medtimings[i]);
+    for (size_t l=0; l<nformats; l++) {
+      run_floatxr_test<double>(exponent[l], precision[l],
+                               Xd, n, ntests, timing, fidx);
     }
     fprintf(fidxr, "\n");
     fprintf(stdout, "\n");
@@ -146,7 +130,6 @@ int main() {
   }
          fclose(fidxr);
 
-  delete[] (medtimings);
   delete[] (timing);
 
   return 0;
