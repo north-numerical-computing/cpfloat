@@ -154,9 +154,11 @@ example: init makebin $(EXAMPLEDIR)example_manuscript.c
 
 
 
-.PHONY:
-experiments: run_exp_ccomp run_exp_openmp run_exp_overhead run_exp_matlab
+.PHONY: experiments experiments_extra run_*
+experiments: run_exp_ccomp run_exp_overhead run_exp_matlab
+experiments_extra: run_exp_openmp run_exp_matlab_extra
 
+# C experiments
 exp_comp_cpfloat: init makebin $(EXPDIR)exp_comp_cpfloat.c
 	$(CC) $(CFLAGS) $(COPTIM) $(EXPDIR)exp_comp_cpfloat.c \
 		$(CLIBS) $(PCG_FLAGS) -I $(SRCDIR) -o $(BINDIR)$@
@@ -191,6 +193,7 @@ run_exp_overhead: makedat exp_overhead
 	$(BINDIR)exp_overhead
 	$(MV) *.dat $(DATDIR)
 
+# MATLAB experiments
 run_exp_matlab: EXPSTRING="addpath('$(INCDIR)chop'); \
 		addpath('$(BINDIR)'); \
 		addpath(genpath('$(INCDIR)floatp/')); \
@@ -200,6 +203,17 @@ run_exp_matlab: EXPSTRING="addpath('$(INCDIR)chop'); \
 		exit;"
 
 run_exp_matlab: makedat mexmat
+	$(MATLAB) -r $(EXPSTRING)
+
+run_exp_matlab_extra: EXPSTRING="addpath('$(INCDIR)chop'); \
+		addpath('$(BINDIR)'); \
+		addpath(genpath('$(INCDIR)floatp/')); \
+		cd $(EXPDIR); \
+		datdir = '$(DATDIR)'; \
+		run_exps_extra; \
+		exit;"
+
+run_exp_matlab_extra: makedat mexmat
 	$(MATLAB) -r $(EXPSTRING)
 
 clean_experiments:

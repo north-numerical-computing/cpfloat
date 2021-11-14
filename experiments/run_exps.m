@@ -28,16 +28,6 @@ end
 %% Overhead of MATLAB interface (Figure 5, second and third columns)
 exp_overhead
 
-%% Experiments not currently reported in the manuscript.
-% Cost of subnormals
-for iter1 = 1:2
-  storageformat = storageformats{iter1};
-  exp_normal_subnormal
-end
-
-% Speedup of lu decomposition
-exp_lu
-
 % CPFloat - Custom Precision Floating-point numbers.
 %
 % Copyright 2020 Massimiliano Fasi and Mantas Mikaitis

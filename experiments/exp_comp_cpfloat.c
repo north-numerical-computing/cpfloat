@@ -22,117 +22,120 @@ int main() {
   size_t nsizes = 28;
   size_t *sizes = malloc(nsizes*sizeof(double));
   size_t mult = 1;
-  for (i = 1; i<=3; i++) {
+  for (i = 1; i <= 3; i++) {
     mult *= 10;
-    for (j = 1; j<10; j++)
-      sizes[9*(i-1)+(j-1)] = mult*j;
+    for (j = 1; j < 10; j++)
+      sizes[9 * (i - 1) + (j - 1)] = mult * j;
   }
-  sizes[9*(i-1)] = mult*10;
+  sizes[9 * (i - 1)] = mult * 10;
 
   optstruct *fpopts = init_optstruct();
 
   strcpy(fpopts->format, "h");
   fpopts->precision = 11; // t
-  fpopts->emax = 15; // emax
+  fpopts->emax = 15;      // emax
   fpopts->subnormal = CPFLOAT_SUBN_USE;
   fpopts->explim = CPFLOAT_EXPRANGE_TARG;
   fpopts->round = CPFLOAT_RND_NE;
   fpopts->flip = CPFLOAT_NO_SOFTERR;
   fpopts->p = 0.5;
 
-  float fmin = ldexpf(1.,-14);
+  float fmin = ldexpf(1., -14);
 
   struct timespec *start = malloc(sizeof(struct timespec));
   struct timespec *end = malloc(sizeof(struct timespec));
 
-  double *medtimings = malloc(nsizes * sizeof(double));
-
-  /* Binary32 */
-  /* printf("\n*** BINARY32 ***\n"); */
-  /* const char outfilefloat [] = "./timing-clang-single.dat"; */
-  /* FILE *fidf = fopen(outfilefloat, "w"); */
-  /* for (i = 0; i < nsizes; i++) { */
-  /*   n = sizes[i] * sizes[i]; */
-  /*   float *Xf = malloc(n * sizeof(float)); */
-  /*   float *Yf; */
-  /*   for (j=0; j<n; j++) // generate normal numbers */
-  /*     Xf[j] = fmin + rand() / (float)RAND_MAX; */
-  /*   double *timing = malloc(ntests * sizeof(double)); */
-  /*   fprintf(fidf, "%6lu", sizes[i]); */
-  /*   fprintf(stdout, "%6lu", sizes[i]); */
-  /*   for (k=0; k<ntests; k++) { */
-  /*     clock_gettime(CLOCK_MONOTONIC, start); */
-  /*     Yf = malloc(n * sizeof(float)); */
-  /*     cpfloatf(Yf, Xf, n, fpopts); */
-  /*     free(Yf); */
-  /*     clock_gettime(CLOCK_MONOTONIC, end); */
-  /*     timing[k] = timedifference(start, end); */
-  /*   } */
-  /*   qsort(timing, ntests, sizeof(*timing), cmpfun); */
-  /*   medtimings[i] = timing[ntests/2]; */
-  /*   fprintf(fidf, " %10.5e", medtimings[i]); */
-  /*   fprintf(stdout, " %10.5e", medtimings[i]); */
-  /*   free(Xf); */
-  /*   fprintf(fidf, "\n"); */
-  /*   fprintf(stdout, "\n"); */
-  /* } */
-  /* fclose(fidf); */
+  double medtiming;
 
   /* Binary64 */
   cpfloat_precision_t precision [] = {11, 8, 11};
   cpfloat_exponent_t emax [] = {15, 127, 127};
   size_t nformats = 3;
   printf("\n*** BINARY64 ***\n");
-  const char outfilepar [] = "./timing-clang-par.dat";
-  const char outfileseq [] = "./timing-clang-seq.dat";
-  FILE *fidp = fopen(outfilepar, "w");
-  FILE *fids = fopen(outfileseq, "w");
+  const char outfile_conv_par[] = "./timing-clang-conv-par.dat";
+  FILE *fidp_conv = fopen(outfile_conv_par, "w");
+  const char outfile_conv_seq[] = "./timing-clang-conv-seq.dat";
+  FILE *fids_conv = fopen(outfile_conv_seq, "w");
+  const char outfile_op_seq[] = "./timing-clang-op-seq.dat";
+  FILE *fids_op = fopen(outfile_op_seq, "w");
   for (i = 0; i < nsizes; i++) {
     n = sizes[i] * sizes[i];
-    double *Xd = malloc(n * sizeof(double));
-    double *Yd;
-    for (j=0; j<n; j++) // generate normal numbers
-      Xd[j] = fmin + rand() / (double)RAND_MAX;
+    double *X = malloc(n * sizeof(*X));
+    double *Y = malloc(n * sizeof(*Y));
+    double *Xd, *Yd;
+    for (j = 0; j < n; j++) { // generate normal numbers
+      X[j] = fmin + rand() / (double)RAND_MAX;
+      Y[j] = fmin + rand() / (double)RAND_MAX;
+    }
     double *timing = malloc(ntests * sizeof(double));
-    fprintf(fidp, "%6lu", sizes[i]);
-    fprintf(fids, "%6lu", sizes[i]);
+    fprintf(fidp_conv, "%6lu", sizes[i]);
+    fprintf(fids_conv, "%6lu", sizes[i]);
+    fprintf(fids_op, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
-    for (l=0; l<nformats; l++) {
+    for (l = 0; l < nformats; l++) {
       fpopts->precision = precision[l];
       fpopts->emax = emax[l];
-      for (k=0; k<ntests; k++) {
-        clock_gettime(CLOCK_MONOTONIC, start);
-        Yd = malloc(n * sizeof(double));
-        cpfloat(Yd, Xd, n, fpopts);
-        free(Yd);
-        clock_gettime(CLOCK_MONOTONIC, end);
-        timing[k] = timedifference(start, end);
-      }
-      qsort(timing, ntests, sizeof(*timing), cmpfun);
-      medtimings[i] = timing[ntests/2];
-      fprintf(fidp, " %10.5e", medtimings[i]);
-      fprintf(stdout, " %10.5e", medtimings[i]);
 
-      for (k=0; k<ntests; k++) {
+      /* Test parallel conversion with allocation. */
+      for (k = 0; k < ntests; k++) {
         clock_gettime(CLOCK_MONOTONIC, start);
-        Yd = malloc(n * sizeof(double));
-        cpfloat_sequential(Yd, Xd, n, fpopts);
-        free(Yd);
+        Xd = malloc(n * sizeof(*Xd));
+        cpfloat(Xd, X, n, fpopts);
         clock_gettime(CLOCK_MONOTONIC, end);
+        free(Xd);
         timing[k] = timedifference(start, end);
       }
       qsort(timing, ntests, sizeof(*timing), cmpfun);
-      medtimings[i] = timing[ntests/2];
-      fprintf(fids, " %10.5e", medtimings[i]);
-      fprintf(stdout, " %10.5e", medtimings[i]);
+      medtiming = timing[ntests / 2];
+      fprintf(fidp_conv, " %10.5e", medtiming);
+      fprintf(stdout, " [P] %10.5e", medtiming);
+
+      /* Test sequential conversion with allocation. */
+      for (k = 0; k < ntests; k++) {
+        clock_gettime(CLOCK_MONOTONIC, start);
+        Yd = malloc(n * sizeof(*Xd));
+        cpfloat_sequential(Yd, Y, n, fpopts);
+        clock_gettime(CLOCK_MONOTONIC, end);
+        free(Yd);
+        timing[k] = timedifference(start, end);
+      }
+      qsort(timing, ntests, sizeof(*timing), cmpfun);
+      medtiming = timing[ntests/2];
+      fprintf(fids_conv, " %10.5e", medtiming);
+      fprintf(stdout, " [C] %10.5e", medtiming);
+
+      /* Test sequential arithmetic operation. */
+      Xd = malloc(n * sizeof(*Xd));
+      Yd = malloc(n * sizeof(*Yd));
+      double *Zd = malloc(n * sizeof(*Zd));
+      for (k = 0; k < ntests; k++) {
+        clock_gettime(CLOCK_MONOTONIC, start);
+        cpf_add_sequential(Zd, Xd, Yd, n, fpopts);
+        clock_gettime(CLOCK_MONOTONIC, end);
+        timing[k] = timedifference(start, end);
+      }
+      free(Xd);
+      free(Yd);
+      free(Zd);
+      qsort(timing, ntests, sizeof(*timing), cmpfun);
+      medtiming = timing[ntests/2];
+      fprintf(fids_op, " %10.5e", medtiming);
+      fprintf(stdout, " [A] %10.5e", medtiming);
+
+      fprintf(stdout, " |");
     }
-    free(Xd);
-    fprintf(fidp, "\n");
-    fprintf(fids, "\n");
+
+    free(X);
+    free(Y);
+    fprintf(fidp_conv, "\n");
+    fprintf(fids_conv, "\n");
+    fprintf(fids_op, "\n");
     fprintf(stdout, "\n");
   }
-  fclose(fidp);
-  fclose(fids);
+
+  fclose(fidp_conv);
+  fclose(fids_conv);
+  fclose(fids_op);
 
   free_optstruct(fpopts);
 

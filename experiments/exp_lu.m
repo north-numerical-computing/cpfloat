@@ -7,6 +7,7 @@ nsizes = length(sizes);
 
 options.precision = 'h';
 options.subnormal = 1;
+options.round = 1;
 chop(1, options);
 cpfloat(1, options);
 
