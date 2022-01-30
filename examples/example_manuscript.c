@@ -4,8 +4,9 @@
 #include <stdio.h>
 #include "cpfloat_binary64.h"
 
-int main ()
-{
+#define N 3
+
+int main () {
   // Allocate the data structure for target formats and rounding parameters.
   optstruct *fpopts = init_optstruct();
 
@@ -22,42 +23,33 @@ int main ()
   int retval = cpfloat_validate_optstruct(fpopts);
   printf("The validation function returned %d.\n", retval);
 
-  // Initialize a 2x2 matrix with four arbitrary elements.
-  double X[4] = { (double)1/3, M_PI, M_E, M_SQRT2 };
-  double Y[4] = { 1.5, 1.5, 1.5, 1.5 };
-  double Z[4];
-
-  printf("Values in binary64:\n %.15e %.15e\n %.15e %.15e \n",
-         X[0], X[1], X[2], X[3]);
+  // Initialize C array with arbitrary elements.
+  double X[N] = { (double)5/3, M_PI, M_E };
+  double Y[N] = { 1.5, 1.5, 1.5 };
+  double Z[N];
+  printf("X in binary64:\n  %.15e %.15e %.15e\n", X[0], X[1], X[2]);
 
   // Round the values of X to the binary16 format and store in Y.
-  cpfloat(Z, X, 4, fpopts);
-  printf("Rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
-         Z[0], Z[1], Z[2], Z[3]);
+  cpfloat(Z, X, N, fpopts);
+  printf("X rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
   // Round the sum of X and Y.
-  cpf_add(Z, Y, X, fpopts);
-  printf("Sum rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
-         Z[0], Z[1], Z[2], Z[3]);
+  cpf_add(Z, Y, X, N, fpopts);
+  printf("Sum rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
   // Round the product of X and Y.
-  cpf_mul(Z, Y, X, fpopts);
-  printf("Sum rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
-         Z[0], Z[1], Z[2], Z[3]);
+  cpf_mul(Z, Y, X, N, fpopts);
+  printf("Product rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
-  // Round the product of X and Y.
-  cpf_log(Z, X, fpopts);
-  printf("Logarithm rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
-         Z[0], Z[1], Z[2], Z[3]);
+  // Round the logarithm of X.
+  cpf_log(Z, X, N, fpopts);
+  printf("Log rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
-  // Round the product of X and Y.
-  cpf_atan2(Z, Y, X, fpopts);
-  printf("Angle between ... rounded to binary16:\n %.15e %.15e\n %.15e %.15e \n",
-         Z[0], Z[1], Z[2], Z[3]);
+  // Round the 2-argument arctangent of X and Y.
+  cpf_atan2(Z, Y, X, N, fpopts);
+  printf("Angle rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
   free_optstruct(fpopts);
-
-  return 0;
 }
 
 /*
