@@ -16,8 +16,9 @@
 template <short exp_bits, short sig_bits, typename backend_float>
 void run_floatx_test(backend_float *X, backend_float *Y, size_t n,
                      size_t ntests, double *timing,
-                     FILE *fidx_conv, FILE *fidx_op) {
+                     FILE *fidx_conv, FILE *fidx_conv_noalloc, FILE *fidx_op) {
   struct timespec start, end;
+  double medtiming;
 
   // Test conversion with allocation.
   for (size_t k = 0; k < ntests; k++) {
@@ -31,12 +32,25 @@ void run_floatx_test(backend_float *X, backend_float *Y, size_t n,
     timing[k] = timedifference(&start, &end);
   }
   qsort(timing, ntests, sizeof(*timing), cmpfun);
-  double medtiming = timing[ntests / 2];
+  medtiming = timing[ntests / 2];
   fprintf(fidx_conv, " %10.5e", medtiming);
   fprintf(stdout, " [C] %10.5e", medtiming);
 
-  // Test arithmetic operation.
+  // Test conversion without allocation.
   auto Xd = new flx::floatx<exp_bits, sig_bits, backend_float>[n];
+  for (size_t k = 0; k < ntests; k++) {
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    for (size_t j = 0; j < n; j++)
+      Xd[j] = X[j];
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    timing[k] = timedifference(&start, &end);
+  }
+  qsort(timing, ntests, sizeof(*timing), cmpfun);
+  medtiming = timing[ntests / 2];
+  fprintf(fidx_conv_noalloc, " %10.5e", medtiming);
+  fprintf(stdout, " [N] %10.5e", medtiming);
+
+  // Test arithmetic operation.
   auto Yd = new flx::floatx<exp_bits, sig_bits, backend_float>[n];
   auto Zd = new flx::floatx<exp_bits, sig_bits, backend_float>[n];
   for (size_t j = 0; j < n; j++)
@@ -61,8 +75,9 @@ template <typename backend_float>
 void run_floatxr_test(short exp_bits, short sig_bits,
                       backend_float *X, backend_float *Y, size_t n,
                       size_t ntests, double *timing,
-                      FILE *fidx_conv, FILE *fidx_op) {
+                      FILE *fidx_conv, FILE *fidx_conv_noalloc, FILE *fidx_op) {
   struct timespec start, end;
+  double medtiming;
 
   // Test conversion with allocation.
   for (size_t k = 0; k < ntests; k++) {
@@ -79,16 +94,30 @@ void run_floatxr_test(short exp_bits, short sig_bits,
     timing[k] = timedifference(&start, &end);
   }
   qsort(timing, ntests, sizeof(*timing), cmpfun);
-  double medtiming = timing[ntests / 2];
+  medtiming = timing[ntests / 2];
   fprintf(fidx_conv, " %10.5e", medtiming);
   fprintf(stdout, " [C] %10.5e", medtiming);
 
-  // Test arithmetic operation.
+  // Test conversion without allocation.
   auto Xd = new flx::floatxr<double, short> *[n];
+  for (size_t j = 0; j < n; j++)
+    Xd[j] = new flx::floatxr<double, short>(exp_bits, sig_bits);
+  for (size_t k = 0; k < ntests; k++) {
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    for (size_t j = 0; j < n; j++)
+      *Xd[j] = X[j];
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    timing[k] = timedifference(&start, &end);
+  }
+  qsort(timing, ntests, sizeof(*timing), cmpfun);
+  medtiming = timing[ntests / 2];
+  fprintf(fidx_conv_noalloc, " %10.5e", medtiming);
+  fprintf(stdout, " [C] %10.5e", medtiming);
+
+  // Test arithmetic operation.
   auto Yd = new flx::floatxr<double, short> *[n];
   auto Zd = new flx::floatxr<double, short> *[n];
   for (size_t j = 0; j < n; j++) {
-    Xd[j] = new flx::floatxr<double, short>(exp_bits, sig_bits, X[j]);
     Yd[j] = new flx::floatxr<double, short>(exp_bits, sig_bits, Y[j]);
     Zd[j] = new flx::floatxr<double, short>(exp_bits, sig_bits);
   }
@@ -145,10 +174,12 @@ int main() {
 
   /* Compile-time FloatX values (floatx class). */
   printf("\n*** FloatX compile-time ***\n");
-  const char outfilefloatx_conv[] = "./timing-floatx-conv-seq.dat";
-  FILE *fidx_conv = fopen(outfilefloatx_conv, "w");
-  const char outfilefloatx_op[] = "./timing-floatx-op-seq.dat";
-  FILE *fidx_op = fopen(outfilefloatx_op, "w");
+  const char outfile_fx_conv[] = "./timing-floatx-conv-seq.dat";
+  FILE *fidx_conv = fopen(outfile_fx_conv, "w");
+  const char outfile_fx_conv_noalloc[] = "./timing-floatx-conv-noalloc-seq.dat";
+  FILE *fidx_conv_noalloc = fopen(outfile_fx_conv_noalloc, "w");
+  const char outfile_fx_op[] = "./timing-floatx-op-seq.dat";
+  FILE *fidx_op = fopen(outfile_fx_op, "w");
   for (i = 0; i < nsizes; i++) {
     size_t n = sizes[i] * sizes[i];
     double *X = new double[n];
@@ -158,37 +189,42 @@ int main() {
       Y[j] = fmin + rand() / (double)RAND_MAX;
     }
     fprintf(fidx_conv, "%6lu", sizes[i]);
+    fprintf(fidx_conv_noalloc, "%6lu", sizes[i]);
     fprintf(fidx_op, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
 
     // binary16
     run_floatx_test<5, 11, double>(X, Y, n, ntests, timing,
-                                   fidx_conv, fidx_op);
+                                   fidx_conv, fidx_conv_noalloc, fidx_op);
     fprintf(stdout, " |");
     // bfloat16
     run_floatx_test<8, 8, double>(X, Y, n, ntests, timing,
-                                  fidx_conv, fidx_op);
+                                  fidx_conv, fidx_conv_noalloc, fidx_op);
     fprintf(stdout, " |");
     // TensorFloat-32
     run_floatx_test<8, 11, double>(X, Y, n, ntests, timing,
-                                   fidx_conv, fidx_op);
+                                   fidx_conv, fidx_conv_noalloc, fidx_op);
     fprintf(stdout, " |");
 
     fprintf(fidx_conv, "\n");
+    fprintf(fidx_conv_noalloc, "\n");
     fprintf(fidx_op, "\n");
     fprintf(stdout, "\n");
     delete[](X);
     delete[](Y);
   }
   fclose(fidx_conv);
+  fclose(fidx_conv_noalloc);
   fclose(fidx_op);
 
   /* Run-time FloatX values (floatxr class). */
   printf("\n*** FloatX runtime ***\n");
-  const char outfilefloatxr_conv [] = "./timing-floatxr-conv-seq.dat";
-  FILE *fidxr_conv = fopen(outfilefloatxr_conv, "w");
-  const char outfilefloatxr_op[] = "./timing-floatxr-op-seq.dat";
-  FILE *fidxr_op = fopen(outfilefloatxr_op, "w");
+  const char outfile_fxr_conv [] = "./timing-floatxr-conv-seq.dat";
+  FILE *fidxr_conv = fopen(outfile_fxr_conv, "w");
+  const char outfile_fxr_conv_noalloc[] = "./timing-floatxr-conv-noalloc-seq.dat";
+  FILE *fidxr_conv_noalloc = fopen(outfile_fxr_conv_noalloc, "w");
+  const char outfile_fxr_op[] = "./timing-floatxr-op-seq.dat";
+  FILE *fidxr_op = fopen(outfile_fxr_op, "w");
   for (i = 0; i < nsizes; i++) {
     size_t n = sizes[i] * sizes[i];
     double *X = new double[n];
@@ -198,21 +234,24 @@ int main() {
       Y[j] = fmin + rand() / (double)RAND_MAX;
     }
     fprintf(fidxr_conv, "%6lu", sizes[i]);
+    fprintf(fidxr_conv_noalloc, "%6lu", sizes[i]);
     fprintf(fidxr_op, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
     for (size_t l=0; l<nformats; l++) {
       run_floatxr_test<double>(exponent[l], precision[l],
                                X, Y, n, ntests, timing,
-                               fidxr_conv, fidxr_op);
+                               fidxr_conv, fidxr_conv_noalloc, fidxr_op);
       fprintf(stdout, " |");
     }
     fprintf(fidxr_conv, "\n");
+    fprintf(fidxr_conv_noalloc, "\n");
     fprintf(fidxr_op, "\n");
     fprintf(stdout, "\n");
     delete[](X);
     delete[](Y);
   }
   fclose(fidxr_conv);
+  fclose(fidxr_conv_noalloc);
   fclose(fidxr_op);
 
   delete[] (timing);

@@ -53,11 +53,13 @@ int main() {
   size_t nformats = 3;
   printf("\n*** BINARY64 ***\n");
   const char outfile_conv_par[] = "./timing-clang-conv-par.dat";
-  FILE *fidp_conv = fopen(outfile_conv_par, "w");
+  FILE *fid_conv_par = fopen(outfile_conv_par, "w");
   const char outfile_conv_seq[] = "./timing-clang-conv-seq.dat";
-  FILE *fids_conv = fopen(outfile_conv_seq, "w");
+  FILE *fid_conv_seq = fopen(outfile_conv_seq, "w");
+  const char outfile_conv_noalloc_seq[] = "./timing-clang-conv-noalloc-seq.dat";
+  FILE *fid_conv_noalloc_seq = fopen(outfile_conv_noalloc_seq, "w");
   const char outfile_op_seq[] = "./timing-clang-op-seq.dat";
-  FILE *fids_op = fopen(outfile_op_seq, "w");
+  FILE *fid_op_seq = fopen(outfile_op_seq, "w");
   for (i = 0; i < nsizes; i++) {
     n = sizes[i] * sizes[i];
     double *X = malloc(n * sizeof(*X));
@@ -68,9 +70,10 @@ int main() {
       Y[j] = fmin + rand() / (double)RAND_MAX;
     }
     double *timing = malloc(ntests * sizeof(double));
-    fprintf(fidp_conv, "%6lu", sizes[i]);
-    fprintf(fids_conv, "%6lu", sizes[i]);
-    fprintf(fids_op, "%6lu", sizes[i]);
+    fprintf(fid_conv_par, "%6lu", sizes[i]);
+    fprintf(fid_conv_seq, "%6lu", sizes[i]);
+    fprintf(fid_conv_noalloc_seq, "%6lu", sizes[i]);
+    fprintf(fid_op_seq, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
     for (l = 0; l < nformats; l++) {
       fpopts->precision = precision[l];
@@ -87,25 +90,37 @@ int main() {
       }
       qsort(timing, ntests, sizeof(*timing), cmpfun);
       medtiming = timing[ntests / 2];
-      fprintf(fidp_conv, " %10.5e", medtiming);
+      fprintf(fid_conv_par, " %10.5e", medtiming);
       fprintf(stdout, " [P] %10.5e", medtiming);
 
       /* Test sequential conversion with allocation. */
       for (k = 0; k < ntests; k++) {
         clock_gettime(CLOCK_MONOTONIC, start);
-        Yd = malloc(n * sizeof(*Xd));
-        cpfloat_sequential(Yd, Y, n, fpopts);
+        Xd = malloc(n * sizeof(*Xd));
+        cpfloat_sequential(Xd, Y, n, fpopts);
         clock_gettime(CLOCK_MONOTONIC, end);
-        free(Yd);
+        free(Xd);
         timing[k] = timedifference(start, end);
       }
       qsort(timing, ntests, sizeof(*timing), cmpfun);
       medtiming = timing[ntests/2];
-      fprintf(fids_conv, " %10.5e", medtiming);
+      fprintf(fid_conv_seq, " %10.5e", medtiming);
       fprintf(stdout, " [C] %10.5e", medtiming);
 
-      /* Test sequential arithmetic operation. */
+      /* Test sequential conversion without allocation. */
       Xd = malloc(n * sizeof(*Xd));
+      for (k = 0; k < ntests; k++) {
+        clock_gettime(CLOCK_MONOTONIC, start);
+        cpfloat_sequential(Xd, Y, n, fpopts);
+        clock_gettime(CLOCK_MONOTONIC, end);
+        timing[k] = timedifference(start, end);
+      }
+      qsort(timing, ntests, sizeof(*timing), cmpfun);
+      medtiming = timing[ntests/2];
+      fprintf(fid_conv_noalloc_seq, " %10.5e", medtiming);
+      fprintf(stdout, " [N] %10.5e", medtiming);
+
+      /* Test sequential arithmetic operation. */
       Yd = malloc(n * sizeof(*Yd));
       double *Zd = malloc(n * sizeof(*Zd));
       for (k = 0; k < ntests; k++) {
@@ -119,7 +134,7 @@ int main() {
       free(Zd);
       qsort(timing, ntests, sizeof(*timing), cmpfun);
       medtiming = timing[ntests/2];
-      fprintf(fids_op, " %10.5e", medtiming);
+      fprintf(fid_op_seq, " %10.5e", medtiming);
       fprintf(stdout, " [A] %10.5e", medtiming);
 
       fprintf(stdout, " |");
@@ -127,15 +142,17 @@ int main() {
 
     free(X);
     free(Y);
-    fprintf(fidp_conv, "\n");
-    fprintf(fids_conv, "\n");
-    fprintf(fids_op, "\n");
+    fprintf(fid_conv_par, "\n");
+    fprintf(fid_conv_seq, "\n");
+    fprintf(fid_conv_noalloc_seq, "\n");
+    fprintf(fid_op_seq, "\n");
     fprintf(stdout, "\n");
   }
 
-  fclose(fidp_conv);
-  fclose(fids_conv);
-  fclose(fids_op);
+  fclose(fid_conv_par);
+  fclose(fid_conv_seq);
+  fclose(fid_conv_noalloc_seq);
+  fclose(fid_op_seq);
 
   free_optstruct(fpopts);
 

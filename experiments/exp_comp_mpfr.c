@@ -53,9 +53,11 @@ int main() {
   size_t nformats = 3;
   printf("\n*** BINARY64 ***\n");
   const char outfile_conv_seq [] = "./timing-mpfr-conv-seq.dat";
-  FILE *fids_conv = fopen(outfile_conv_seq, "w");
+  FILE *fid_conv_seq = fopen(outfile_conv_seq, "w");
+  const char outfile_conv_noalloc_seq[] = "./timing-mpfr-conv-noalloc-seq.dat";
+  FILE *fid_conv_noalloc_seq = fopen(outfile_conv_noalloc_seq, "w");
   const char outfile_op_seq[] = "./timing-mpfr-op-seq.dat";
-  FILE *fids_op = fopen(outfile_op_seq, "w");
+  FILE *fid_op_seq = fopen(outfile_op_seq, "w");
   for (i = 0; i < nsizes; i++) {
     n = sizes[i] * sizes[i];
     double *X = malloc(n * sizeof(double));
@@ -65,13 +67,11 @@ int main() {
       Y[j] = fmin + rand() / (double)RAND_MAX;
     }
     double *timing = malloc(ntests * sizeof(double));
-    fprintf(fids_conv, "%6lu", sizes[i]);
-    fprintf(fids_op, "%6lu", sizes[i]);
+    fprintf(fid_conv_seq, "%6lu", sizes[i]);
+    fprintf(fid_conv_noalloc_seq, "%6lu", sizes[i]);
+    fprintf(fid_op_seq, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
     for (l = 0; l < nformats; l++) {
-      /* fpopts->precision = precision[l]; */
-      /* fpopts->emax = emax[l]; */
-
       // Test conversion with allocation.
       for (k = 0; k < ntests; k++) {
         clock_gettime(CLOCK_MONOTONIC, start);
@@ -87,15 +87,28 @@ int main() {
       }
       qsort(timing, ntests, sizeof(*timing), cmpfun);
       medtiming = timing[ntests / 2];
-      fprintf(fids_conv, " %10.5e", medtiming);
+      fprintf(fid_conv_seq, " %10.5e", medtiming);
       fprintf(stdout, " [C] %10.5e", medtiming);
 
-      // Test arithmetic operations.
+      // Test conversion without allocation.
       mpfr_t *Xd = malloc(n * sizeof(*Xd));
+      for (size_t i = 0; i < n; i++)
+        mpfr_init(Xd[i]);
+      for (k = 0; k < ntests; k++) {
+        clock_gettime(CLOCK_MONOTONIC, start);
+        chop_mpfr(Xd, X, n, precision[l], emax[l], MPFR_RNDN);
+        clock_gettime(CLOCK_MONOTONIC, end);
+        timing[k] = timedifference(start, end);
+      }
+      qsort(timing, ntests, sizeof(*timing), cmpfun);
+      medtiming = timing[ntests / 2];
+      fprintf(fid_conv_noalloc_seq, " %10.5e", medtiming);
+      fprintf(stdout, " [N] %10.5e", medtiming);
+
+      // Test arithmetic operations.
       mpfr_t *Yd = malloc(n * sizeof(*Yd));
       mpfr_t *Zd = malloc(n * sizeof(*Zd));
       for (size_t i = 0; i < n; i++) {
-        mpfr_init(Xd[i]);
         mpfr_init(Yd[i]);
         mpfr_init(Zd[i]);
       }
@@ -117,18 +130,21 @@ int main() {
       free(Zd);
       qsort(timing, ntests, sizeof(*timing), cmpfun);
       medtiming = timing[ntests/2];
-      fprintf(fids_op, " %10.5e", medtiming);
+      fprintf(fid_op_seq, " %10.5e", medtiming);
       fprintf(stdout, " [A] %10.5e", medtiming);
       fprintf(stdout, " |");
     }
 
     free(X);
     free(Y);
-    fprintf(fids_conv, "\n");
-    fprintf(fids_op, "\n");
+    fprintf(fid_conv_seq, "\n");
+    fprintf(fid_conv_noalloc_seq, "\n");
+    fprintf(fid_op_seq, "\n");
     fprintf(stdout, "\n");
   }
-  fclose(fids_conv);
+  fclose(fid_conv_seq);
+  fclose(fid_conv_noalloc_seq);
+  fclose(fid_op_seq);
 
   return 0;
 }
