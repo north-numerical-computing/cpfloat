@@ -52,6 +52,7 @@ void mexFunction(int nlhs,
 
   /* Parse second argument and populate fpopts structure. */
   if (nrhs > 1) {
+    bool is_subn_rnd_default = false;
     if(!mxIsStruct(prhs[1])) {
       mexErrMsgIdAndTxt("cpfloat:invalidstruct",
                         "Second argument must be a struct.");
@@ -77,7 +78,7 @@ void mexFunction(int nlhs,
           !strcmp(fpopts->format, "bf16")) {
         fpopts->precision = 8;
         fpopts->emax = 127;
-        fpopts->subnormal = CPFLOAT_SUBN_RND; /* Default for bfloat16. */
+        is_subn_rnd_default = true;
       } else if (!strcmp(fpopts->format, "h") ||
                  !strcmp(fpopts->format, "half") ||
                  !strcmp(fpopts->format, "binary16") ||
@@ -114,13 +115,18 @@ void mexFunction(int nlhs,
         mexErrMsgIdAndTxt("cpfloat:invalidformat",
                           "Invalid floating-point format specified.");
       }
-      /* Set default values o be compatible with MATLAB chop. */
+      /* Set default values to be compatible with MATLAB chop. */
       tmp = mxGetField(prhs[1], 0, "subnormal");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
           fpopts->subnormal = CPFLOAT_SUBN_USE;
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->subnormal = *((double *)mxGetData(tmp));
+      } else {
+        if (is_subn_rnd_default)
+          fpopts->subnormal = CPFLOAT_SUBN_RND; /* Default for bfloat16. */
+        else
+          fpopts->subnormal = CPFLOAT_SUBN_USE;
       }
       tmp = mxGetField(prhs[1], 0, "explim");
       if (tmp != NULL) {
