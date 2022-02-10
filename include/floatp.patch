@@ -1,7 +1,7 @@
-diff -Naur include/floatp/f_d_floatp/d_float_dec2floatp.m include/floatp/f_d_floatp/d_float_dec2floatp.m
---- include/floatp/f_d_floatp/d_float_dec2floatp.m	2020-05-29 16:21:20.000000000 +0200
-+++ include/floatp/f_d_floatp/d_float_dec2floatp.m	2021-01-29 12:48:32.000000000 +0100
-@@ -60,14 +60,19 @@
+diff -ruN include/floatp/f_d_floatp/d_float_dec2floatp.m include/floatp_mod/f_d_floatp/d_float_dec2floatp.m
+--- include/floatp/f_d_floatp/d_float_dec2floatp.m	2021-09-14 16:14:58.000000000 +0100
++++ include/floatp_mod/f_d_floatp/d_float_dec2floatp.m	2022-02-10 06:24:42.795767336 +0000
+@@ -62,14 +62,19 @@
   end % if
   
   [f,ex] = log2(y); % x = f 2^ex, 0.5 <= f <1, y < 1e308!!
@@ -23,7 +23,7 @@ diff -Naur include/floatp/f_d_floatp/d_float_dec2floatp.m include/floatp/f_d_flo
   else
    F = zeros(1,nbits,'uint8');
    e = ex;
-@@ -81,7 +86,7 @@
+@@ -83,7 +88,7 @@
    I = Inf(1,length(I)); 
    F = Inf(1,length(F));
   end % if
@@ -32,24 +32,15 @@ diff -Naur include/floatp/f_d_floatp/d_float_dec2floatp.m include/floatp/f_d_flo
    I = zeros(1,length(I));
    F = zeros(1,length(F));
   end % if
-diff -Naur include/floatp/f_d_floatp/f_d_round_bin.m include/floatp/f_d_floatp/f_d_round_bin.m
---- include/floatp/f_d_floatp/f_d_round_bin.m	2020-05-30 08:17:38.000000000 +0200
-+++ include/floatp/f_d_floatp/f_d_round_bin.m	2021-01-29 12:48:32.000000000 +0100
-@@ -33,7 +33,8 @@
- % no rounding to do
+diff -ruN include/floatp/f_d_floatp/f_d_round_bin.m include/floatp_mod/f_d_floatp/f_d_round_bin.m
+--- include/floatp/f_d_floatp/f_d_round_bin.m	2021-09-13 18:38:58.000000000 +0100
++++ include/floatp_mod/f_d_floatp/f_d_round_bin.m	2022-02-10 06:32:47.490152914 +0000
+@@ -36,7 +36,7 @@
  
  len = length(bin);
--if len <= nbits
-+binr = bin(nbits+1:len);
+ binr = bin(nbits+1:len);
+-if len <= nbits 
 +if len <= nbits | binr == 0
   % do nothing
   p = bin;
   cnext = 0;
-@@ -47,7 +48,6 @@
-  % round to nearest
-  
-  bint = bin(1:nbits);
-- binr = bin(nbits+1:len);
-  
-  % we need at least 3 bits in binr to do the rounding to nearest
-  if length(binr) < 3
