@@ -36,7 +36,7 @@ OCTAVE:=octave
 
 WFLAGS=-Wall -Wextra -pedantic
 ARCHFLAGS=-march=native
-CFLAGS=$(WFLAGS) $(ARCHFLAGS) -I $(SRCDIR) \
+CFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=gnu99 -I $(SRCDIR) \
 	-I /usr/local/include -L /usr/local/lib
 CXXFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=c++11 -I $(INCDIR) -I $(INCDIR)FloatX/src/
 COPTIM=-O3
@@ -89,7 +89,7 @@ ctestsrc: $(TESTDIR)cpfloat_test.ts
 ctest: init makebin ctestsrc
 	$(CC) $(CFLAGS) $(COPTIM) -fsanitize=undefined \
 		-o $(BINDIR)cpfloat_test $(TESTDIR)cpfloat_test.c \
-		-lcheck -lm -lpthread $(CLIBS) $(PCG_FLAGS)
+		-lcheck -lm -lpthread -lsubunit $(CLIBS) $(PCG_FLAGS)
 	$(BINDIR)cpfloat_test
 	$(MV) cpfloat_test.log $(TESTDIR)
 
@@ -222,11 +222,14 @@ clean_experiments:
 
 
 
-.PHONY: cleanall clean cleantest cleancoverage cleandoc cleandat
-cleanall: clean cleantest cleancoverage cleandoc cleandat
+.PHONY: cleanall clean cleandep cleantest cleancoverage cleandoc cleandat
+cleanall: clean cleandep cleantest cleancoverage cleandoc cleandat
 
 clean:
 	$(RM) $(BINDIR)*
+
+cleandep:
+	cd $(INCDIR)pcg-c; make clean
 
 cleantest:
 	$(RM) $(TESTDIR)cpfloat_test $(TESTDIR)*.c $(TESTDIR)*.log
