@@ -72,7 +72,7 @@ for k = 1:nformats
     fprintf("   n = %5d\n", n);
 
     % Generate test matrix
-    A = randn(m, n, storageformat);
+    A = rand(m, n, storageformat);
     if generatesubnormals
       A = A * (xmin-xmins) + xmins;
     else

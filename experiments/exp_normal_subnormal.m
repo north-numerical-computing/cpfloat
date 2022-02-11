@@ -60,8 +60,8 @@ for k = 1:nformats
     m = n;
 
     % Generate test matrix
-    Anormal = randn(m, n, storageformat) + xmin;
-    Asubnormal = randn(m,n,storageformat) * (xmin-xmins) + xmins;
+    Anormal = rand(m, n, storageformat) + xmin;
+    Asubnormal = rand(m,n,storageformat) * (xmin-xmins) + xmins;
 
     for i = 1:nroundingmodes
       round = roundingmodes(i);
@@ -94,7 +94,7 @@ for k = 1:nformats
   end
 end
 
-fprefix= sprintf('%s/speedup-normals-subnormals', datdir);
+fprefix = sprintf('%s/speedup-normals-subnormals', datdir);
 
 for k = 1:nformats
   fileid = fopen(sprintf('%s-%s-%c.dat', fprefix, storageformat, formats{k}), 'w');

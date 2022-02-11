@@ -62,8 +62,8 @@ for k = 1:nformats
     m = n;
 
     % Generate test matrix
-    Anormal = randn(m, n, storageformat) + xmin;
-    Asubnormal = randn(m,n,storageformat) * (xmin-xmins) + xmins;
+    Anormal = rand(m, n, storageformat) + xmin;
+    Asubnormal = rand(m,n,storageformat) * (xmin-xmins) + xmins;
 
     for i = 1:nroundingmodes
       round = roundingmodes(i);
