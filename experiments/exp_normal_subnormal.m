@@ -7,7 +7,7 @@ warning('off', 'all')
 fasttiming = false;
 roundingmodes = [-1:7];
 sizes = 1:9;
-sizes = [10*sizes]; % , 100*sizes, 1000*sizes, 10000];
+sizes = [10*sizes , 100*sizes, 1000*sizes, 10000];
 
 subnormal = 1;
 explim = 0;
@@ -61,7 +61,7 @@ for k = 1:nformats
 
     % Generate test matrix
     Anormal = rand(m, n, storageformat) + xmin;
-    Asubnormal = rand(m,n,storageformat) * (xmin-xmins) + xmins;
+    Asubnormal = rand(m, n, storageformat) * (xmin-xmins) + xmins;
 
     for i = 1:nroundingmodes
       round = roundingmodes(i);
@@ -105,6 +105,15 @@ for k = 1:nformats
     end
     fprintf(fileid, '\n');
   end
+end
+
+plotcols = 3;
+plotrows = ceil(nformats/plotcols);
+for i = 1:nformats
+  figure(2)
+  subplot(plotrows, plotcols, i);
+  semilogx(sizes,speedups(:,:,i));
+  axis([min(sizes),max(sizes),0,2]);
 end
 
 % CPFloat - Custom Precision Floating-point numbers.
