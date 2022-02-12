@@ -1,10 +1,11 @@
-#! /bin/bash --login
+#!/bin/bash --login
 #$ -cwd
-#$ -pe smp.pe 24 -l haswell
+#$ -l haswell
+#$ -pe smp.pe 24
 export OMP_NUM_THREADS=$NSLOTS
 
 module load /opt/clusterware/etc/modules/null
-module load apps/binapps/matlab/R2021a
+module load apps/binapps/matlab/R2021b
 module unload compilers/gcc/6.4.0
 module load compilers/gcc/9.3.0
 
