@@ -28,7 +28,6 @@ int main() {
 
   /* Input parameters. */
   size_t i, j, k, l, n;
-  size_t ntests = 10;
 
   size_t nsizes = 28;
   size_t *sizes = malloc(nsizes * sizeof(double));
@@ -66,14 +65,14 @@ int main() {
       X[j] = fmin + rand() / (double)RAND_MAX;
       Y[j] = fmin + rand() / (double)RAND_MAX;
     }
-    double *timing = malloc(ntests * sizeof(double));
+    double *timing = malloc(NTESTS * sizeof(double));
     fprintf(fid_conv_seq, "%6lu", sizes[i]);
     fprintf(fid_conv_noalloc_seq, "%6lu", sizes[i]);
     fprintf(fid_op_seq, "%6lu", sizes[i]);
     fprintf(stdout, "%6lu", sizes[i]);
     for (l = 0; l < nformats; l++) {
       // Test conversion with allocation.
-      for (k = 0; k < ntests; k++) {
+      for (k = 0; k < NTESTS; k++) {
         clock_gettime(CLOCK_MONOTONIC, start);
         mpfr_t *Xd = malloc(n * sizeof(*Xd));
         for (size_t i = 0; i < n; i++)
@@ -85,8 +84,8 @@ int main() {
         free(Xd);
         timing[k] = timedifference(start, end);
       }
-      qsort(timing, ntests, sizeof(*timing), cmpfun);
-      medtiming = timing[ntests / 2];
+      qsort(timing, NTESTS, sizeof(*timing), cmpfun);
+      medtiming = timing[NTESTS / 2];
       fprintf(fid_conv_seq, " %10.5e", medtiming);
       fprintf(stdout, " [C] %10.5e", medtiming);
 
@@ -94,14 +93,14 @@ int main() {
       mpfr_t *Xd = malloc(n * sizeof(*Xd));
       for (size_t i = 0; i < n; i++)
         mpfr_init(Xd[i]);
-      for (k = 0; k < ntests; k++) {
+      for (k = 0; k < NTESTS; k++) {
         clock_gettime(CLOCK_MONOTONIC, start);
         chop_mpfr(Xd, X, n, precision[l], emax[l], MPFR_RNDN);
         clock_gettime(CLOCK_MONOTONIC, end);
         timing[k] = timedifference(start, end);
       }
-      qsort(timing, ntests, sizeof(*timing), cmpfun);
-      medtiming = timing[ntests / 2];
+      qsort(timing, NTESTS, sizeof(*timing), cmpfun);
+      medtiming = timing[NTESTS / 2];
       fprintf(fid_conv_noalloc_seq, " %10.5e", medtiming);
       fprintf(stdout, " [N] %10.5e", medtiming);
 
@@ -113,7 +112,7 @@ int main() {
         mpfr_init(Zd[i]);
       }
       chop_mpfr(Yd, Y, n, precision[l], emax[l], MPFR_RNDN);
-      for (k = 0; k < ntests; k++) {
+      for (k = 0; k < NTESTS; k++) {
         clock_gettime(CLOCK_MONOTONIC, start);
         for (j = 0; j < n; j++)
           mpfr_add(Zd[i], Xd[i], Yd[i], MPFR_RNDN);
@@ -128,8 +127,8 @@ int main() {
       free(Xd);
       free(Yd);
       free(Zd);
-      qsort(timing, ntests, sizeof(*timing), cmpfun);
-      medtiming = timing[ntests/2];
+      qsort(timing, NTESTS, sizeof(*timing), cmpfun);
+      medtiming = timing[NTESTS/2];
       fprintf(fid_op_seq, " %10.5e", medtiming);
       fprintf(stdout, " [A] %10.5e", medtiming);
       fprintf(stdout, " |");

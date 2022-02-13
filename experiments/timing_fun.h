@@ -2,6 +2,7 @@
 /* SPDX-License-Identifier: LGPL-2.1-or-later                         */
 
 #include <time.h>
+#define NTESTS 100
 
 int cmpfun(const void *x, const void *y) {
 if (*(double *)x < *(double *)y)
@@ -12,8 +13,7 @@ if (*(double *)x < *(double *)y)
     return 0;
 }
 
-double timedifference(struct timespec *start, struct timespec *end)
-{
+double timedifference(struct timespec *start, struct timespec *end) {
   return
     (end->tv_sec - start->tv_sec) +
     (double)(end->tv_nsec - start->tv_nsec) * 1e-9;

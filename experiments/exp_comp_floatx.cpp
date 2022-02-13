@@ -149,7 +149,6 @@ void run_floatxr_test(short exp_bits, short sig_bits,
 int main() {
 
   /* Input parameters. */
-  const size_t ntests = 10;
   const size_t nsizes = 28;
   size_t sizes[nsizes];
   size_t mult = 1;
@@ -170,7 +169,7 @@ int main() {
   double fmin = ldexpf(1., -14);
 
   double *timing;
-  timing = new double[ntests];
+  timing = new double[NTESTS];
 
   /* Compile-time FloatX values (floatx class). */
   printf("\n*** FloatX compile-time ***\n");
@@ -194,15 +193,15 @@ int main() {
     fprintf(stdout, "%6lu", sizes[i]);
 
     // binary16
-    run_floatx_test<5, 11, double>(X, Y, n, ntests, timing,
+    run_floatx_test<5, 11, double>(X, Y, n, NTESTS, timing,
                                    fidx_conv, fidx_conv_noalloc, fidx_op);
     fprintf(stdout, " |");
     // bfloat16
-    run_floatx_test<8, 8, double>(X, Y, n, ntests, timing,
+    run_floatx_test<8, 8, double>(X, Y, n, NTESTS, timing,
                                   fidx_conv, fidx_conv_noalloc, fidx_op);
     fprintf(stdout, " |");
     // TensorFloat-32
-    run_floatx_test<8, 11, double>(X, Y, n, ntests, timing,
+    run_floatx_test<8, 11, double>(X, Y, n, NTESTS, timing,
                                    fidx_conv, fidx_conv_noalloc, fidx_op);
     fprintf(stdout, " |");
 
@@ -239,7 +238,7 @@ int main() {
     fprintf(stdout, "%6lu", sizes[i]);
     for (size_t l=0; l<nformats; l++) {
       run_floatxr_test<double>(exponent[l], precision[l],
-                               X, Y, n, ntests, timing,
+                               X, Y, n, NTESTS, timing,
                                fidxr_conv, fidxr_conv_noalloc, fidxr_op);
       fprintf(stdout, " |");
     }
