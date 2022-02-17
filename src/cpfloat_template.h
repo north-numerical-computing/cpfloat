@@ -393,10 +393,10 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 /* Round-to-nearest with ties-to-even. */
 #define RN_TIES_TO_EVEN_SCALAR_SAME_EXP(x, y, p)                               \
   if (p->subnormal != CPFLOAT_SUBN_USE && ABS(y) < p->xmin) {                  \
-    if (ABS(y) >= p->xmin/2)                                                   \
-      *(x) = FPOF(SIGN(y) | INTOFCONST(p->xmin));                              \
-    else                                                                       \
+    if (ABS(y) <= p->xmin/2)                                                   \
       *(x) = FPOF(SIGN(y));                                                    \
+    else                                                                       \
+      *(x) = FPOF(SIGN(y) | INTOFCONST(p->xmin));                              \
   } else {                                                                     \
     INTTYPE LSB = (INTOF(y) >> (DEFPREC-p->precision)) & INTCONST(1);          \
     *(x) = FPOF((INTOF(y) + (p->trailmask >> 1) + LSB) & p->leadmask);         \
@@ -404,9 +404,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 #define RN_TIES_TO_EVEN_SCALAR_OTHER_EXP(x, y, p, lp)                          \
   if (ABS(y) < p->ftzthreshold) { /* Underflow */                              \
-    if (ABS(y) < p->ftzthreshold/2                                             \
-        || (ABS(y) == p->ftzthreshold/2                                        \
-            && p->subnormal == CPFLOAT_SUBN_USE))                              \
+    if (ABS(y) <= p->ftzthreshold/2)                                           \
       *(x) = FPOF(SIGN(y));                                                    \
     else                                                                       \
       *(x) = FPOF(SIGN(y) | INTOFCONST(p->ftzthreshold));                      \

@@ -325,7 +325,7 @@ function cpfloat_test
     c = cpfloat(xmin,options); assert_eq(c,xmin)
     x = [xmins xmin/2 xmin 0 xmax 2*xmax 1-delta/5 1+delta/4];
     c = cpfloat(x,options);
-    c_expected = [0 xmin x(3:5) inf 1 1];
+    c_expected = [0 0 x(3:5) inf 1 1];
     assert_eq(c,c_expected)
 
     % Smallest normal number and spacing between the subnormal numbers.
@@ -348,14 +348,14 @@ function cpfloat_test
     c = cpfloat(x,options);
     assert_eq(c,x)
 
-    % Numbers smaller than smaller representable number.
+    % Numbers smaller than smallest representable number.
     options.subnormal = 0;
     x = xmin / 2;
     c = cpfloat(x,options);
-    assert_eq(c,xmin)
+    assert_eq(c,0)
     x = -xmin / 2;
     c = cpfloat(x,options);
-    assert_eq(c,-xmin)
+    assert_eq(c,-0)
     x = xmin / 4;
     c = cpfloat(x,options);
     assert_eq(c,0)
