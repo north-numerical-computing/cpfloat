@@ -29,16 +29,16 @@ int main () {
   double Z[N];
   printf("X in binary64:\n  %.15e %.15e %.15e\n", X[0], X[1], X[2]);
 
-  // Round the values of X to the binary16 format and store in Y.
+  // Round the values of X to the binary16 format and store in Z.
   cpfloat(Z, X, N, fpopts);
   printf("X rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
   // Round the sum of X and Y.
-  cpf_add(Z, Y, X, N, fpopts);
+  cpf_add(Z, X, Y, N, fpopts);
   printf("Sum rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
   // Round the product of X and Y.
-  cpf_mul(Z, Y, X, N, fpopts);
+  cpf_mul(Z, X, Y, N, fpopts);
   printf("Product rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
   // Round the logarithm of X.
@@ -46,7 +46,7 @@ int main () {
   printf("Log rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
   // Round the 2-argument arctangent of X and Y.
-  cpf_atan2(Z, Y, X, N, fpopts);
+  cpf_atan2(Z, X, Y, N, fpopts);
   printf("Angle rounded to binary16:\n  %.15e %.15e %.15e\n", Z[0], Z[1], Z[2]);
 
   free_optstruct(fpopts);
