@@ -102,10 +102,13 @@ typedef enum {
  * @brief Soft fault simulation modes available in CPFloat.
  */
 typedef enum {
-  /** Do not simulate soft errors. */
+  /** Do not introduce soft errors. */
   CPFLOAT_NO_SOFTERR = 0,
-  /** Introduce soft errors after the floating-point conversion. */
-  CPFLOAT_SOFTERR = 1
+  /** Soft errors in fraction of target-format floating-point representation.*/
+  CPFLOAT_FRAC_SOFTERR = 1,
+  /** Soft errors anywhere in target-format floating-point representation. */
+  CPFLOAT_FP_SOFTERR = 2
+
 } cpfloat_softerr_t;
 
 #ifdef PCG_VARIANTS_H_INCLUDED
@@ -240,22 +243,26 @@ typedef struct {
   /**
    * @brief Support for soft errors.
    *
-   * @details If this field is not set to `CPFLOAT_SOFTERR`, a single bit flip
-   * in the significand of the rounded result is introduced with probability
-   * `p`.
+   * @details If this field is not set to `CPFLOAT_NO_SOFTERR`, a single bit
+   * flip is introduced in the binary floating-point representation of the
+   * rounded result with probability `p`. The bit flip can strike only the
+   * target-format fraction (significand without the implicit bit) if this field
+   * is set to `CPFLOAT_FRAC_SOFTERR` and any bit in the target-format
+   * representation if it is set to `CPFLOAT_FP_SOFTERR`.
    */
   cpfloat_softerr_t flip;
   /**
    * @brief Probability of bit flips.
    *
-   * @details The probability of flipping a single bit in the significand of a
-   * floating-point number after rounding. This field is ignored if `flip` is
-   * set to `CPFLOAT_NO_SOFTERR`.
+   * @details The probability of flipping a single bit in the binary
+   * floating-point representation or in the fraction (significand without the
+   * implicit bit) of a number after rounding. This field is ignored if `flip`
+   * is set to `CPFLOAT_NO_SOFTERR`.
    *
    * The validation functions cpfloatf_validate_optstruct() and
    * cpfloat_validate_optstruct() return an error code if `flip` is set to
-   * `CPFLOAT_SOFTERR` and this field does not contain a number in the interval
-   * [0,1].
+   * `CPFLOAT_FP_SOFTERR` or `CPFLOAT_FRAC_SOFTERR` and this field does not
+   * contain a number in the interval [0,1].
    */
   double p;
   /**

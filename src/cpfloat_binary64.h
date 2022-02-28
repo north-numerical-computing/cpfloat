@@ -277,12 +277,13 @@ static inline int cpf_fma(double *X, const double *A, const double *B,
 #define NLEADBITS 12
 #define NBITS 64
 #define FULLMASK 0xFFFFFFFFFFFFFFFFULL
-#define ABSMASK 0x7FFFFFFFFFFFFFFFULL
+#define ABSMASK  0x7FFFFFFFFFFFFFFFULL
 #define SIGNMASK 0x8000000000000000ULL
-#define EXPMASK 0x7FF0000000000000ULL
+#define EXPMASK  0x7FF0000000000000ULL
 #define FRACMASK 0x000FFFFFFFFFFFFFULL
 
 #ifdef PCG_VARIANTS_H_INCLUDED
+#define MAXRAND 0xFFFFFFFFFFFFFFFFULL
 #define INITRAND(seed) pcg64_srandom_r(seed, time(NULL), (intptr_t)seed);
 #define ADVANCERAND(seed, thread, nloc) pcg64_advance_r(seed, thread *nloc - 1);
 #define GENRAND(seed) pcg64_random_r(seed)
@@ -290,6 +291,7 @@ static inline int cpf_fma(double *X, const double *A, const double *B,
 #warning "The default C random number generator is being used."
 #warning "Please compile with -include <path-to-pcg_variants.h>"
 #warning "and link with -L <path-to-libpcg_random.a> -lpcg_random."
+#define MAXRAND RAND_MAX 0x3FFFFFFFFFFFFFFFULL
 #define INITRAND(seed) *seed = time(NULL);
 #define GEN_SINGLE_RAND(seed)                                                  \
   ((INTTYPE)rand_r((unsigned int *)seed) +                                     \

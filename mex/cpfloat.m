@@ -63,13 +63,16 @@
 %      is 1.
 %
 %   * The scalar FPOPTS.flip specifies whether the function should simulate the
-%     occurrence of soft errors striking the elements of Y. If this field is not
-%     set to 0, then the fraction of each element of Y will have a randomly
-%     chosen bit flipped with probability FPOPTS.p. If the exponent range of the
-%     storage format is larger than that of the target format, then subnormal
-%     numbers might be stored as normal numbers, in which case the bit flip
-%     cannot strike the leading bit of the representation. The default value for
-%     this field is 0.
+%     occurrence of a single bit flip striking the floating-point representation
+%     of elements of Y. Possible values are:
+%        0    no bit flips
+%        1    bit flips can occur the fraction of target-format representation
+%        2    bit flips can occur in any bit of target-format representation
+%     The probability of a bit flip occurring in any element of Y is FPOPTS.p.
+%     If the exponent range of the storage format is larger than that of the
+%     target format, then subnormal numbers might be stored as normal numbers,
+%     in which case the bit flip cannot strike the leading bit of the
+%     representation. The default value for this field is 0.
 %
 %   * The scalar FPOPTS.p specifies the probability of bit flips. If FPOPTS.flip
 %     is not set to zero, then the value of this field must be a valid

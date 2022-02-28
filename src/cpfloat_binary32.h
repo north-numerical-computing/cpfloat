@@ -285,6 +285,7 @@ static inline int cpf_fmaf(float *X, const float *A, const float *B,
 #define FRACMASK 0x007FFFFFU
 
 #ifdef PCG_VARIANTS_H_INCLUDED
+#define MAXRAND 0xFFFFFFFFU
 #define INITRAND(seed) pcg32_srandom_r(seed, time(NULL), (intptr_t)seed);
 #define ADVANCERAND(seed, thread, nloc)                                        \
   pcg32_advance_r(seed, thread * nloc - 1);
@@ -293,6 +294,7 @@ static inline int cpf_fmaf(float *X, const float *A, const float *B,
 #warning "The default C random number generator is being used."
 #warning "Please compile with -include <path-to-pcg_variants.h>"
 #warning "and link with -L <path-to-libpcg_random.a> -lpcg_random."
+#define MAXRAND 0x7FFFFFFFU
 #define INITRAND(seed) *seed = time(NULL);
 #define GEN_SINGLE_RAND(seed) ((INTTYPE)rand_r((unsigned int *)seed))
 #endif /* #ifndef PCG_VARIANTS_H_INCLUDED */

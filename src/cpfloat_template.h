@@ -244,7 +244,7 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
     retval = -4;
 
   /* Return 5 if p is required but is not a valid probability. */
-  if (fpopts->flip == CPFLOAT_SOFTERR && (fpopts->p > 1 || fpopts->p < 0))
+  if (fpopts->flip != CPFLOAT_NO_SOFTERR && (fpopts->p > 1 || fpopts->p < 0))
     return 5;
 
   /* Return 0 or warning value. */
@@ -741,12 +741,19 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define ADD_BITFLIP_CODE(BITFLIP_CODE) ADD_BITFLIP_CODE_##BITFLIP_CODE
 #define ADD_BITFLIP_CODE_NO_BITFLIP(PARALLEL_TYPE, X)
 #define ADD_BITFLIP_CODE_INTRODUCE_BITFLIP(PARALLEL_TYPE, X)                   \
-  /* Introduce bit flips. */                                                   \
-  if (fpopts->flip == CPFLOAT_SOFTERR) {                                       \
+  /* Introduce bit flips anywhere in the binary representation. */             \
+  if (fpopts->flip != CPFLOAT_NO_SOFTERR) {                                    \
+    PRNG_RAND_INIT                                                             \
+    size_t flippos;                                                            \
+    const size_t totbits = fpopts->flip == CPFLOAT_FP_SOFTERR ?                \
+                             NBITS : DEFPREC;                                  \
     FOR_STRING(PARALLEL_TYPE)                                                  \
     for (size_t i = 0; i < numelem; i++) {                                     \
-      if (rand() / (FPTYPE)RAND_MAX < fpopts->p) {                             \
-        *(X) = FPOF(INTOF(X) ^ (INTCONST(1) << rand() % (DEFPREC - 1)));       \
+      UPDATE_LOCAL_PARAMS(X+i, &params, &lp);                                  \
+      size_t tailbits = DEFPREC - lp.precision;                                \
+      if (GENRAND(fpopts->RANDSEED) / (FPTYPE)MAXRAND < fpopts->p) {           \
+        flippos = GENRAND(fpopts->RANDSEED) % (totbits - tailbits) + tailbits; \
+        *(X) = FPOF(INTOF(X) ^ INTCONST(1) << flippos);                        \
       }                                                                        \
     }                                                                          \
   }
@@ -1452,12 +1459,12 @@ GENERATE_TRIVARIATE_MATH_H(fma, fma)
 #undef EXPMASK
 #undef FRACMASK
 
-#ifdef PCG_VARIANTS_H_INCLUDED
+#undef MAXRAND
 #undef INITRAND
+#ifdef PCG_VARIANTS_H_INCLUDED
 #undef ADVANCERAND
 #undef GENRAND
 #else /* #ifdef PCG_VARIANTS_H_INCLUDED */
-#undef INITRAND
 #undef GEN_SINGLE_RAND
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
 
