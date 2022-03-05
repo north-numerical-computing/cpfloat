@@ -1,6 +1,6 @@
 #! /bin/zsh
 
-VERSION='0.3.0'
+VERSION='0.4.0'
 
 # Compute package hash using spdx-tools.
 CURL=curl
@@ -87,7 +87,7 @@ for file in `find .`; do
         esac
         echo "FileChecksum: SHA1: `shasum -a 1 $file | \
                                       awk -F ' ' '{print $1}'`"
-        echo "FileChecksum: MD5: `md5 $file | awk -F ' ' '{print $4}'`"
+        echo "FileChecksum: MD5: `md5sum $file | awk -F ' ' '{print $1}'`"
         echo "LicenseConcluded: LGPL-2.1-or-later"
         LICENSE=`grep "SPDX-License-Identifier" $file | \
                       awk -F ' ' '{printf $3}'`
