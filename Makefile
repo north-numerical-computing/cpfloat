@@ -4,7 +4,7 @@
 ROOTDIR=$(shell pwd)
 INCDIR=$(ROOTDIR)/include/
 SRCDIR=$(ROOTDIR)/src/
-DOCDIR=$(ROOTDIR)/doc/
+DOCDIR=$(ROOTDIR)/docs/
 MEXDIR=$(ROOTDIR)/mex/
 EXAMPLEDIR=$(ROOTDIR)/examples/
 TESTDIR=$(ROOTDIR)/test/
@@ -30,6 +30,7 @@ CXX:=g++
 CCOV:=gcov
 
 DOXYGEN:=doxygen
+SPHINXBUILD:=sphinx-build
 GIT:=git
 MATLAB:=matlab -nodesktop -nosplash
 OCTAVE:=octave
@@ -137,7 +138,9 @@ otest: mexoct
 	$(OCTAVE) --eval $(OTESTSTRING)
 
 docs:
-	$(DOXYGEN) doc/Doxyfile
+	$(DOXYGEN) -g $(DOCDIR)Doxyfile
+	$(DOXYGEN) $(DOCDIR)Doxyfile-project
+	$(SPHINXBUILD) -M html "$(DOCDIR)source" "$(DOCDIR)"
 
 coverage: init ctestsrc
 	$(CC) $(CFLAGS) $(CCOVFLAGS) -o $(TESTDIR)cpfloat_test \
@@ -222,8 +225,8 @@ clean_experiments:
 
 
 
-.PHONY: cleanall clean cleandep cleantest cleancoverage cleandoc cleandat
-cleanall: clean cleandep cleantest cleancoverage cleandoc cleandat
+.PHONY: cleanall clean cleandep cleantest cleancoverage cleandocs cleandat
+cleanall: clean cleandep cleantest cleancoverage cleandocs cleandat
 
 clean:
 	$(RM) $(BINDIR)*
@@ -237,8 +240,9 @@ cleantest:
 cleancoverage:
 	$(RM) cpfloat_test.c cpfloat_test.log *.gcno *.gcda *.gcov
 
-cleandoc:
-	$(RM) -r $(DOCDIR)html/* $(DOCDIR)latex/*
+cleandocs:
+	$(RM) -r $(DOCDIR)Doxyfile $(DOCDIR)xml
+	$(RM) -r $(DOCDIR)html $(DOCDIR)source/cpfloat
 
 cleandat:
 	$(RM) $(DATDIR)*

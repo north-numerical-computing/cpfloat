@@ -1,0 +1,22 @@
+@INCLUDE                = "./docs/Doxyfile"
+GENERATE_HTML           = NO
+GENERATE_LATEX          = NO
+GENERATE_XML            = YES
+XML_PROGRAMLISTING      = NO
+
+# Project configuration.
+PROJECT_NAME           = "CPFloat"
+PROJECT_NUMBER         = "0.4.0"
+PROJECT_BRIEF          = "Custom precision floating-point numbers"
+OUTPUT_DIRECTORY       = "./docs/"
+
+# Inputs
+INPUT                  = ./src/cpfloat_definitions.h \
+                         ./src/cpfloat_binary32.h \
+                         ./src/cpfloat_binary64.h
+RECURSIVE              = NO
+
+# Options
+EXTENSION_MAPPING      = h=C
+MACRO_EXPANSION        = YES
+OPTIMIZE_OUTPUT_FOR_C  = YES

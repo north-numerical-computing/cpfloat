@@ -111,6 +111,7 @@ typedef enum {
 
 } cpfloat_softerr_t;
 
+/** @cond */
 #ifdef PCG_VARIANTS_H_INCLUDED
 #define CPFLOAT_BITSEEDTYPE pcg32_random_t
 #define CPFLOAT_RANDSEEDTYPEF pcg32_random_t
@@ -120,6 +121,7 @@ typedef enum {
 #define CPFLOAT_RANDSEEDTYPEF size_t
 #define CPFLOAT_RANDSEEDTYPE size_t
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
+/** @endcond */
 
 /**
  * @brief Internal state of the pseudo-random bit generator.
@@ -291,6 +293,14 @@ typedef struct {
   cpfloat_randseed_t *randseed;
 } optstruct;
 
+/** \
+ @brief Allocate @ref optstruct struct to store parameters of target format. \
+ \
+ @details This function allocates and initializes an @ref optstruct struct. \
+ \
+ @return The function returns a pointer to the allocated memory if the \
+ execution was successful, and @b NULL otherwise.<p/>\
+ */
 optstruct *init_optstruct() {
   optstruct *fpopts = malloc(sizeof(*fpopts));
   fpopts->bitseed = NULL;
@@ -299,10 +309,26 @@ optstruct *init_optstruct() {
   return fpopts;
 }
 
+/** \
+ @brief Free the memory underlying an @ref optstruct struct. \
+ \
+ @details This function attempts to free all the memory used by @p fpopts. \
+ \
+ @param[in] fpopts Pointer to @ref optstruct struct to be deallocated.
+ \
+ @return The function returns @p 0 if the unless @p fpopts is set to @p NULL, \
+ in which case it return @p -1.<p/>\
+ */
 int free_optstruct(optstruct *fpopts) {
-  if(fpopts == NULL)
+  if (fpopts == NULL)
     return -1;
   else {
+    if (fpopts->bitseed != NULL)
+      free(fpopts->bitseed);
+    if (fpopts->randseedf != NULL)
+      free(fpopts->randseedf);
+    if (fpopts->randseed != NULL)
+      free(fpopts->randseed);
     free(fpopts);
     return 0;
   }
