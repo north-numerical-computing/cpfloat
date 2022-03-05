@@ -1,3 +1,6 @@
+/* SPDX-FileCopyrightText: 2020 Massimiliano Fasi and Mantas Mikaitis */
+/* SPDX-License-Identifier: LGPL-2.1-or-later                         */
+
 /**
  * @file cpfloat_threshold_binary64.h
  * @brief Size of smallest `double` array on which to use multiple OpenMP threads.

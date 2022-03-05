@@ -118,7 +118,9 @@ int main() {
   printf("Test using %d OpenMP threads.\n", maxnumthreads);
 
   char docstring [] =
-    "/**\n"
+    "/* SPDX-FileCopyrightText: 2020 Massimiliano Fasi and Mantas Mikaitis */\n"
+    "/* SPDX-License-Identifier: LGPL-2.1-or-later                         */\n"
+    "\n/**\n"
     " * @file %s_threshold_%s.h\n"
     " * @brief Size of smallest `%s` array on which to use"
     " multiple OpenMP threads.\n"
