@@ -1,0 +1,23 @@
+name: Build and deploty eploy documentation
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+      - uses: actions/checkout@master
+
+      - name: Install and Build
+        run: |
+          sudo apt install -y doxygen graphviz
+          pip install sphinx sphinx_rtd_theme breathe exhale m2r2
+          make docs
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: docs/html
