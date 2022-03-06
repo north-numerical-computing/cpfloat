@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1ad0a26c05644b934296fae7d9ef8c1d2a:
+
+Function cpf_exp2
+=================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_exp2(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

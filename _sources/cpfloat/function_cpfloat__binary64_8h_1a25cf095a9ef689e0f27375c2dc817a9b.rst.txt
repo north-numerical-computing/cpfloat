@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a25cf095a9ef689e0f27375c2dc817a9b:
+
+Function cpf_fma
+================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_fma(double *, const double *, const double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

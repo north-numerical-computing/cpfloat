@@ -1,0 +1,14 @@
+.. _exhale_enum_cpfloat__definitions_8h_1a9f79e24cc89b42b57e660ceea5b6e113:
+
+Enum cpfloat_rounding_t
+=======================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: cpfloat_rounding_t
+   :project: CPFloat

@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a0bf4fe7e7903f30043cce02fbf443cf0:
+
+Function cpf_round
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_round(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

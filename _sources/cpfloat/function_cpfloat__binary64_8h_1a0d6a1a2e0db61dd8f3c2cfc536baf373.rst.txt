@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a0d6a1a2e0db61dd8f3c2cfc536baf373:
+
+Function cpf_trunc
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_trunc(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

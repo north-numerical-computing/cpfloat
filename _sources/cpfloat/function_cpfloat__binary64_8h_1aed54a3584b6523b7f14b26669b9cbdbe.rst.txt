@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1aed54a3584b6523b7f14b26669b9cbdbe:
+
+Function cpf_scalbn
+===================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_scalbn(double *, const double *, const int *, const size_t, optstruct *)
+   :project: CPFloat

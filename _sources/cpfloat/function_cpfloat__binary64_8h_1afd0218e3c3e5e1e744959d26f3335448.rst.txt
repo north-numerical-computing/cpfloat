@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1afd0218e3c3e5e1e744959d26f3335448:
+
+Function cpf_isfinite
+=====================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_isfinite(int *, const double *, const size_t, optstruct *)
+   :project: CPFloat

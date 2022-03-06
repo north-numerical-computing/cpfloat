@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a96b9a0679ebfe724ae15ad96647bc246:
+
+Function cpfloat
+================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpfloat(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

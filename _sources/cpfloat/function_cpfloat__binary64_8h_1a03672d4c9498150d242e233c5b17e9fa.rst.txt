@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a03672d4c9498150d242e233c5b17e9fa:
+
+Function cpf_nearbyint
+======================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_nearbyint(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

@@ -1,0 +1,14 @@
+.. _exhale_enum_cpfloat__definitions_8h_1af95a89ad20a60b1697bec7d008d39a91:
+
+Enum cpfloat_softerr_t
+======================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: cpfloat_softerr_t
+   :project: CPFloat

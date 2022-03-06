@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enum cpfloat_subnormal_t &mdash; CPFloat latest documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Function cpf_acos" href="function_cpfloat__binary64_8h_1a6ed96d685fbf9216cc68e3151d5a8992.html" />
+    <link rel="prev" title="Enum cpfloat_softerr_t" href="enum_cpfloat__definitions_8h_1af95a89ad20a60b1697bec7d008d39a91.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CPFloat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">CPFloat documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">CPFloat: Custom-Precision Floating-point numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#experiments">Experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#id9">Licensing information</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cpfloat_root.html">CPFloat API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpfloat_root.html#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpfloat_root.html#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cpfloat_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cpfloat_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="cpfloat_root.html#enums">Enums</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="enum_cpfloat__definitions_8h_1a9d6b6ecb3dadc890bbb77bd737507847.html">Enum cpfloat_explim_t</a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_cpfloat__definitions_8h_1a9f79e24cc89b42b57e660ceea5b6e113.html">Enum cpfloat_rounding_t</a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_cpfloat__definitions_8h_1af95a89ad20a60b1697bec7d008d39a91.html">Enum cpfloat_softerr_t</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Enum cpfloat_subnormal_t</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpfloat_root.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpfloat_root.html#defines">Defines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpfloat_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPFloat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="cpfloat_root.html">CPFloat API</a> &raquo;</li>
+      <li>Enum cpfloat_subnormal_t</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpfloat/enum_cpfloat__definitions_8h_1a19fe474041e378986b36e30c95900573.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="enum-cpfloat-subnormal-t">
+<span id="exhale-enum-cpfloat-definitions-8h-1a19fe474041e378986b36e30c95900573"></span><h1>Enum cpfloat_subnormal_t<a class="headerlink" href="#enum-cpfloat-subnormal-t" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_cpfloat_definitions.h.html#file-src-cpfloat-definitions-h"><span class="std std-ref">File cpfloat_definitions.h</span></a></p></li>
+</ul>
+<section id="enum-documentation">
+<h2>Enum Documentation<a class="headerlink" href="#enum-documentation" title="Permalink to this headline"></a></h2>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv419cpfloat_subnormal_t">
+<span id="_CPPv319cpfloat_subnormal_t"></span><span id="_CPPv219cpfloat_subnormal_t"></span><span class="target" id="cpfloat__definitions_8h_1a19fe474041e378986b36e30c95900573"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cpfloat_subnormal_t</span></span></span><a class="headerlink" href="#_CPPv419cpfloat_subnormal_t" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Subnormal support modes available in CPFloat. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N19cpfloat_subnormal_t16CPFLOAT_SUBN_RNDE">
+<span id="_CPPv3N19cpfloat_subnormal_t16CPFLOAT_SUBN_RNDE"></span><span id="_CPPv2N19cpfloat_subnormal_t16CPFLOAT_SUBN_RNDE"></span><span class="target" id="cpfloat__definitions_8h_1a19fe474041e378986b36e30c95900573a7c6eebddf911f0d2986c019aecee4b5f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CPFLOAT_SUBN_RND</span></span></span><a class="headerlink" href="#_CPPv4N19cpfloat_subnormal_t16CPFLOAT_SUBN_RNDE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Round subnormal numbers using current rounding mode. </p>
+</dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N19cpfloat_subnormal_t16CPFLOAT_SUBN_USEE">
+<span id="_CPPv3N19cpfloat_subnormal_t16CPFLOAT_SUBN_USEE"></span><span id="_CPPv2N19cpfloat_subnormal_t16CPFLOAT_SUBN_USEE"></span><span class="target" id="cpfloat__definitions_8h_1a19fe474041e378986b36e30c95900573a9503246ffad16a3969c30713dddf4bf2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CPFLOAT_SUBN_USE</span></span></span><a class="headerlink" href="#_CPPv4N19cpfloat_subnormal_t16CPFLOAT_SUBN_USEE" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Support storage of subnormal numbers. </p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="enum_cpfloat__definitions_8h_1af95a89ad20a60b1697bec7d008d39a91.html" class="btn btn-neutral float-left" title="Enum cpfloat_softerr_t" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="function_cpfloat__binary64_8h_1a6ed96d685fbf9216cc68e3151d5a8992.html" class="btn btn-neutral float-right" title="Function cpf_acos" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Massimiliano Fasi and Mantas Mikaitis.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

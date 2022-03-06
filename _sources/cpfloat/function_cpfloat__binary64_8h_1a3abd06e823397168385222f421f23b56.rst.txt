@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a3abd06e823397168385222f421f23b56:
+
+Function cpf_ceil
+=================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_ceil(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

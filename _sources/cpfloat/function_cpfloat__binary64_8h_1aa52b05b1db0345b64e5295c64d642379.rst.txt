@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1aa52b05b1db0345b64e5295c64d642379:
+
+Function cpf_copysign
+=====================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_copysign(double *, const double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

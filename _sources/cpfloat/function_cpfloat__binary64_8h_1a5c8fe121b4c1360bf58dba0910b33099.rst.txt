@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a5c8fe121b4c1360bf58dba0910b33099:
+
+Function cpf_atanh
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_atanh(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

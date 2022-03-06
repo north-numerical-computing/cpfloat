@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Function cpf_nearbyint &mdash; CPFloat latest documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Function cpf_nearbyintf" href="function_cpfloat__binary32_8h_1a6bfa9ad6658bd8f04cb8d180ac5f9535.html" />
+    <link rel="prev" title="Function cpf_mulf" href="function_cpfloat__binary32_8h_1a55469d7c106bb345745a38935597fdd8.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CPFloat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">CPFloat documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">CPFloat: Custom-Precision Floating-point numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#experiments">Experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#id9">Licensing information</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cpfloat_root.html">CPFloat API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpfloat_root.html#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpfloat_root.html#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cpfloat_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cpfloat_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpfloat_root.html#enums">Enums</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="cpfloat_root.html#functions">Functions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a6ed96d685fbf9216cc68e3151d5a8992.html">Function cpf_acos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a40566fde0120452b1d99a6810293edea.html">Function cpf_acosf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1aae599f693c8b66088777ef2e56b5d672.html">Function cpf_acosh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a1e20ef853c25adc93ac41ea9c83bd216.html">Function cpf_acoshf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ad697f0bc5b78182729c1e73c67f3f3db.html">Function cpf_add</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a6cd8e140c774c87dacfc632568e66f6a.html">Function cpf_addf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1af3b59ed422b215b7bbb55d894c3187ac.html">Function cpf_asin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1acb652175c8d29ad44ecca182813116ba.html">Function cpf_asinf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a66b3e4d9c3c78a25b3f4c8a7922a7195.html">Function cpf_asinh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a2f9499ce5846b4efb64f339bb56a56f6.html">Function cpf_asinhf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a93383f6ded96e5f9d1bccee04256fc9c.html">Function cpf_atan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ac955ebd441b68a6aa8ada8ffcfb9914d.html">Function cpf_atan2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1af6f38eac4b377dd41486ab86f81c3a9b.html">Function cpf_atan2f</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a6319a2256ffae8e6ffbdb8646f68af59.html">Function cpf_atanf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a5c8fe121b4c1360bf58dba0910b33099.html">Function cpf_atanh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1aaf0fa14e3741c9f8d7021a07a3bcf622.html">Function cpf_atanhf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ac5f770a8f2733062d464728e9657f35c.html">Function cpf_cbrt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a53b4f14a70ceeeee4940db2c40afb258.html">Function cpf_cbrtf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a3abd06e823397168385222f421f23b56.html">Function cpf_ceil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1adcb29626a38c2581ca8c723788c298c3.html">Function cpf_ceilf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1aa52b05b1db0345b64e5295c64d642379.html">Function cpf_copysign</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a6be9cf6b8868ac42ae8acd6fc7ae3b08.html">Function cpf_copysignf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a9501da5447e7312008fdb9de9afa0c22.html">Function cpf_cos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a0bbdd99e313c5e5641ddc4930a27fa6e.html">Function cpf_cosf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a414ed4ba81c18da6cc193b78bf9b74a5.html">Function cpf_cosh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ad7bf1bf45fb131defdf139afc9e24039.html">Function cpf_coshf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ad248d49c009940f112bb2d20d20eaa68.html">Function cpf_div</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a167f287f9a25c35f53a1076212d3f28b.html">Function cpf_divf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a58fde02b57376b569d8040477bb2cfa7.html">Function cpf_erf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1acf7e9334dc4641f0acd85dc15e76799c.html">Function cpf_erfc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a9c2beddd7e5ba30005d6629f733f8d67.html">Function cpf_erfcf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a089a76d5591d7ab60dcb013fda8b601f.html">Function cpf_erff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ad3004345506dfa249d07556399841f7d.html">Function cpf_exp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ad0a26c05644b934296fae7d9ef8c1d2a.html">Function cpf_exp2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a71b363b5861b8e6d015a194c3f55c78c.html">Function cpf_exp2f</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a7553025b8ad5533b95d5f373f7507384.html">Function cpf_expf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1aab0b20f9e88df3153d2dec79cd5e8308.html">Function cpf_expm1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1af60133d1097e0e6dd48ceb1d7778c955.html">Function cpf_expm1f</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a65a5a00a4319bd821ab2d0c5f2a973a0.html">Function cpf_fabs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a0a697f9645a62781f202ec3d41430982.html">Function cpf_fabsf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a748408b7fcfd10975fbea84e9464367d.html">Function cpf_fdim</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a5af83565177316e7a4c2a8467195666d.html">Function cpf_fdimf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a3797decc6ad539d13688b184ffdd3d26.html">Function cpf_floor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1af317756151f8e0d8e472ca9298d26e35.html">Function cpf_floorf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a25cf095a9ef689e0f27375c2dc817a9b.html">Function cpf_fma</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a6d62b00b86aec804bea165639389620a.html">Function cpf_fmaf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1abce349f21bf9f8ce915ecc1d891f695d.html">Function cpf_fmax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a8331e592c12d08afffa495dcd2c2c3b6.html">Function cpf_fmaxf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a524bf21345084c78ff4ca85b9fe71cb3.html">Function cpf_fmin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ab68254ae7beb57eac1c6de6e24870975.html">Function cpf_fminf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a5bc740a8b59f739f43466dfba2491a84.html">Function cpf_fpclassify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a4d95ee12617fff36c9dab79f8ff4918b.html">Function cpf_fpclassifyf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a5e58552e4eae406cdb9c1d9a5ea17ceb.html">Function cpf_fpround</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ac99ff08fc4433edd351042ce7c8899a8.html">Function cpf_fproundf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1add0f439c6e1e564950465a608ad13f84.html">Function cpf_frexp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ac01ddf1fb4c996791fc705135d58a213.html">Function cpf_frexpf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a96230f2586f3b9f3ea5c58206222fdb1.html">Function cpf_hypot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ac455a2e8aeba249b76ba254954781e4c.html">Function cpf_hypotf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ac1914590ea49ddbf1f8663804550815f.html">Function cpf_ilogb</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ad1433c738030584287771015a4265b87.html">Function cpf_ilogbf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1afd0218e3c3e5e1e744959d26f3335448.html">Function cpf_isfinite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ae315ee6157ad4c393e442ff91ed57ee4.html">Function cpf_isfinitef</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ae11d1ca8b0d7d018171df8559e8b409e.html">Function cpf_isinf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a972c8fe061804a6ad225a8d4b75c2f76.html">Function cpf_isinff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1aa3a7fd5d7becad4708a605adf3f64bcf.html">Function cpf_isnan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ac5642dd9bac91bb94e5a5bffa81ff8b6.html">Function cpf_isnanf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a034289374a89ca91226b1dc126cdd035.html">Function cpf_isnormal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1aaed4a250d2d6884b3d40bcc10c0cd715.html">Function cpf_isnormalf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1aa2c320269517412bd6342cb3fcbbe5c7.html">Function cpf_ldexp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a39d185377069cbda8ee13627e5664a69.html">Function cpf_ldexpf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ace9ba7f3dae49e2dce74508a6dcf9787.html">Function cpf_lgamma</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1abde2759f4f62554f453957079293c877.html">Function cpf_lgammaf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a169da198dade03a6c86908b8f4c5e76e.html">Function cpf_llrint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a7f242c671b3961385afc6eaff7441939.html">Function cpf_llrintf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a1e34aa7c12db136452055fdb64f5f7d7.html">Function cpf_llround</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a4b2c6abf629d8c2ac94a2d942621b851.html">Function cpf_llroundf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1affd1c26e36fbebe4afd83e2818f3bb15.html">Function cpf_log</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a983d112870c0c898ac8ba50f6dfea5dd.html">Function cpf_log10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1aa0cf1e6dd57ff75a21cbc384f5798073.html">Function cpf_log10f</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a5a6ff04bcb43c9d6baca0e4459d4455d.html">Function cpf_log1p</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a0e490790240cb35ea27675e307fb10ca.html">Function cpf_log1pf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a1efdb4c7cede14f0ea8c8d7c51692bf2.html">Function cpf_log2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a0bc15569c1b6138080a033df9ebced60.html">Function cpf_log2f</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a1877565a0f1b314769513117df1c1ff0.html">Function cpf_logf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a49bbb1528f3158fe6b924da4b4bb0eda.html">Function cpf_lrint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a3629a7ae160baba601570beca2a2af16.html">Function cpf_lrintf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a2c90fb08d0bd11dc4509a4bbb6d0bd0d.html">Function cpf_lround</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ab1a0f0d604b203f2694c178df3a9f8c6.html">Function cpf_lroundf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a9831276b5f02bf49a33528d865fd68a2.html">Function cpf_modf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a4c06557f4e81b9b280caa524236dd44b.html">Function cpf_modff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a22531ffa5521d9f14eeb1205627a632e.html">Function cpf_mul</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a55469d7c106bb345745a38935597fdd8.html">Function cpf_mulf</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Function cpf_nearbyint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a6bfa9ad6658bd8f04cb8d180ac5f9535.html">Function cpf_nearbyintf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1aa360337534c179f91409996c4830bfff.html">Function cpf_nextafter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a8d3b234665d278831b14390bb4280c53.html">Function cpf_nextafterf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ac243f32a7c3bed64efbdf65638d5e41b.html">Function cpf_nexttoward</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a54e465fc20b0956da57419a5327e1b7f.html">Function cpf_nexttowardf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a48c2d916b21c6a86c7b32aa6f198ad12.html">Function cpf_pow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a8cd372f7c58699d41cf35cc159fa841a.html">Function cpf_powf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a955eebc2a6433725c26111b42ce5964c.html">Function cpf_remainder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a71748654de127f9b477281702d7fef14.html">Function cpf_remainderf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1aa959577431e45ed6552ec46a32886bd1.html">Function cpf_remquo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ae65afe522528ae686dd91f0f945d907b.html">Function cpf_remquof</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1abde12a510811a571df69a4909a2a3229.html">Function cpf_rint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a03dfe8e8da1b2973a5c12b6d9c185a74.html">Function cpf_rintf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a0bf4fe7e7903f30043cce02fbf443cf0.html">Function cpf_round</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1aefadf99c4aeae221187eaf052fba3d25.html">Function cpf_roundf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a046b8ccbe0d6005cad5ff24d1128496d.html">Function cpf_scalbln</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1aa8530f26a31a2ac83ce8e81e5fc734dc.html">Function cpf_scalblnf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1aed54a3584b6523b7f14b26669b9cbdbe.html">Function cpf_scalbn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ac1ed1245b836b85af0889b438b9355cf.html">Function cpf_scalbnf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a69ee24c64b1656a1268ba79e8040ff48.html">Function cpf_sin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a3ea6ff3ea53a0037398bf7efbe1b402d.html">Function cpf_sinf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a3d43576d3a6719083db218aa8cd659c2.html">Function cpf_sinh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1afd0dc4d9afec5c40ac872400f85af34c.html">Function cpf_sinhf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1aaa748eb5e746e78600c40d77df957419.html">Function cpf_sqrt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a9722a159e824f3d0b0b48cb10f21cc94.html">Function cpf_sqrtf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a48a47c67ea5b778170c27d33d9bbecef.html">Function cpf_sub</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a3ad83b09ac0600de26226efcd0b9e49e.html">Function cpf_subf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a2fec1becf0d2c16814a843d80c28314f.html">Function cpf_tan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a38199446fcb04e15ef41175801e8476e.html">Function cpf_tanf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a3e34e3a711f153c5cf95fb086e73475e.html">Function cpf_tanh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a358bc60a128bc5a9c87c019b3fea2740.html">Function cpf_tanhf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ae395d18e33d74c9de8eec1681b290324.html">Function cpf_tgamma</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1ac61be2d5954b3265c4f8d27860e934a5.html">Function cpf_tgammaf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a0d6a1a2e0db61dd8f3c2cfc536baf373.html">Function cpf_trunc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a56315cb8af6812c8df4f1a38fda36534.html">Function cpf_truncf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a96b9a0679ebfe724ae15ad96647bc246.html">Function cpfloat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a9ffc7d3972e0a89b165c1ec70a7b5da0.html">Function cpfloat_validate_optstruct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a8eaac34cedf63a1415eb5c71fa5ce939.html">Function cpfloat_validate_optstructf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a955f8bb4cb9e417a1dbb3034c1c2e0c5.html">Function cpfloatf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__definitions_8h_1a0fb8844dbe1ea4065b71c69d94b04cd5.html">Function free_optstruct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__definitions_8h_1aa86db17fe733cb8a909f4ff8441e1d8f.html">Function init_optstruct</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpfloat_root.html#defines">Defines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpfloat_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPFloat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="cpfloat_root.html">CPFloat API</a> &raquo;</li>
+      <li>Function cpf_nearbyint</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpfloat/function_cpfloat__binary64_8h_1a03672d4c9498150d242e233c5b17e9fa.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="function-cpf-nearbyint">
+<span id="exhale-function-cpfloat-binary64-8h-1a03672d4c9498150d242e233c5b17e9fa"></span><h1>Function cpf_nearbyint<a class="headerlink" href="#function-cpf-nearbyint" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_src_cpfloat_binary64.h.html#file-src-cpfloat-binary64-h"><span class="std std-ref">File cpfloat_binary64.h</span></a></p></li>
+</ul>
+<section id="function-documentation">
+<h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Permalink to this headline"></a></h2>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413cpf_nearbyintPdPKdK6size_tP9optstruct">
+<span id="_CPPv313cpf_nearbyintPdPKdK6size_tP9optstruct"></span><span id="_CPPv213cpf_nearbyintPdPKdK6size_tP9optstruct"></span><span id="cpf_nearbyint__doubleP.doubleCP.sC.optstructP"></span><span class="target" id="cpfloat__binary64_8h_1a03672d4c9498150d242e233c5b17e9fa"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cpf_nearbyint</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">X</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">A</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">numelem</span></span>, <a class="reference internal" href="structoptstruct.html#_CPPv49optstruct" title="optstruct"><span class="n"><span class="pre">optstruct</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fpopts</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413cpf_nearbyintPdPKdK6size_tP9optstruct" title="Permalink to this definition"></a><br /></dt>
+<dd><p>Compute the closest integer with specified rounding mode. </p>
+<p>If the function executes without errors, then <code class="docutils literal notranslate"><span class="pre">X</span></code>[i] is the integral part of <code class="docutils literal notranslate"><span class="pre">A</span></code>[i] rounded to lower-precision target format. The parameters of the target format and the rounding mode to be used are encoded in <code class="docutils literal notranslate"><span class="pre">fpopts</span></code>. If required, the function flips one bit in some of the entries of <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
+<p>If OpenMP support is specified at compile time, several OpenMP threads are used if <code class="docutils literal notranslate"><span class="pre">numelem</span></code> is large enough. This parameter is machine dependent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – <strong>[out]</strong> Array of rounded values.</p></li>
+<li><p><strong>A</strong> – <strong>[in]</strong> Input array.</p></li>
+<li><p><strong>numelem</strong> – <strong>[in]</strong> Number of elements in <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+<li><p><strong>fpopts</strong> – <strong>[in]</strong> Parameters describing the target format, the rounding mode, and the probability of soft errors striking the rounded values. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The function returns <strong>1</strong> if <code class="docutils literal notranslate"><span class="pre">fpopts-&gt;precision</span></code> is larger than PMAX , <strong>2</strong> if <code class="docutils literal notranslate"><span class="pre">fpopts-&gt;emax</span></code> is larger than EMAX , and <strong>0</strong> otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="function_cpfloat__binary32_8h_1a55469d7c106bb345745a38935597fdd8.html" class="btn btn-neutral float-left" title="Function cpf_mulf" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="function_cpfloat__binary32_8h_1a6bfa9ad6658bd8f04cb8d180ac5f9535.html" class="btn btn-neutral float-right" title="Function cpf_nearbyintf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Massimiliano Fasi and Mantas Mikaitis.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

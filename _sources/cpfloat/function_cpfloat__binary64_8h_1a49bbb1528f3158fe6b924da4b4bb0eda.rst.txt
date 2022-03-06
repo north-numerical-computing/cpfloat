@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a49bbb1528f3158fe6b924da4b4bb0eda:
+
+Function cpf_lrint
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_lrint(long *, int *, const double *, const size_t, optstruct *)
+   :project: CPFloat

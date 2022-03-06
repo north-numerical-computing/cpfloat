@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1ace9ba7f3dae49e2dce74508a6dcf9787:
+
+Function cpf_lgamma
+===================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_lgamma(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

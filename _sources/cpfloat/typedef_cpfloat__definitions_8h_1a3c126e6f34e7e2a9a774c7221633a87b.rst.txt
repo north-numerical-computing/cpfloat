@@ -1,0 +1,14 @@
+.. _exhale_typedef_cpfloat__definitions_8h_1a3c126e6f34e7e2a9a774c7221633a87b:
+
+Typedef cpfloat_exponent_t
+==========================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: cpfloat_exponent_t
+   :project: CPFloat

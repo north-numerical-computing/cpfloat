@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a955eebc2a6433725c26111b42ce5964c:
+
+Function cpf_remainder
+======================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_remainder(double *, const double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a22531ffa5521d9f14eeb1205627a632e:
+
+Function cpf_mul
+================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_mul(double *, const double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

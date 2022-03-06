@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__definitions_8h_1a0fb8844dbe1ea4065b71c69d94b04cd5:
+
+Function free_optstruct
+=======================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: free_optstruct(optstruct *)
+   :project: CPFloat

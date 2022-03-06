@@ -1,0 +1,17 @@
+.. _exhale_struct_structoptstruct:
+
+Struct optstruct
+================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: optstruct
+   :project: CPFloat
+   :members:
+   :protected-members:
+   :undoc-members:

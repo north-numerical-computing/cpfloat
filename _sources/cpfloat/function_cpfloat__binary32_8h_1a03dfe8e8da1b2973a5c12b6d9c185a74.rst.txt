@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1a03dfe8e8da1b2973a5c12b6d9c185a74:
+
+Function cpf_rintf
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_rintf(float *, int *, const float *, const size_t, optstruct *)
+   :project: CPFloat

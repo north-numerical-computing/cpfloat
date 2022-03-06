@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1ac5f770a8f2733062d464728e9657f35c:
+
+Function cpf_cbrt
+=================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_cbrt(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

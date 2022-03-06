@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1a3ad83b09ac0600de26226efcd0b9e49e:
+
+Function cpf_subf
+=================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_subf(float *, const float *, const float *, const size_t, optstruct *)
+   :project: CPFloat

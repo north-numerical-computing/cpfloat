@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1ac01ddf1fb4c996791fc705135d58a213:
+
+Function cpf_frexpf
+===================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_frexpf(float *, int *, const float *, const size_t, optstruct *)
+   :project: CPFloat

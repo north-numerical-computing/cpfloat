@@ -1,0 +1,176 @@
+
+.. _file_src_cpfloat_binary64.h:
+
+File cpfloat_binary64.h
+=======================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+CPFloat functions for ``double`` arrays. 
+
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/cpfloat_binary64.h``)
+---------------------------------------
+
+
+
+
+
+
+Includes
+--------
+
+
+- ``cpfloat_definitions.h`` (:ref:`file_src_cpfloat_definitions.h`)
+
+- ``cpfloat_docmacros.h``
+
+
+
+
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a6ed96d685fbf9216cc68e3151d5a8992`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1aae599f693c8b66088777ef2e56b5d672`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ad697f0bc5b78182729c1e73c67f3f3db`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1af3b59ed422b215b7bbb55d894c3187ac`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a66b3e4d9c3c78a25b3f4c8a7922a7195`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a93383f6ded96e5f9d1bccee04256fc9c`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ac955ebd441b68a6aa8ada8ffcfb9914d`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a5c8fe121b4c1360bf58dba0910b33099`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ac5f770a8f2733062d464728e9657f35c`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a3abd06e823397168385222f421f23b56`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1aa52b05b1db0345b64e5295c64d642379`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a9501da5447e7312008fdb9de9afa0c22`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a414ed4ba81c18da6cc193b78bf9b74a5`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ad248d49c009940f112bb2d20d20eaa68`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a58fde02b57376b569d8040477bb2cfa7`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1acf7e9334dc4641f0acd85dc15e76799c`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ad3004345506dfa249d07556399841f7d`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ad0a26c05644b934296fae7d9ef8c1d2a`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1aab0b20f9e88df3153d2dec79cd5e8308`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a65a5a00a4319bd821ab2d0c5f2a973a0`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a748408b7fcfd10975fbea84e9464367d`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a3797decc6ad539d13688b184ffdd3d26`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a25cf095a9ef689e0f27375c2dc817a9b`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1abce349f21bf9f8ce915ecc1d891f695d`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a524bf21345084c78ff4ca85b9fe71cb3`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a5bc740a8b59f739f43466dfba2491a84`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a5e58552e4eae406cdb9c1d9a5ea17ceb`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1add0f439c6e1e564950465a608ad13f84`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a96230f2586f3b9f3ea5c58206222fdb1`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ac1914590ea49ddbf1f8663804550815f`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1afd0218e3c3e5e1e744959d26f3335448`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ae11d1ca8b0d7d018171df8559e8b409e`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1aa3a7fd5d7becad4708a605adf3f64bcf`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a034289374a89ca91226b1dc126cdd035`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1aa2c320269517412bd6342cb3fcbbe5c7`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ace9ba7f3dae49e2dce74508a6dcf9787`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a169da198dade03a6c86908b8f4c5e76e`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a1e34aa7c12db136452055fdb64f5f7d7`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1affd1c26e36fbebe4afd83e2818f3bb15`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a983d112870c0c898ac8ba50f6dfea5dd`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a5a6ff04bcb43c9d6baca0e4459d4455d`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a1efdb4c7cede14f0ea8c8d7c51692bf2`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a49bbb1528f3158fe6b924da4b4bb0eda`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a2c90fb08d0bd11dc4509a4bbb6d0bd0d`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a9831276b5f02bf49a33528d865fd68a2`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a22531ffa5521d9f14eeb1205627a632e`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a03672d4c9498150d242e233c5b17e9fa`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1aa360337534c179f91409996c4830bfff`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ac243f32a7c3bed64efbdf65638d5e41b`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a48c2d916b21c6a86c7b32aa6f198ad12`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a955eebc2a6433725c26111b42ce5964c`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1aa959577431e45ed6552ec46a32886bd1`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1abde12a510811a571df69a4909a2a3229`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a0bf4fe7e7903f30043cce02fbf443cf0`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a046b8ccbe0d6005cad5ff24d1128496d`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1aed54a3584b6523b7f14b26669b9cbdbe`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a69ee24c64b1656a1268ba79e8040ff48`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a3d43576d3a6719083db218aa8cd659c2`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1aaa748eb5e746e78600c40d77df957419`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a48a47c67ea5b778170c27d33d9bbecef`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a2fec1becf0d2c16814a843d80c28314f`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a3e34e3a711f153c5cf95fb086e73475e`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1ae395d18e33d74c9de8eec1681b290324`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a0d6a1a2e0db61dd8f3c2cfc536baf373`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a96b9a0679ebfe724ae15ad96647bc246`
+
+- :ref:`exhale_function_cpfloat__binary64_8h_1a9ffc7d3972e0a89b165c1ec70a7b5da0`
+

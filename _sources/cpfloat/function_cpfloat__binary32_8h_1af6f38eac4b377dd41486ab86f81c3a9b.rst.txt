@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1af6f38eac4b377dd41486ab86f81c3a9b:
+
+Function cpf_atan2f
+===================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_atan2f(float *, const float *, const float *, const size_t, optstruct *)
+   :project: CPFloat

@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__definitions_8h_1aa86db17fe733cb8a909f4ff8441e1d8f:
+
+Function init_optstruct
+=======================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: init_optstruct()
+   :project: CPFloat

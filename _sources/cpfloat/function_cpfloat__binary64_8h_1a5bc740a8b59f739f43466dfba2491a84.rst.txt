@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a5bc740a8b59f739f43466dfba2491a84:
+
+Function cpf_fpclassify
+=======================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_fpclassify(int *, const double *, const size_t, optstruct *)
+   :project: CPFloat

@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a9ffc7d3972e0a89b165c1ec70a7b5da0:
+
+Function cpfloat_validate_optstruct
+===================================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpfloat_validate_optstruct(const optstruct *)
+   :project: CPFloat

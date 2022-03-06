@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1a9722a159e824f3d0b0b48cb10f21cc94:
+
+Function cpf_sqrtf
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_sqrtf(float *, const float *, const size_t, optstruct *)
+   :project: CPFloat

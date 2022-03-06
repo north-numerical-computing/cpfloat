@@ -1,0 +1,14 @@
+.. _exhale_typedef_cpfloat__definitions_8h_1aa6d0354f2ee724040f2d558538cc8d33:
+
+Typedef cpfloat_precision_t
+===========================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: cpfloat_precision_t
+   :project: CPFloat

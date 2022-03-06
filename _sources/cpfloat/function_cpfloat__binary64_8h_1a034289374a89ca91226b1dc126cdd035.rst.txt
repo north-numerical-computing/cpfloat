@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a034289374a89ca91226b1dc126cdd035:
+
+Function cpf_isnormal
+=====================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_isnormal(int *, const double *, const size_t, optstruct *)
+   :project: CPFloat

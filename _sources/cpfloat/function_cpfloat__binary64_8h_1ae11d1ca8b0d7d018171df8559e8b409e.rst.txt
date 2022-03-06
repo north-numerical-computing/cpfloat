@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1ae11d1ca8b0d7d018171df8559e8b409e:
+
+Function cpf_isinf
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_isinf(int *, const double *, const size_t, optstruct *)
+   :project: CPFloat

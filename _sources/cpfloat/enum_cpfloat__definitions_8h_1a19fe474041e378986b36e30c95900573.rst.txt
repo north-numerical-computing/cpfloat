@@ -1,0 +1,14 @@
+.. _exhale_enum_cpfloat__definitions_8h_1a19fe474041e378986b36e30c95900573:
+
+Enum cpfloat_subnormal_t
+========================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: cpfloat_subnormal_t
+   :project: CPFloat

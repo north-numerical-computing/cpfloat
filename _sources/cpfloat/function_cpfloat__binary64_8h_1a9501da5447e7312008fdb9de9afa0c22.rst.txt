@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a9501da5447e7312008fdb9de9afa0c22:
+
+Function cpf_cos
+================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_cos(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

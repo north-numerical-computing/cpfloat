@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a414ed4ba81c18da6cc193b78bf9b74a5:
+
+Function cpf_cosh
+=================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_cosh(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

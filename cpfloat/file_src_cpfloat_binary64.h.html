@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File cpfloat_binary64.h &mdash; CPFloat latest documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> CPFloat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">CPFloat documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">CPFloat: Custom-Precision Floating-point numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#experiments">Experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#id9">Licensing information</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cpfloat_root.html">CPFloat API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPFloat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>File cpfloat_binary64.h</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpfloat/file_src_cpfloat_binary64.h.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-cpfloat-binary64-h">
+<span id="file-src-cpfloat-binary64-h"></span><h1>File cpfloat_binary64.h<a class="headerlink" href="#file-cpfloat-binary64-h" title="Permalink to this headline"></a></h1>
+<p>↰ <a class="reference internal" href="dir_src.html#dir-src"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">src</span></code>)</p>
+<p>CPFloat functions for <code class="docutils literal notranslate"><span class="pre">double</span></code> arrays.</p>
+<div class="contents local topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-src-cpfloat-binary64-h" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">src/cpfloat_binary64.h</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id3">Functions</a></p></li>
+</ul>
+</div>
+<section id="definition-src-cpfloat-binary64-h">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">src/cpfloat_binary64.h</span></code>)<a class="headerlink" href="#definition-src-cpfloat-binary64-h" title="Permalink to this headline"></a></h2>
+</section>
+<section id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cpfloat_definitions.h</span></code> (<a class="reference internal" href="file_src_cpfloat_definitions.h.html#file-src-cpfloat-definitions-h"><span class="std std-ref">File cpfloat_definitions.h</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cpfloat_docmacros.h</span></code></p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a6ed96d685fbf9216cc68e3151d5a8992.html#exhale-function-cpfloat-binary64-8h-1a6ed96d685fbf9216cc68e3151d5a8992"><span class="std std-ref">Function cpf_acos</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1aae599f693c8b66088777ef2e56b5d672.html#exhale-function-cpfloat-binary64-8h-1aae599f693c8b66088777ef2e56b5d672"><span class="std std-ref">Function cpf_acosh</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ad697f0bc5b78182729c1e73c67f3f3db.html#exhale-function-cpfloat-binary64-8h-1ad697f0bc5b78182729c1e73c67f3f3db"><span class="std std-ref">Function cpf_add</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1af3b59ed422b215b7bbb55d894c3187ac.html#exhale-function-cpfloat-binary64-8h-1af3b59ed422b215b7bbb55d894c3187ac"><span class="std std-ref">Function cpf_asin</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a66b3e4d9c3c78a25b3f4c8a7922a7195.html#exhale-function-cpfloat-binary64-8h-1a66b3e4d9c3c78a25b3f4c8a7922a7195"><span class="std std-ref">Function cpf_asinh</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a93383f6ded96e5f9d1bccee04256fc9c.html#exhale-function-cpfloat-binary64-8h-1a93383f6ded96e5f9d1bccee04256fc9c"><span class="std std-ref">Function cpf_atan</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ac955ebd441b68a6aa8ada8ffcfb9914d.html#exhale-function-cpfloat-binary64-8h-1ac955ebd441b68a6aa8ada8ffcfb9914d"><span class="std std-ref">Function cpf_atan2</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a5c8fe121b4c1360bf58dba0910b33099.html#exhale-function-cpfloat-binary64-8h-1a5c8fe121b4c1360bf58dba0910b33099"><span class="std std-ref">Function cpf_atanh</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ac5f770a8f2733062d464728e9657f35c.html#exhale-function-cpfloat-binary64-8h-1ac5f770a8f2733062d464728e9657f35c"><span class="std std-ref">Function cpf_cbrt</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a3abd06e823397168385222f421f23b56.html#exhale-function-cpfloat-binary64-8h-1a3abd06e823397168385222f421f23b56"><span class="std std-ref">Function cpf_ceil</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1aa52b05b1db0345b64e5295c64d642379.html#exhale-function-cpfloat-binary64-8h-1aa52b05b1db0345b64e5295c64d642379"><span class="std std-ref">Function cpf_copysign</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a9501da5447e7312008fdb9de9afa0c22.html#exhale-function-cpfloat-binary64-8h-1a9501da5447e7312008fdb9de9afa0c22"><span class="std std-ref">Function cpf_cos</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a414ed4ba81c18da6cc193b78bf9b74a5.html#exhale-function-cpfloat-binary64-8h-1a414ed4ba81c18da6cc193b78bf9b74a5"><span class="std std-ref">Function cpf_cosh</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ad248d49c009940f112bb2d20d20eaa68.html#exhale-function-cpfloat-binary64-8h-1ad248d49c009940f112bb2d20d20eaa68"><span class="std std-ref">Function cpf_div</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a58fde02b57376b569d8040477bb2cfa7.html#exhale-function-cpfloat-binary64-8h-1a58fde02b57376b569d8040477bb2cfa7"><span class="std std-ref">Function cpf_erf</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1acf7e9334dc4641f0acd85dc15e76799c.html#exhale-function-cpfloat-binary64-8h-1acf7e9334dc4641f0acd85dc15e76799c"><span class="std std-ref">Function cpf_erfc</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ad3004345506dfa249d07556399841f7d.html#exhale-function-cpfloat-binary64-8h-1ad3004345506dfa249d07556399841f7d"><span class="std std-ref">Function cpf_exp</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ad0a26c05644b934296fae7d9ef8c1d2a.html#exhale-function-cpfloat-binary64-8h-1ad0a26c05644b934296fae7d9ef8c1d2a"><span class="std std-ref">Function cpf_exp2</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1aab0b20f9e88df3153d2dec79cd5e8308.html#exhale-function-cpfloat-binary64-8h-1aab0b20f9e88df3153d2dec79cd5e8308"><span class="std std-ref">Function cpf_expm1</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a65a5a00a4319bd821ab2d0c5f2a973a0.html#exhale-function-cpfloat-binary64-8h-1a65a5a00a4319bd821ab2d0c5f2a973a0"><span class="std std-ref">Function cpf_fabs</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a748408b7fcfd10975fbea84e9464367d.html#exhale-function-cpfloat-binary64-8h-1a748408b7fcfd10975fbea84e9464367d"><span class="std std-ref">Function cpf_fdim</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a3797decc6ad539d13688b184ffdd3d26.html#exhale-function-cpfloat-binary64-8h-1a3797decc6ad539d13688b184ffdd3d26"><span class="std std-ref">Function cpf_floor</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a25cf095a9ef689e0f27375c2dc817a9b.html#exhale-function-cpfloat-binary64-8h-1a25cf095a9ef689e0f27375c2dc817a9b"><span class="std std-ref">Function cpf_fma</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1abce349f21bf9f8ce915ecc1d891f695d.html#exhale-function-cpfloat-binary64-8h-1abce349f21bf9f8ce915ecc1d891f695d"><span class="std std-ref">Function cpf_fmax</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a524bf21345084c78ff4ca85b9fe71cb3.html#exhale-function-cpfloat-binary64-8h-1a524bf21345084c78ff4ca85b9fe71cb3"><span class="std std-ref">Function cpf_fmin</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a5bc740a8b59f739f43466dfba2491a84.html#exhale-function-cpfloat-binary64-8h-1a5bc740a8b59f739f43466dfba2491a84"><span class="std std-ref">Function cpf_fpclassify</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a5e58552e4eae406cdb9c1d9a5ea17ceb.html#exhale-function-cpfloat-binary64-8h-1a5e58552e4eae406cdb9c1d9a5ea17ceb"><span class="std std-ref">Function cpf_fpround</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1add0f439c6e1e564950465a608ad13f84.html#exhale-function-cpfloat-binary64-8h-1add0f439c6e1e564950465a608ad13f84"><span class="std std-ref">Function cpf_frexp</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a96230f2586f3b9f3ea5c58206222fdb1.html#exhale-function-cpfloat-binary64-8h-1a96230f2586f3b9f3ea5c58206222fdb1"><span class="std std-ref">Function cpf_hypot</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ac1914590ea49ddbf1f8663804550815f.html#exhale-function-cpfloat-binary64-8h-1ac1914590ea49ddbf1f8663804550815f"><span class="std std-ref">Function cpf_ilogb</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1afd0218e3c3e5e1e744959d26f3335448.html#exhale-function-cpfloat-binary64-8h-1afd0218e3c3e5e1e744959d26f3335448"><span class="std std-ref">Function cpf_isfinite</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ae11d1ca8b0d7d018171df8559e8b409e.html#exhale-function-cpfloat-binary64-8h-1ae11d1ca8b0d7d018171df8559e8b409e"><span class="std std-ref">Function cpf_isinf</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1aa3a7fd5d7becad4708a605adf3f64bcf.html#exhale-function-cpfloat-binary64-8h-1aa3a7fd5d7becad4708a605adf3f64bcf"><span class="std std-ref">Function cpf_isnan</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a034289374a89ca91226b1dc126cdd035.html#exhale-function-cpfloat-binary64-8h-1a034289374a89ca91226b1dc126cdd035"><span class="std std-ref">Function cpf_isnormal</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1aa2c320269517412bd6342cb3fcbbe5c7.html#exhale-function-cpfloat-binary64-8h-1aa2c320269517412bd6342cb3fcbbe5c7"><span class="std std-ref">Function cpf_ldexp</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ace9ba7f3dae49e2dce74508a6dcf9787.html#exhale-function-cpfloat-binary64-8h-1ace9ba7f3dae49e2dce74508a6dcf9787"><span class="std std-ref">Function cpf_lgamma</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a169da198dade03a6c86908b8f4c5e76e.html#exhale-function-cpfloat-binary64-8h-1a169da198dade03a6c86908b8f4c5e76e"><span class="std std-ref">Function cpf_llrint</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a1e34aa7c12db136452055fdb64f5f7d7.html#exhale-function-cpfloat-binary64-8h-1a1e34aa7c12db136452055fdb64f5f7d7"><span class="std std-ref">Function cpf_llround</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1affd1c26e36fbebe4afd83e2818f3bb15.html#exhale-function-cpfloat-binary64-8h-1affd1c26e36fbebe4afd83e2818f3bb15"><span class="std std-ref">Function cpf_log</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a983d112870c0c898ac8ba50f6dfea5dd.html#exhale-function-cpfloat-binary64-8h-1a983d112870c0c898ac8ba50f6dfea5dd"><span class="std std-ref">Function cpf_log10</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a5a6ff04bcb43c9d6baca0e4459d4455d.html#exhale-function-cpfloat-binary64-8h-1a5a6ff04bcb43c9d6baca0e4459d4455d"><span class="std std-ref">Function cpf_log1p</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a1efdb4c7cede14f0ea8c8d7c51692bf2.html#exhale-function-cpfloat-binary64-8h-1a1efdb4c7cede14f0ea8c8d7c51692bf2"><span class="std std-ref">Function cpf_log2</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a49bbb1528f3158fe6b924da4b4bb0eda.html#exhale-function-cpfloat-binary64-8h-1a49bbb1528f3158fe6b924da4b4bb0eda"><span class="std std-ref">Function cpf_lrint</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a2c90fb08d0bd11dc4509a4bbb6d0bd0d.html#exhale-function-cpfloat-binary64-8h-1a2c90fb08d0bd11dc4509a4bbb6d0bd0d"><span class="std std-ref">Function cpf_lround</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a9831276b5f02bf49a33528d865fd68a2.html#exhale-function-cpfloat-binary64-8h-1a9831276b5f02bf49a33528d865fd68a2"><span class="std std-ref">Function cpf_modf</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a22531ffa5521d9f14eeb1205627a632e.html#exhale-function-cpfloat-binary64-8h-1a22531ffa5521d9f14eeb1205627a632e"><span class="std std-ref">Function cpf_mul</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a03672d4c9498150d242e233c5b17e9fa.html#exhale-function-cpfloat-binary64-8h-1a03672d4c9498150d242e233c5b17e9fa"><span class="std std-ref">Function cpf_nearbyint</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1aa360337534c179f91409996c4830bfff.html#exhale-function-cpfloat-binary64-8h-1aa360337534c179f91409996c4830bfff"><span class="std std-ref">Function cpf_nextafter</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ac243f32a7c3bed64efbdf65638d5e41b.html#exhale-function-cpfloat-binary64-8h-1ac243f32a7c3bed64efbdf65638d5e41b"><span class="std std-ref">Function cpf_nexttoward</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a48c2d916b21c6a86c7b32aa6f198ad12.html#exhale-function-cpfloat-binary64-8h-1a48c2d916b21c6a86c7b32aa6f198ad12"><span class="std std-ref">Function cpf_pow</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a955eebc2a6433725c26111b42ce5964c.html#exhale-function-cpfloat-binary64-8h-1a955eebc2a6433725c26111b42ce5964c"><span class="std std-ref">Function cpf_remainder</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1aa959577431e45ed6552ec46a32886bd1.html#exhale-function-cpfloat-binary64-8h-1aa959577431e45ed6552ec46a32886bd1"><span class="std std-ref">Function cpf_remquo</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1abde12a510811a571df69a4909a2a3229.html#exhale-function-cpfloat-binary64-8h-1abde12a510811a571df69a4909a2a3229"><span class="std std-ref">Function cpf_rint</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a0bf4fe7e7903f30043cce02fbf443cf0.html#exhale-function-cpfloat-binary64-8h-1a0bf4fe7e7903f30043cce02fbf443cf0"><span class="std std-ref">Function cpf_round</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a046b8ccbe0d6005cad5ff24d1128496d.html#exhale-function-cpfloat-binary64-8h-1a046b8ccbe0d6005cad5ff24d1128496d"><span class="std std-ref">Function cpf_scalbln</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1aed54a3584b6523b7f14b26669b9cbdbe.html#exhale-function-cpfloat-binary64-8h-1aed54a3584b6523b7f14b26669b9cbdbe"><span class="std std-ref">Function cpf_scalbn</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a69ee24c64b1656a1268ba79e8040ff48.html#exhale-function-cpfloat-binary64-8h-1a69ee24c64b1656a1268ba79e8040ff48"><span class="std std-ref">Function cpf_sin</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a3d43576d3a6719083db218aa8cd659c2.html#exhale-function-cpfloat-binary64-8h-1a3d43576d3a6719083db218aa8cd659c2"><span class="std std-ref">Function cpf_sinh</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1aaa748eb5e746e78600c40d77df957419.html#exhale-function-cpfloat-binary64-8h-1aaa748eb5e746e78600c40d77df957419"><span class="std std-ref">Function cpf_sqrt</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a48a47c67ea5b778170c27d33d9bbecef.html#exhale-function-cpfloat-binary64-8h-1a48a47c67ea5b778170c27d33d9bbecef"><span class="std std-ref">Function cpf_sub</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a2fec1becf0d2c16814a843d80c28314f.html#exhale-function-cpfloat-binary64-8h-1a2fec1becf0d2c16814a843d80c28314f"><span class="std std-ref">Function cpf_tan</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a3e34e3a711f153c5cf95fb086e73475e.html#exhale-function-cpfloat-binary64-8h-1a3e34e3a711f153c5cf95fb086e73475e"><span class="std std-ref">Function cpf_tanh</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1ae395d18e33d74c9de8eec1681b290324.html#exhale-function-cpfloat-binary64-8h-1ae395d18e33d74c9de8eec1681b290324"><span class="std std-ref">Function cpf_tgamma</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a0d6a1a2e0db61dd8f3c2cfc536baf373.html#exhale-function-cpfloat-binary64-8h-1a0d6a1a2e0db61dd8f3c2cfc536baf373"><span class="std std-ref">Function cpf_trunc</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a96b9a0679ebfe724ae15ad96647bc246.html#exhale-function-cpfloat-binary64-8h-1a96b9a0679ebfe724ae15ad96647bc246"><span class="std std-ref">Function cpfloat</span></a></p></li>
+<li><p><a class="reference internal" href="function_cpfloat__binary64_8h_1a9ffc7d3972e0a89b165c1ec70a7b5da0.html#exhale-function-cpfloat-binary64-8h-1a9ffc7d3972e0a89b165c1ec70a7b5da0"><span class="std std-ref">Function cpfloat_validate_optstruct</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Massimiliano Fasi and Mantas Mikaitis.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

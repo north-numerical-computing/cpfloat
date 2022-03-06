@@ -1,0 +1,14 @@
+.. _exhale_typedef_cpfloat__definitions_8h_1ac8dce72cae112670993871b19b489d8d:
+
+Typedef cpfloat_bitseed_t
+=========================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: cpfloat_bitseed_t
+   :project: CPFloat

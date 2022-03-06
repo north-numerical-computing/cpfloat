@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1ad248d49c009940f112bb2d20d20eaa68:
+
+Function cpf_div
+================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_div(double *, const double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

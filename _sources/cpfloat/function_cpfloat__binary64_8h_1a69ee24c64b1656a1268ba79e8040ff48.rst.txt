@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a69ee24c64b1656a1268ba79e8040ff48:
+
+Function cpf_sin
+================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_sin(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

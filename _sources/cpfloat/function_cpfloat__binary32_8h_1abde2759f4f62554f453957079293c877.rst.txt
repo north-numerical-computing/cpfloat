@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1abde2759f4f62554f453957079293c877:
+
+Function cpf_lgammaf
+====================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_lgammaf(float *, const float *, const size_t, optstruct *)
+   :project: CPFloat

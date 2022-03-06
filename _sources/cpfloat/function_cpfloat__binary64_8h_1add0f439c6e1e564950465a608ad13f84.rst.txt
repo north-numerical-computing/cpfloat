@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1add0f439c6e1e564950465a608ad13f84:
+
+Function cpf_frexp
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_frexp(double *, int *, const double *, const size_t, optstruct *)
+   :project: CPFloat

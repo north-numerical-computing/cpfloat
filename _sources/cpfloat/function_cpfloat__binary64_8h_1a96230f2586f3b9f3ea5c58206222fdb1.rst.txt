@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a96230f2586f3b9f3ea5c58206222fdb1:
+
+Function cpf_hypot
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_hypot(double *, const double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

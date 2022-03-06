@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1ac99ff08fc4433edd351042ce7c8899a8:
+
+Function cpf_fproundf
+=====================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_fproundf(float *, const float *, const size_t, optstruct *)
+   :project: CPFloat

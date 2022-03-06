@@ -1,0 +1,130 @@
+
+.. _file_src_cpfloat_definitions.h:
+
+File cpfloat_definitions.h
+==========================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+Definition of CPFloat data types. 
+
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/cpfloat_definitions.h``)
+------------------------------------------
+
+
+
+
+Detailed Description
+--------------------
+
+This file includes all the external header files used by CPFloat, defines the enumerated types
+
+
+
+- :ref:`exhale_enum_cpfloat__definitions_8h_1a19fe474041e378986b36e30c95900573`,
+
+- :ref:`exhale_enum_cpfloat__definitions_8h_1a9d6b6ecb3dadc890bbb77bd737507847`,
+
+- :ref:`exhale_enum_cpfloat__definitions_8h_1a9f79e24cc89b42b57e660ceea5b6e113`,
+
+- :ref:`exhale_enum_cpfloat__definitions_8h_1af95a89ad20a60b1697bec7d008d39a91`,
+
+
+
+and the structured data type :ref:`exhale_struct_structoptstruct`. It is not necessary to include this file in order to use CPFloat, as it is already included by :ref:`file_src_cpfloat_binary32.h` and by :ref:`file_src_cpfloat_binary64.h`. 
+
+
+
+
+Includes
+--------
+
+
+- ``fenv.h``
+
+- ``float.h``
+
+- ``limits.h``
+
+- ``math.h``
+
+- ``stdint.h``
+
+- ``stdlib.h``
+
+- ``string.h``
+
+- ``time.h``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_cpfloat_binary32.h`
+
+- :ref:`file_src_cpfloat_binary64.h`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structoptstruct`
+
+
+Enums
+-----
+
+
+- :ref:`exhale_enum_cpfloat__definitions_8h_1a9d6b6ecb3dadc890bbb77bd737507847`
+
+- :ref:`exhale_enum_cpfloat__definitions_8h_1a9f79e24cc89b42b57e660ceea5b6e113`
+
+- :ref:`exhale_enum_cpfloat__definitions_8h_1af95a89ad20a60b1697bec7d008d39a91`
+
+- :ref:`exhale_enum_cpfloat__definitions_8h_1a19fe474041e378986b36e30c95900573`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_cpfloat__definitions_8h_1a0fb8844dbe1ea4065b71c69d94b04cd5`
+
+- :ref:`exhale_function_cpfloat__definitions_8h_1aa86db17fe733cb8a909f4ff8441e1d8f`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_cpfloat__definitions_8h_1a65845a966d3eee691cdca5608f677ef4`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_cpfloat__definitions_8h_1ac8dce72cae112670993871b19b489d8d`
+
+- :ref:`exhale_typedef_cpfloat__definitions_8h_1a3c126e6f34e7e2a9a774c7221633a87b`
+
+- :ref:`exhale_typedef_cpfloat__definitions_8h_1aa6d0354f2ee724040f2d558538cc8d33`
+
+- :ref:`exhale_typedef_cpfloat__definitions_8h_1abb4394b4f32066ec2e04092979634b70`
+
+- :ref:`exhale_typedef_cpfloat__definitions_8h_1a6cd60f28b30a446ea2d28d2919ca247a`
+

@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1afd0dc4d9afec5c40ac872400f85af34c:
+
+Function cpf_sinhf
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_sinhf(float *, const float *, const size_t, optstruct *)
+   :project: CPFloat

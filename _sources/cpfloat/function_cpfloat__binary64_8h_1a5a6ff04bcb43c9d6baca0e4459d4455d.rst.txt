@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a5a6ff04bcb43c9d6baca0e4459d4455d:
+
+Function cpf_log1p
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_log1p(double *, const double *, size_t, optstruct *)
+   :project: CPFloat

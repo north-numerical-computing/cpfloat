@@ -1,0 +1,14 @@
+.. _exhale_define_cpfloat__definitions_8h_1a65845a966d3eee691cdca5608f677ef4:
+
+Define MAINFUNNAME
+==================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: MAINFUNNAME
+   :project: CPFloat

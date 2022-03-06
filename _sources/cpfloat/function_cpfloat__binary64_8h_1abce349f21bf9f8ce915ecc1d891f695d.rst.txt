@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1abce349f21bf9f8ce915ecc1d891f695d:
+
+Function cpf_fmax
+=================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_fmax(double *, const double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

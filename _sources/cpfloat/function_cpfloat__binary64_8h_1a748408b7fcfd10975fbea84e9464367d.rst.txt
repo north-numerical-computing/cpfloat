@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a748408b7fcfd10975fbea84e9464367d:
+
+Function cpf_fdim
+=================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_fdim(double *, const double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

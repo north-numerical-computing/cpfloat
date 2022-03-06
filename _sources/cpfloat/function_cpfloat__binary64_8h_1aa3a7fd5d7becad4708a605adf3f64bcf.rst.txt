@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1aa3a7fd5d7becad4708a605adf3f64bcf:
+
+Function cpf_isnan
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_isnan(int *, const double *, const size_t, optstruct *)
+   :project: CPFloat

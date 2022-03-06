@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1a0a697f9645a62781f202ec3d41430982:
+
+Function cpf_fabsf
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_fabsf(float *, const float *, const size_t, optstruct *)
+   :project: CPFloat

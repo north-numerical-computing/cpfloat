@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1aae599f693c8b66088777ef2e56b5d672:
+
+Function cpf_acosh
+==================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_acosh(double *, const double *, const size_t, optstruct *)
+   :project: CPFloat
