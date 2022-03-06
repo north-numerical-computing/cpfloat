@@ -90,7 +90,7 @@ ctestsrc: $(TESTDIR)cpfloat_test.ts
 ctest: init makebin ctestsrc
 	$(CC) $(CFLAGS) $(COPTIM) -fsanitize=undefined \
 		-o $(BINDIR)cpfloat_test $(TESTDIR)cpfloat_test.c \
-		-lcheck -lm -lpthread -lsubunit $(CLIBS) $(PCG_FLAGS)
+		-lcheck -lm -lpthread -lsubunit -lrt $(CLIBS) $(PCG_FLAGS)
 	$(BINDIR)cpfloat_test
 	$(MV) cpfloat_test.log $(TESTDIR)
 
@@ -126,7 +126,17 @@ mtest: MTESTSTRING="addpath('$(INCDIR)/float_params'); \
 mtest: mexmat
 	$(MATLAB) -r $(MTESTSTRING)
 
-otest: OTESTSTRING="pkg install -forge fenv; \
+otest: OTESTSTRING="pkglist=pkg('list'); \
+		no_fenv=true; \
+		for i=1:length(pkglist); \
+			if strcmp(pkglist{i}.name, 'fenv'); \
+				no_fenv = false; \
+				break; \
+			end; \
+		end; \
+		if no_fenv; \
+			pkg install -forge fenv; \
+		end; \
 		pkg load fenv; \
 		addpath('$(INCDIR)/float_params'); \
 		addpath('$(BINDIR)'); \
