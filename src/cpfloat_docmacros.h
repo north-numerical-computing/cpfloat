@@ -308,31 +308,6 @@
  PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
 */
 
-#define doc_cpf_rint(PMAX, EMAX) \
-/** \
- @brief Compute the closest integer with specified rounding mode. \
- \
- @details If the function executes without errors, then @p X[i] is the \
- integral part of @p A[i] rounded to a lower-precision target format and \
- @p exception[i] is set to 0 if @p X[i] is equal to @p A[i] and to FE_INEXACT \
- otherwise. \
- The parameters of the target format and the rounding mode to be used are \
- encoded in @p fpopts. If required, the function flips one bit in some of the \
- entries of @p X.<p/>\
- \
- If OpenMP support is specified at compile time, several OpenMP threads are \
- used if @p numelem is large enough. This parameter is machine dependent.\
- \
- @param[out] X Array of rounded values. \
- @param[out] exception Array of floating-point exceptions. \
- @param[in] A Input array. \
- @param[in] numelem Number of elements in @p X and @p A. \
- @param[in] fpopts Parameters describing the target format, the rounding mode, \
- and the probability of soft errors striking the rounded values. \
- \
- @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
-*/
 
 #define doc_cpf_remquo(PMAX, EMAX) \
 /** \
