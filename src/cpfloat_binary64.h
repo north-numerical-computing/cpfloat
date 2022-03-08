@@ -220,12 +220,12 @@ static inline int cpf_copysign(double *X, const double *A, const double *B,
 doc_cpf_bivariate(next floating-point number in specified direction,
                       the floating-point number closest to A[i] in the
                       direction of B[i], 53, 1023)
-static inline int cpf_nextafter(double *X, double *A, const double *B,
+static inline int cpf_nextafter(double *X, const double *A, const double *B,
                                     const size_t numelem, optstruct *fpopts);
 doc_cpf_bivariate(next floating-point number in specified direction,
                       the floating-point number closest to A[i] in the
                       direction of B[i], 53, 1023)
-static inline int cpf_nexttoward(double *X, double *A,
+static inline int cpf_nexttoward(double *X, const double *A,
                                      const long double *B, const size_t numelem,
                                      optstruct *fpopts);
 

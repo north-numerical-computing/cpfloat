@@ -981,7 +981,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                                         PARALLEL_SUFFIX)                       \
   static inline int                                                            \
   GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX)                               \
-  (FPTYPE *X, FPTYPE *A, const TYPETO *B,                                      \
+  (FPTYPE *X, const FPTYPE *A, const TYPETO *B,                                \
    const size_t numelem, optstruct *fpopts) {                                  \
     int retval = 0;                                                            \
     FPPARAMS params = COMPUTE_GLOBAL_PARAMS(fpopts, &retval);                  \
@@ -1007,7 +1007,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   GENERATE_NEXTAFTER_SUBFUNCTIONS(FUNNAME, TYPETO, SEQ, PARALLEL_SUFFIX_SEQ)   \
   GENERATE_NEXTAFTER_SUBFUNCTIONS(FUNNAME, TYPETO, PAR, PARALLEL_SUFFIX_PAR)   \
   static inline int                                                            \
-       GENERATE_FUN_NAME(FUNNAME)(FPTYPE *X, FPTYPE *A, const TYPETO *B,       \
+       GENERATE_FUN_NAME(FUNNAME)(FPTYPE *X, const FPTYPE *A, const TYPETO *B, \
                              const size_t numelem, optstruct *fpopts) {        \
     if (numelem < CONCATENATE(OPENMP_THRESHOLD_, FPTYPE))                      \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
@@ -1020,7 +1020,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define GENERATE_NEXTAFTER_INTERFACE(FUNNAME, TYPETO)                          \
   GENERATE_NEXTAFTER_SUBFUNCTIONS(FUNNAME, TYPETO, SEQ, PARALLEL_SUFFIX_SEQ)   \
   static inline int                                                            \
-  GENERATE_FUN_NAME(FUNNAME)(FPTYPE *X, FPTYPE *A, TYPETO *B,                  \
+  GENERATE_FUN_NAME(FUNNAME)(FPTYPE *X, const FPTYPE *A, const TYPETO *B,      \
                              const size_t numelem, optstruct *fpopts) {        \
       return GENERATE_SUBFUN_NAME(FUNNAME, PARALLEL_SUFFIX_SEQ)                \
         (X, A, B, numelem, fpopts);                                            \
