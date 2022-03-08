@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary64_8h_1a30199ae8d7934b6bb359d2d4b98bb190:
+
+Function cpf_nexttoward
+=======================
+
+- Defined in :ref:`file_src_cpfloat_binary64.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_nexttoward(double *, const double *, const long double *, const size_t, optstruct *)
+   :project: CPFloat

@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__binary32_8h_1af4aa515487e3afc01055702cd632c8d4:
+
+Function cpf_nexttowardf
+========================
+
+- Defined in :ref:`file_src_cpfloat_binary32.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpf_nexttowardf(float *, const float *, const long double *, const size_t, optstruct *)
+   :project: CPFloat

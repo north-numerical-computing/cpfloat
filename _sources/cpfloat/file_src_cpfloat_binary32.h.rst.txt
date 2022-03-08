@@ -136,9 +136,9 @@ Functions
 
 - :ref:`exhale_function_cpfloat__binary32_8h_1a6bfa9ad6658bd8f04cb8d180ac5f9535`
 
-- :ref:`exhale_function_cpfloat__binary32_8h_1a8d3b234665d278831b14390bb4280c53`
+- :ref:`exhale_function_cpfloat__binary32_8h_1a1591cf0ca60c9f5151186c5210db1e27`
 
-- :ref:`exhale_function_cpfloat__binary32_8h_1a54e465fc20b0956da57419a5327e1b7f`
+- :ref:`exhale_function_cpfloat__binary32_8h_1af4aa515487e3afc01055702cd632c8d4`
 
 - :ref:`exhale_function_cpfloat__binary32_8h_1a8cd372f7c58699d41cf35cc159fa841a`
 
