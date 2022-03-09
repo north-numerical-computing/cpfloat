@@ -127,6 +127,10 @@ static inline int cpf_log1pf(float *X, const float *A,
 doc_cpf_univariate(base-2 logarithm, X[i] = log2(A[i]), 24, 127)
 static inline int cpf_log2f(float *X, const float *A,
                                 const size_t numelem, optstruct *fpopts);
+doc_cpf_univariate(base-FLT_RADIX logarithm of absolute value,
+                   X[i] = log(abs(A[i])), 24, 127)
+static inline int cpf_logbf(float *X, const float *A,
+                                const size_t numelem, optstruct *fpopts);
 doc_cpf_scaling(FLT_RADIX, 24, 127)
   static inline int cpf_scalbnf(float *X, const float *A, const int *exp,
                                     const size_t numelem, optstruct *fpopts);
@@ -172,6 +176,10 @@ static inline int cpf_ceilf(float *X, const float *A,
 doc_cpf_univariate(floor function, X[i] = floor(A[i]), 24, 127)
 static inline int cpf_floorf(float *X, const float *A,
                                  const size_t numelem, optstruct *fpopts);
+doc_cpf_bivariate(floating-point remainder of division,
+                  X[i] = A[i] mod B[i], 24, 127)
+static inline int cpf_fmodf(float *X, const float *A, const float *B,
+                                const size_t numelem, optstruct *fpopts);
 doc_cpf_univariate(integer truncation, X[i] = trunc(A[i]), 24, 127)
 static inline int cpf_truncf(float *X, const float *A,
                                 const size_t numelem, optstruct *fpopts);
