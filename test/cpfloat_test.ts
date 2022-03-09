@@ -7,8 +7,28 @@
 #include <float.h>
 #include <math.h>
 #include <stdbool.h>
+#include <inttypes.h>
 #include "cpfloat_binary32.h"
 #include "cpfloat_binary64.h"
+
+/* Struct to reinterpret floating-point values as unsigned integers. */
+typedef union {
+  uint32_t intval;
+  float fpval;
+} fpint_f;
+
+#define INTOFf(x)(((fpint_f){.fpval = (float)(x)}).intval)
+#define FPOFf(x)(((fpint_f){.intval = (uint32_t)(x)}).fpval)
+
+typedef union {
+  uint64_t intval;
+  double fpval;
+} fpint_d;
+
+#define INTOFd(x)(((fpint_d){.fpval = (double)(x)}).intval)
+#define FPOFd(x)(((fpint_d){.intval = (uint64_t)(x)}).fpval)
+
+
 
 #define CONST_E         2.7182818284590452354
 #define CONST_LOG2E     1.4426950408889634074
@@ -44,12 +64,6 @@ void fpopts_setup(void) {
 void fpopts_teardown(void) {
   free(fpopts);
 }
-
-#define INTOFd(x)(((fpint){.fpval = (double)(x)}).intval)
-#define FPOFd(x)(((fpint){.intval = (uint64_t)(x)}).fpval)
-
-#define INTOFf(x)(((fpintf){.fpval = (float)(x)}).intval)
-#define FPOFf(x)(((fpintf){.intval = (uint32_t)(x)}).fpval)
 
 /***********************
  * Auxiliary functions *
