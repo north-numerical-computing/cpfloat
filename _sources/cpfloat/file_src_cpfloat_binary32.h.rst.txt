@@ -92,6 +92,8 @@ Functions
 
 - :ref:`exhale_function_cpfloat__binary32_8h_1ab68254ae7beb57eac1c6de6e24870975`
 
+- :ref:`exhale_function_cpfloat__binary32_8h_1a3a2d60c142fad8efc40298c27700a038`
+
 - :ref:`exhale_function_cpfloat__binary32_8h_1a4d95ee12617fff36c9dab79f8ff4918b`
 
 - :ref:`exhale_function_cpfloat__binary32_8h_1ac99ff08fc4433edd351042ce7c8899a8`
@@ -123,6 +125,8 @@ Functions
 - :ref:`exhale_function_cpfloat__binary32_8h_1a0e490790240cb35ea27675e307fb10ca`
 
 - :ref:`exhale_function_cpfloat__binary32_8h_1a0bc15569c1b6138080a033df9ebced60`
+
+- :ref:`exhale_function_cpfloat__binary32_8h_1a57d654ea732fb162424212e567f1bd29`
 
 - :ref:`exhale_function_cpfloat__binary32_8h_1a1877565a0f1b314769513117df1c1ff0`
 
