@@ -1,8 +1,6 @@
-name: Build and deploty eploy documentation
+name: documentation
 on:
   push:
-    branches:
-      - dev
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

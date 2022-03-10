@@ -1,3 +1,8 @@
+[![Version](https://img.shields.io/github/v/tag/mfasi/cpfloat?label=version)](https://github.com/mfasi/cpfloat/tags)
+[![CircleCI build](https://img.shields.io/circleci/build/github/mfasi/cpfloat/master?label=build)](https://circleci.com/gh/mfasi/cpfloat)
+[![Tests](https://img.shields.io/github/workflow/status/mfasi/cpfloat/run-tests?label=tests)](https://github.com/mfasi/cpfloat/actions/workflows/run_tests.yml)
+[![GitHub](https://img.shields.io/github/license/mfasi/cpfloat)](LICENSE.md)
+
 # CPFloat: Custom-Precision Floating-point numbers
 
 CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, for performing arithmetic operations, for evaluating  mathematical functions, and for querying properties of the simulated low-precision format. Internally, numbers are stored in `float` or `double` arrays. The low-precision format (target format) follows a straightforward extension of the IEEE 754 standard, and is assumed to be entirely specified by three parameters:
