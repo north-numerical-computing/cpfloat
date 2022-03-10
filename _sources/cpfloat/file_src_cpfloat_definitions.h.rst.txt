@@ -102,7 +102,7 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_cpfloat__definitions_8h_1a0fb8844dbe1ea4065b71c69d94b04cd5`
+- :ref:`exhale_function_cpfloat__definitions_8h_1a57fd9c22cf3dfc3d5f5ef49703bff12e`
 
 - :ref:`exhale_function_cpfloat__definitions_8h_1aa86db17fe733cb8a909f4ff8441e1d8f`
 
