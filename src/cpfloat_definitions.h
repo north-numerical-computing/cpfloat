@@ -301,13 +301,7 @@ typedef struct {
  @return The function returns a pointer to the allocated memory if the \
  execution was successful, and @b NULL otherwise.<p/>\
  */
-optstruct *init_optstruct() {
-  optstruct *fpopts = malloc(sizeof(*fpopts));
-  fpopts->bitseed = NULL;
-  fpopts->randseedf = NULL;
-  fpopts->randseed = NULL;
-  return fpopts;
-}
+optstruct *init_optstruct();
 
 /** \
  @brief Free the memory underlying an @ref optstruct struct. \
@@ -319,20 +313,7 @@ optstruct *init_optstruct() {
  @return The function returns @p 0 if the unless @p fpopts is set to @p NULL, \
  in which case it return @p -1.<p/>\
  */
-int free_optstruct(optstruct *fpopts) {
-  if (fpopts == NULL)
-    return -1;
-  else {
-    if (fpopts->bitseed != NULL)
-      free(fpopts->bitseed);
-    if (fpopts->randseedf != NULL)
-      free(fpopts->randseedf);
-    if (fpopts->randseed != NULL)
-      free(fpopts->randseed);
-    free(fpopts);
-    return 0;
-  }
-}
+int free_optstruct(optstruct *);
 
 #endif /* #ifndef _CHOPFAST_DEFINITIONS_ */
 

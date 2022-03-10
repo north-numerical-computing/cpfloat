@@ -11,11 +11,11 @@
  * file and handle the definition of macros correctly.
  */
 
-/****************************
- ****************************
- * TYPE-INDEPENDENT MACROS. *
- ****************************
- ****************************/
+/******************************************
+ ******************************************
+ * TYPE-INDEPENDENT MACROS AND FUNCTIONS. *
+ ******************************************
+ ******************************************/
 
 #ifndef TYPE_INDEPENDENT_MACROS_INCLUDED
 #define TYPE_INDEPENDENT_MACROS_INCLUDED
@@ -94,15 +94,43 @@ static inline BITTYPE PRNG_ADVANCE_BIT(BITSEEDTYPE *seed, size_t delta) {
     *(fpopts->BITSEED) = *(params.BITSEED);                                    \
   }
 
+/*
+ * Define type-independent functions.
+ * Prototypes are in cpfloat_definitions.
+ */
+
+optstruct *init_optstruct() {
+  optstruct *fpopts = malloc(sizeof(*fpopts));
+  fpopts->bitseed = NULL;
+  fpopts->randseedf = NULL;
+  fpopts->randseed = NULL;
+  return fpopts;
+}
+
+int free_optstruct(optstruct *fpopts) {
+  if (fpopts == NULL)
+    return -1;
+  else {
+    if (fpopts->bitseed != NULL)
+      free(fpopts->bitseed);
+    if (fpopts->randseedf != NULL)
+      free(fpopts->randseedf);
+    if (fpopts->randseed != NULL)
+      free(fpopts->randseed);
+    free(fpopts);
+    return 0;
+  }
+}
+
 #endif /* #ifndef TYPE_INDEPENDENT_MACROS_INCLUDED */
 
 
 
-/**************************
- **************************
- * TYPE-DEPENDENT MACROS. *
- **************************
- **************************/
+/****************************************
+ ****************************************
+ * TYPE-DEPENDENT MACROS AND FUNCTIONS. *
+ ****************************************
+ ****************************************/
 
 #define ADDSUFFIXTO(x) CONCATENATE(x, FUNSUFFIX)
 
