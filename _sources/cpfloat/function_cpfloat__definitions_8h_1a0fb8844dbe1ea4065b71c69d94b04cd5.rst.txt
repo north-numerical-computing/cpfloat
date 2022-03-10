@@ -1,4 +1,4 @@
-.. _exhale_function_cpfloat__definitions_8h_1a57fd9c22cf3dfc3d5f5ef49703bff12e:
+.. _exhale_function_cpfloat__definitions_8h_1a0fb8844dbe1ea4065b71c69d94b04cd5:
 
 Function free_optstruct
 =======================
