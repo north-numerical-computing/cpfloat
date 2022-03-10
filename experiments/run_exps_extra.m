@@ -14,6 +14,11 @@ for iter = 1:2
   exp_normal_subnormal
 end
 
+%% Speedup cpfloat/floatp
+for generatesubnormals = [true,false]
+  exp_comp_floatp
+end
+
 % CPFloat - Custom Precision Floating-point numbers.
 %
 % Copyright 2020 Massimiliano Fasi and Mantas Mikaitis

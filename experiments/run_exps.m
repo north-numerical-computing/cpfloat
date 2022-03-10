@@ -12,7 +12,7 @@
 nthreads = Inf;
 storageformats = {'single', 'double'};
 
-%% Speedup cpfloat/chop (Figures 2 and 3)
+%% Speedup cpfloat/chop (Figure 2)
 for iter1 = 1:2
   storageformat = storageformats{iter1};
   for generatesubnormals = [true,false]
@@ -20,12 +20,7 @@ for iter1 = 1:2
   end
 end
 
-%% Speedup cpfloat/floatp (Figure 4)
-for generatesubnormals = [true,false]
-  exp_comp_floatp
-end
-
-%% Overhead of MATLAB interface (Figure 5, second and third columns)
+%% Overhead of MATLAB interface (Figure 3, second and third columns)
 exp_overhead
 
 % CPFloat - Custom Precision Floating-point numbers.
