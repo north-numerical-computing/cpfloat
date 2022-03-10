@@ -49,13 +49,17 @@
 <li class="toctree-l1"><a class="reference internal" href="#installation">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#mex-interface">MEX interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#auto-tuning">Auto-tuning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#validation">Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#experiments">Experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#using-cpfloat">Using CPFloat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#code-validation">Code validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#unit-tests">Unit tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#experiments">Experiments</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="#references">References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#id9">Licensing information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#id8">Licensing information</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cpfloat/cpfloat_root.html">CPFloat API</a></li>
@@ -87,7 +91,7 @@
              
   <section id="cpfloat-custom-precision-floating-point-numbers">
 <h1>CPFloat: Custom-Precision Floating-point numbers<a class="headerlink" href="#cpfloat-custom-precision-floating-point-numbers" title="Permalink to this headline"></a></h1>
-<p>CPFloat is a header-only C library for simulating low-precision floating-point number formats in software. The library provides a set of routines for converting the elements of <code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">double</span></code> arrays to lower precision using a variety of rounding modes. The low-precision format (target format) follows a straightforward extension of the IEEE 754 standard, and is assumed to be entirely specified by three parameters:</p>
+<p>CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, for performing arithmetic operations, for evaluating  mathematical functions, and for querying properties of the simulated low-precision format. Internally, numbers are stored as C arrays of <code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">double</span></code>. The low-precision format (target format) follows a straightforward extension of the IEEE 754 standard, and is assumed to be entirely specified by three parameters:</p>
 <ul class="simple">
 <li><p>a positive integer <em>p</em>, which represents the number of digits of precision;</p></li>
 <li><p>a positive integer <em>e</em><span class="raw-html-m2r"><sub>max</sub></span>, which represents the maximum supported exponent; and</p></li>
@@ -98,27 +102,23 @@
 </section>
 <section id="dependencies">
 <h1>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline"></a></h1>
-<p>The only (optional) dependency of CPFloat is the header file <code class="docutils literal notranslate"><span class="pre">pcg_variants.h</span></code> from the <a class="reference external" href="https://github.com/imneme/pcg-c">C implementation</a> of the <a class="reference external" href="https://www.pcg-random.org/">PCG Library</a>, which provides a variety of high-quality pseudo-random number generators. For an in-depth discussion of the algorithms underlying this software, we recommend reading the <a class="reference external" href="https://www.pcg-random.org/paper.html">paper</a> by <a class="reference external" href="https://www.cs.hmc.edu/~oneill/">Melissa O’Neill</a> <a class="reference external" href="#ref3">[3]</a>, author of the library. If the file <code class="docutils literal notranslate"><span class="pre">pcg_variants.h</span></code> is not included at compile-time with the <code class="docutils literal notranslate"><span class="pre">--include</span></code> compiler option, then CPFloat relies on the default C pseudo-random number generator.</p>
+<p>The only (optional) dependency of CPFloat is the <a class="reference external" href="https://github.com/imneme/pcg-c">C implementation</a> of the <a class="reference external" href="https://www.pcg-random.org">PCG Library</a>, which provides a variety of high-quality pseudo-random number generators. For an in-depth discussion of the algorithms underlying this software, we recommend reading the <a class="reference external" href="https://www.pcg-random.org/paper.html">paper</a> by <a class="reference external" href="https://www.cs.hmc.edu/~oneill">Melissa O’Neill</a> <a class="reference external" href="#ref3">[3]</a>, author of the library. If the header file <code class="docutils literal notranslate"><span class="pre">pcg_variants.h</span></code> in <code class="docutils literal notranslate"><span class="pre">include/pcg-c/include/pcg_variants.h</span></code> is not included at compile-time with the <code class="docutils literal notranslate"><span class="pre">--include</span></code> compiler option, then CPFloat relies on the default C pseudo-random number generator.</p>
 <p>The PCG Library is free software (see the <a class="reference external" href="#licensing-information">Licensing information</a> below), and its generators are more efficient, reliable, and flexible than any combination of the functions <code class="docutils literal notranslate"><span class="pre">srand</span></code>,<code class="docutils literal notranslate"><span class="pre">rand</span></code>, and <code class="docutils literal notranslate"><span class="pre">rand_r</span></code> from the C standard library. We see no reason not to use it, and a warning is issued at compile time if the location of <code class="docutils literal notranslate"><span class="pre">pcg_variant.h</span></code> is not specified correctly.</p>
-<p>Compiling the MEX interface requires a reasonably recent version of MATLAB or Octave, and testing the interface requires the function <code class="docutils literal notranslate"><span class="pre">float_params</span></code>, which is <a class="reference external" href="https://github.com/higham/float_params">available on GitHub</a>. The unit tests for the C implementation in <code class="docutils literal notranslate"><span class="pre">test/cpfloat_test.ts</span></code> require the <a class="reference external" href="https://libcheck.github.io/check">check unit testing framework for C</a>, including the <code class="docutils literal notranslate"><span class="pre">checkmk</span></code> script.</p>
-<p>The code in the <code class="docutils literal notranslate"><span class="pre">experiments/</span></code> folder can be used to replicate the experiments discussed in <a class="reference external" href="#ref1">[1]</a>. The C experiments require the <a class="reference external" href="https://www.mpfr.org/">GNU MPFR library</a> and the <a class="reference external" href="https://github.com/oprecomp/FloatX">FloatX library</a>. The MATLAB experiments depend on the <a class="reference external" href="https://github.com/higham/chop">chop function</a> and on the <a class="reference external" href="https://gerard-meurant.pagesperso-orange.fr/floatp.zip">FLOATP_Toolbox</a>.</p>
-<p>All the dependencies can be installed automatically by issuing</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make init</span>
-</pre></div>
-</div>
-<p>If necessary, this Makefile target clones the submodules in the <code class="docutils literal notranslate"><span class="pre">include/</span></code> directory and downloads the latest version of the <a class="reference external" href="https://gerard-meurant.pagesperso-orange.fr/floatp.zip">FLOATP_Toolbox</a> from the website of the author.</p>
+<p>Compiling the MEX interface requires a reasonably recent version of MATLAB or Octave, and testing the interface requires the function <code class="docutils literal notranslate"><span class="pre">float_params</span></code>, which is <a class="reference external" href="https://github.com/higham/float_params">available on GitHub</a>. The unit tests for the C implementation in <code class="docutils literal notranslate"><span class="pre">test/cpfloat_test.ts</span></code> require the <a class="reference external" href="https://libcheck.github.io/check">check unit testing framework for C</a>.</p>
+<p>The code in the <code class="docutils literal notranslate"><span class="pre">experiments/</span></code> folder can be used to replicate the experiments discussed in <a class="reference external" href="#ref1">[1]</a>. The C experiments require the <a class="reference external" href="https://www.mpfr.org">GNU MPFR library</a> and the <a class="reference external" href="https://github.com/oprecomp/FloatX">FloatX library</a>. The MATLAB experiments depend on the <a class="reference external" href="https://github.com/higham/chop">chop function</a> and on the <a class="reference external" href="https://gerard-meurant.pagesperso-orange.fr/floatp.zip">FLOATP_Toolbox</a>.</p>
 </section>
 <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
-<p>CPFloat is a header-only library, and can be used as long as the files in <code class="docutils literal notranslate"><span class="pre">src/</span></code> are in the include path of the compiler. In order to use the PCG Library, one can either:</p>
-<ul>
-<li><p>specify the path of the file <code class="docutils literal notranslate"><span class="pre">pcg_variants.h</span></code> using the preprocessor option <code class="docutils literal notranslate"><span class="pre">--include</span></code> (currently used in the <a class="reference external" href="Makefile">Makefile</a>, see the variable <code class="docutils literal notranslate"><span class="pre">CFLAGS</span></code> for an example); or</p></li>
-<li><p>make sure that <code class="docutils literal notranslate"><span class="pre">pcg_variants.h</span></code> is in the include path and uncomment the preprocessor instruction on line 24 of <code class="docutils literal notranslate"><span class="pre">src/cpfloat_definitions.h</span></code>, that is,</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* #include &quot;pcg_variants.h&quot; */</span><span class="w"></span>
+<p>No installation is needed in order to use CPFloat as a header-only library. The shared and static libraries can be built with</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make lib</span>
 </pre></div>
 </div>
-</li>
-</ul>
+<p>If the compilation is successful, the header and library files of CPFloat will be located in the <code class="docutils literal notranslate"><span class="pre">build/include</span></code> and <code class="docutils literal notranslate"><span class="pre">build/lib</span></code> folders, respectively.
+The library can be installed in <code class="docutils literal notranslate"><span class="pre">&lt;path</span></code> with</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make install --prefix=&lt;path&gt;</span>
+</pre></div>
+</div>
+<p>The default value of<code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code>, which is used if the <code class="docutils literal notranslate"><span class="pre">--prefix</span></code> option is not supplied, is <code class="docutils literal notranslate"><span class="pre">/usr/local</span></code>.</p>
 <section id="mex-interface">
 <h2>MEX interface<a class="headerlink" href="#mex-interface" title="Permalink to this headline"></a></h2>
 <p>The MEX interface can be compiled automatically with either</p>
@@ -139,15 +139,50 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make autotune</span>
 </pre></div>
 </div>
-<p>which compiles the file <code class="docutils literal notranslate"><span class="pre">src/cpfloat_autotune.c</span></code>, runs it, and updates the files <code class="docutils literal notranslate"><span class="pre">src/cpfloat_threshold_binary32.h</span></code> and <code class="docutils literal notranslate"><span class="pre">src/cpfloat_threshold_binary64.h</span></code>.</p>
+<p>which compiles the file <code class="docutils literal notranslate"><span class="pre">src/cpfloat_autotune.c</span></code>, runs it, and updates the files <code class="docutils literal notranslate"><span class="pre">src/cpfloat_threshold_binary32.h</span></code> and <code class="docutils literal notranslate"><span class="pre">src/cpfloat_threshold_binary64.h</span></code>. This procedure is run automatically when building the shared and static libraries.</p>
 </section>
-<section id="validation">
-<h2>Validation<a class="headerlink" href="#validation" title="Permalink to this headline"></a></h2>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline"></a></h2>
+<p>The documentation of CPFloat can be generated with the command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make docs</span>
+</pre></div>
+</div>
+<p>which relies on <a class="reference external" href="https://www.doxygen.nl">Doxygen</a> to format the Javadoc-style comments in the source files, and on <a class="reference external" href="https://www.sphinx-doc.org">Sphinx</a>, with the <a class="reference external" href="https://breathe.readthedocs.io">Breathe</a> and <a class="reference external" href="https://exhale.readthedocs.io">Exhale</a> extensions, to generate the HTML version of the documentation that can be found in the <code class="docutils literal notranslate"><span class="pre">docs/html/</span></code> folder.</p>
+</section>
+</section>
+<section id="using-cpfloat">
+<h1>Using CPFloat<a class="headerlink" href="#using-cpfloat" title="Permalink to this headline"></a></h1>
+<p>CPFloat can be used as a header-only, shared, or static library. Examples showing how to use CPFloat in these thee scenarios can be found in the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> (cf. targets <code class="docutils literal notranslate"><span class="pre">$(BINDIR)cpfloat_test</span></code>, <code class="docutils literal notranslate"><span class="pre">$(BINDIR)libcpfloat_shared_test</span></code>, and <code class="docutils literal notranslate"><span class="pre">$(BINDIR)libcpfloat_static_test</span></code>, respectively). Here we provide a brief summary.</p>
+<ul>
+<li><p><strong>Header-only library</strong> The only requirement is that the files in the <code class="docutils literal notranslate"><span class="pre">src/</span></code> folder be in the include path of the compiler. In order to use the PCG Library, one can either:</p>
+<ul>
+<li><p>specify the path of the file <code class="docutils literal notranslate"><span class="pre">pcg_variants.h</span></code> using the preprocessor option <code class="docutils literal notranslate"><span class="pre">--include</span></code> (see the variable <code class="docutils literal notranslate"><span class="pre">CFLAGS</span></code> in the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> for an example); or</p></li>
+<li><p>make sure that <code class="docutils literal notranslate"><span class="pre">pcg_variants.h</span></code> is in the include path and uncomment the preprocessor instruction on line 34 of <code class="docutils literal notranslate"><span class="pre">src/cpfloat_definitions.h</span></code>, that is,</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* #include &quot;pcg_variants.h&quot; */</span><span class="w"></span>
+</pre></div>
+</div>
+<p>In either case, it is necessary link the executable against the <code class="docutils literal notranslate"><span class="pre">pcg-random</span></code> library, which can be obtained by passing the option <code class="docutils literal notranslate"><span class="pre">-lpcg-random</span></code> to the linker. The library <code class="docutils literal notranslate"><span class="pre">libpcg-random.a</span></code> must be in the load path.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Shared library</strong> The five header files in the <code class="docutils literal notranslate"><span class="pre">build/include</span></code> folder must be in the include path of the compiler. The options <code class="docutils literal notranslate"><span class="pre">-lcpfloat</span></code>, <code class="docutils literal notranslate"><span class="pre">-lpcg-random</span></code>, and <code class="docutils literal notranslate"><span class="pre">-lm</span></code> must be passed to the linker, and the libraries <code class="docutils literal notranslate"><span class="pre">libcpfloat.so</span></code> and <code class="docutils literal notranslate"><span class="pre">m.so</span></code>must be in the load path.</p></li>
+<li><p><strong>Static library</strong> The static library uses the same five header files as the shared library, which are located in the <code class="docutils literal notranslate"><span class="pre">build/include</span></code> and must be in the include path of the compiler. Executable must be linked with the <code class="docutils literal notranslate"><span class="pre">-static</span></code> and <code class="docutils literal notranslate"><span class="pre">-lcpfloat</span></code> options, and the library file <code class="docutils literal notranslate"><span class="pre">libcpfloat.a</span></code> must be in the load path. Linking against the math library is not needed in this case.</p></li>
+</ul>
+</section>
+<section id="code-validation">
+<h1>Code validation<a class="headerlink" href="#code-validation" title="Permalink to this headline"></a></h1>
+<section id="unit-tests">
+<h2>Unit tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">test/</span></code> folder contains two sets of test, one for the C library and one for the MEX interface. The unit tests for the C implementation require the <code class="docutils literal notranslate"><span class="pre">check</span></code> library, and can be run with</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make ctest</span>
 </pre></div>
 </div>
-<p>which generates the file <code class="docutils literal notranslate"><span class="pre">test/cpfloat_test.c</span></code> from <code class="docutils literal notranslate"><span class="pre">test/cpfloat_test.ts</span></code>, compiles it, and runs the tests. The Makefile target <code class="docutils literal notranslate"><span class="pre">coverage</span></code> measures the code coverage using GNU <code class="docutils literal notranslate"><span class="pre">gcov</span></code> on the same set of tests.</p>
+<p>for the header-only or with</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make libtest</span>
+</pre></div>
+</div>
+<p>for the shared and static libraries. The two commands use the same batch of unit tests, which is generated from the file <code class="docutils literal notranslate"><span class="pre">test/cpfloat_test.ts</span></code> using the <code class="docutils literal notranslate"><span class="pre">checkmk</span></code> script.
+The Makefile target <code class="docutils literal notranslate"><span class="pre">coverage</span></code> measures the code coverage using GNU <code class="docutils literal notranslate"><span class="pre">gcov</span></code> on the same set of tests.</p>
 <p>The MEX interface can be tested by using either</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make mtest # Test MEX interface using MATLAB.</span>
 </pre></div>
@@ -156,34 +191,28 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make otest # Test MEX interface using Octave.</span>
 </pre></div>
 </div>
-<p>These two commands run, in MATLAB and Octave respectively,
-the function <code class="docutils literal notranslate"><span class="pre">test/cpfloat_test.m</span></code>, a test set based on the MATLAB <code class="docutils literal notranslate"><span class="pre">test_chop.m</span></code> function, <a class="reference external" href="https://github.com/higham/chop/blob/master/test_chop.m">available on GitHub</a>, which we modified to make compatible with Octave.</p>
-</section>
-<section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline"></a></h2>
-<p>The documentation of CPFloat can be generated with the command</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make docs</span>
-</pre></div>
-</div>
-<p>which relies on <a class="reference external" href="https://www.doxygen.nl/">Doxygen</a> to format the Javadoc-style comments in the source files. The HTML versions of the documentation is generated in the <code class="docutils literal notranslate"><span class="pre">docs/html/</span></code> folder.</p>
-</section>
+<p>These two commands run, in MATLAB and Octave respectively, the function <code class="docutils literal notranslate"><span class="pre">test/cpfloat_test.m</span></code>. This set of tests is based on the MATLAB script <code class="docutils literal notranslate"><span class="pre">test_chop.m</span></code>, <a class="reference external" href="https://github.com/higham/chop/blob/master/test_chop.m">available on GitHub</a>: some modifications were required in order to make it compatible with Octave.</p>
 </section>
 <section id="experiments">
-<h1>Experiments<a class="headerlink" href="#experiments" title="Permalink to this headline"></a></h1>
+<h2>Experiments<a class="headerlink" href="#experiments" title="Permalink to this headline"></a></h2>
 <p>All the tests in <a class="reference external" href="#ref1">[1]</a> can be reproduced using the command</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make experiments</span>
 </pre></div>
 </div>
-<p>provided that all the relevant dependencies are installed as discussed in the <a class="reference external" href="#dependencies">Dependencies section</a> above and the MEX interface has been compiled.</p>
+<p>provided that all the relevant dependencies are installed as discussed in the <a class="reference external" href="#dependencies">Dependencies section</a> above. Experiments that were present in previous drafts of the manuscript but are not included in the current version can be reproduced using the command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make experiments_extra</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="references">
 <h1>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h1>
-<p><span class="raw-html-m2r"><a name="ref1">[1]</a></span> Massimiliano Fasi and Mantas Mikaitis. <a class="reference external" href="http://eprints.maths.manchester.ac.uk/2785">CPFloat: A C library for emulating low-precision arithmetic</a>. MIMS EPrint 2020.22, Manchester Institute for Mathematical Sciences, The University of Manchester, UK, October 2020.</p>
+<p><span class="raw-html-m2r"><a name="ref1">[1]</a></span> Massimiliano Fasi and Mantas Mikaitis. <a class="reference external" href="http://eprints.maths.manchester.ac.uk/2850">CPFloat: A C library for emulating low-precision arithmetic</a>. MIMS EPrint 2020.22, Manchester Institute for Mathematical Sciences, The University of Manchester, UK, October 2020.</p>
 <p><span class="raw-html-m2r"><a name="ref2">[2]</a></span> Nicholas J. Higham and Srikara Pranesh, <a class="reference external" href="https://doi.org/10.1137/19M1251308">Simulating Low Precision Floating-Point Arithmetic</a>, SIAM J. Sci. Comput., 41, C585-C602, 2019.</p>
 <p><span class="raw-html-m2r"><a name="ref3">[3]</a></span> Melissa E. O’Neill, <a class="reference external" href="https://www.pcg-random.org/paper.html">PCG: A family of simple fast space-efficient statistically good algorithms for random number generation</a>, Technical report HMC-CS-2014-0905, Harvey Mudd College, Claremont, CA, September 2014.</p>
 </section>
-<section id="id9">
-<h1>Licensing information<a class="headerlink" href="#id9" title="Permalink to this headline"></a></h1>
+<section id="id8">
+<h1>Licensing information<a class="headerlink" href="#id8" title="Permalink to this headline"></a></h1>
 <p>CPFloat is distributed under the GNU Lesser General Public License, Version 2.1 or later. The terms of the GNU General Public License, Version 2, and of the Lesser GNU General Public License, Version 2.1, are in the <a class="reference external" href="LICENSES">LICENSES</a> folder. Please contact us if you would like to use CPFloat in an open source project distributed under the terms of a license that is incompatible with the GNU LGPL. We might be able to relicense the software for you.</p>
 <p>The PCG Library is distributed under the terms of either the <a class="reference external" href="https://raw.githubusercontent.com/imneme/pcg-c/master/LICENSE-APACHE.txt">Apache License, Version 2.0</a> or the <a class="reference external" href="https://raw.githubusercontent.com/imneme/pcg-c/master/LICENSE-MIT.txt">Expat License</a>, at the option of the user.</p>
 <p>The MATLAB function <code class="docutils literal notranslate"><span class="pre">float_params</span></code> is distributed under the terms of the <a class="reference external" href="https://raw.githubusercontent.com/higham/float_params/master/license.txt">BSD 2-Clause “Simplified” License</a>.</p>
