@@ -1,0 +1,17 @@
+name: run-tests
+on:
+  push:
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Install
+        run: |
+          sudo apt update
+          sudo apt install -y check
+          sudo apt install -y octave liboctave-dev
+
+      - name: Build and run
+        run: make ctest libtest otest
