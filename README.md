@@ -128,7 +128,8 @@ make experiments_extra
 
 # Licensing information
 
-CPFloat is distributed under the GNU Lesser General Public License, Version 2.1 or later. The terms of the GNU General Public License, Version 2, and of the Lesser GNU General Public License, Version 2.1, are in the [LICENSES](LICENSES) folder. Please contact us if you would like to use CPFloat in an open source project distributed under the terms of a license that is incompatible with the GNU LGPL. We might be able to relicense the software for you.
+CPFloat is distributed under the GNU Lesser General Public License, Version 2.1
+or later (see [LICENSE.md](LICENSE.md)). Please contact us if you would like to use CPFloat in an open source project distributed under the terms of a license that is incompatible with the GNU LGPL. We might be able to relicense the software for you.
 
 The PCG Library is distributed under the terms of either the [Apache License, Version 2.0](https://raw.githubusercontent.com/imneme/pcg-c/master/LICENSE-APACHE.txt) or the [Expat License](https://raw.githubusercontent.com/imneme/pcg-c/master/LICENSE-MIT.txt), at the option of the user.
 
