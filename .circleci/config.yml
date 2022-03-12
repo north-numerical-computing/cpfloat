@@ -26,4 +26,9 @@ jobs:
 workflows:
   run-tests-workflow:
     jobs:
-      - run-tests
+      - run-tests:
+          filters:
+            branches:
+              only:
+                - main
+                - dev
