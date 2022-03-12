@@ -165,10 +165,12 @@
  @brief Exponent and normalized fraction of rounded floating-point number. \
  \
  @details If the function executes without errors, then: \
- \li if @p A[i] is @p 0, then X[i] and @p exp[i] are both set to zero; \
- \li otherwise, @p X[i] is a value in the range @p (-1;-0.5], [0.5; 1) and \
- @p exp[i] is an integer such that 2^exp[i] * X[i] is equal to @p A[i] rounded
- to a lower-precision target format.<p/>\
+ \li if \f$ A_i \f$ is 0, then \f$ X_i \f$ and \f$ \exp_i \f$ are both set to \
+ zero;\
+ \li otherwise, \f$ X_i \f$ is a value in the range \f$ (-1;-0.5] \cup
+ [0.5; 1) \f$ and \f$ \exp_i \f$ is an integer such that \f$ 2^{\exp_i} \
+ \times X_i \f$ is equal to \f$ A_i \f$ rounded to a lower-precision target \
+ format.<p/>\
  \
  The parameters of the target format and the rounding mode to be used are \
  encoded in @p fpopts. If \ required, the function flips one bit in some of \
@@ -177,7 +179,8 @@
  If OpenMP support is specified at compile time, several OpenMP threads are \
  used if @p numelem is large enough. This parameter is machine dependent.\
  \
- @param[out] X Array of floating-point values in (-1;-0.5], [0.5; 1). \
+ @param[out] X Array of floating-point values in \
+ \f$ (-1;-0.5] \f$, \f$ [0.5; 1) \f$. \
  @param[out] exp Array of integer exponents. \
  @param[in] A Input array. \
  @param[in] numelem Number of elements in @p X, @p A, @p B, and @p C. \
@@ -192,10 +195,11 @@
 /** \
  @brief Scale number by power of BASE in lower precision. \
  \
- @details If the function executes without errors, then @p X[i] = A[i] *
- BASE^exp[i] rounded to a lower-precision target format. The parameters of the \
- target format and the rounding mode to be used are encoded in @p fpopts. If \
- required, the function flips one bit in some of the entries of @p X.<p/>\
+ @details If the function executes without errors, then \f$ X_i = A_i \times \
+ \mathrm{BASE}^{\exp_i} \f$ rounded to a lower-precision target format. \
+ The parameters of the target format and the rounding mode to be used are \
+ encoded in @p fpopts. If required, the function flips one bit in some of the \
+ entries of @p X.<p/>\
  \
  If OpenMP support is specified at compile time, several OpenMP threads are \
  used if @p numelem is large enough. This parameter is machine dependent.\
@@ -215,12 +219,12 @@
 /** \
  @brief Compute integral and fractional part. \
  \
- @details If the function executes without errors, then @p X[i] is a value in
- the range @p (-1,1) and @p intpart[i] is an integer such that @p X[i] +
- intpart[i] are equal to the @p A[i] rounded to a lower-precision target format.
- The parameters of the \ target format and the rounding mode to be used are
- encoded in @p fpopts. If \ required, the function flips one bit in some of the
- entries of @p X.<p/>\
+ @details If the function executes without errors, then \f$ X_i \f$ is a value \
+ the range \f$ (-1,1) \f$ and \f$ \mathrm{intpart}_i \f$ is an integer such \
+ that \f$ X_i + \mathrm{intpart}_i \f$ is equal to \f$ A_i \f$ rounded to a \
+ lower-precision target format. The parameters of the target format and the \
+ rounding mode to be used are encoded in @p fpopts. If required, the function \
+ flips one bit in some of the entries of @p X.<p/>\
  \
  If OpenMP support is specified at compile time, several OpenMP threads are \
  used if @p numelem is large enough. This parameter is machine dependent.\
@@ -240,17 +244,17 @@
 /** \
  @brief Compute integral part of the logarithm of the absolute value. \
  \
- @details If the function executes without errors, the integer @p exp[i] is \
- the exponent used internally to express the floating-point value @p A[i] \
- rounded to a lower-precision target format. In other words, @p X[i] is equal \
- to truncate(log_b^(abs(A[i]))) where @p b = @p FLT_RADIX is typically 2. The \
- parameters of the target format and the rounding mode to be used are encoded \
- in @p fpopts.<p/>\
+ @details If the function executes without errors, the integer \f$ \exp_i \f$ \
+ is the exponent used internally to express the floating-point value \
+ \f$ A_i \f$ rounded to a lower-precision target format. In other words, \
+ \f$ X_i \f$ is equal to \f$ \mathrm{trunc}(\log_b^{\lvert A_i \rvert}) \f$ \
+ where \f$ b = \mathrm{FLT\_RADIX} \f$ is typically 2. The parameters of the \
+ target format and the rounding mode to be used are encoded in @p fpopts.<p/>\
  \
  If OpenMP support is specified at compile time, several OpenMP threads are \
  used if @p numelem is large enough. This parameter is machine dependent.\
  \
- @param[out] exp Array of floating-point values in (-1, 1). \
+ @param[out] exp Array of floating-point values in \f$ (-1, 1) \f$. \
  @param[in] A Input array. \
  @param[in] numelem Number of elements in @p X, @p A, @p B, and @p C. \
  @param[in] fpopts Parameters describing the target format, the rounding mode, \
@@ -264,12 +268,12 @@
 /** \
  @brief Compute the closest integer with specified rounding mode. \
  \
- @details If the function executes without errors, then @p X[i] is the \
- integral part of @p A[i] rounded to a lower-precision target format and \
- @p exception[i] is set to 0 if @p X[i] is equal to @p A[i] and to FE_INEXACT \
- otherwise. The parameters of the target format and the rounding mode to be \
- used are encoded in @p fpopts. If required, the function flips one bit in \
- some of the entries of @p X.<p/>\
+ @details If the function executes without errors, then \f$ X_i \f$ is the \
+ integral part of \f$ A_i \f$ rounded to a lower-precision target format and \
+ \f$ \mathrm{exception}_i \f$ is set to 0 if \f$ X_i \f$ is equal to \
+ \f$ A_i \f$ and to FE_INEXACT otherwise. The parameters of the target format \
+ and the rounding mode to be used are encoded in @p fpopts. If required, the \
+ function flips one bit in some of the entries of @p X.<p/>\
  \
  If OpenMP support is specified at compile time, several OpenMP threads are \
  used if @p numelem is large enough. This parameter is machine dependent.\
@@ -289,8 +293,8 @@
 /** \
  @brief Compute the closest integer with specified rounding mode. \
  \
- @details If the function executes without errors, then @p X[i] is the \
- integral part of @p A[i] rounded to lower-precision target format. \
+ @details If the function executes without errors, then \f$ X_i \f$ is the \
+ integral part of \f$ A_i \f$ rounded to lower-precision target format. \
  The parameters of the target format and the rounding mode to be used are \
  encoded in @p fpopts. If required, the function flips one bit in some of the \
  entries of @p X.<p/>\
@@ -313,12 +317,12 @@
 /** \
  @brief Compute reminder and quotient of rounded numbers. \
  \
- @details If the function executes without errors, then @p quot[i] and @p X[i] \
- are the (integral) quotient and the reminder of the division @p A[i] / B[i] \
- with A[i] and B[i] rounded to a lower-precision target format. \
- The parameters of the target format and the rounding mode to be used are \
- encoded in @p fpopts. If required, the function flips one bit in some of the \
- entries of @p X.<p/>\
+ @details If the function executes without errors, then \f$ \mathrm{quot}_i \f$ \
+ and \f$ X_i \f$ are the (integral) quotient and the reminder of the division \
+ \f$ A_i / B_i \f$  with \f$ A_i \f$ and \f$ B_i \f$ rounded to a \
+ lower-precision target format. The parameters of the target format and the \
+ rounding mode to be used are encoded in @p fpopts. If required, the function \
+ flips one bit in some of the entries of @p X.<p/>\
  \
  If OpenMP support is specified at compile time, several OpenMP threads are \
  used if @p numelem is large enough. This parameter is machine dependent.\
@@ -339,12 +343,12 @@
 /** \
  @brief Categorize floating-point values. \
  \
- @details If the function executes without errors, then @p r[i] has value: \
- \li FP_INFINITE, if @p A[i] is finite in the lower-precising target format; \
- \li FP_NAN, if @p A[i] is a NaN in the lower-precising target format; \
- \li FP_NORMAL, if @p A[i] is normal in the lower-precising target format; \
- \li FP_SUBNORMAL, if @p A[i] is subnormal in the lower-precising target format; and \
- \li FP_ZERO, if @p A[i] is zero in the lower-precising target format. <p/> \
+ @details If the function executes without errors, then \f$ r_i \f$ has value: \
+ \li FP_INFINITE, if \f$ A_i \f$ is finite in the lower-precising target format; \
+ \li FP_NAN, if \f$ A_i \f$ is a NaN in the lower-precising target format; \
+ \li FP_NORMAL, if \f$ A_i \f$ is normal in the lower-precising target format; \
+ \li FP_SUBNORMAL, if \f$ A_i \f$ is subnormal in the lower-precising target format; and \
+ \li FP_ZERO, if \f$ A_i \f$ is zero in the lower-precising target format. <p/> \
  The parameters of the target format and the rounding mode to be used are \
  encoded in @p fpopts.<p/>\
  \
@@ -365,10 +369,10 @@
 /** \
  @brief Check whether value is STRING in lower precision target format. \
  \
- @details If the function executes without errors, then @p r[i] is a nonzero \
- integral value if @p A[i] is STRING in a lower-precision target format, and \
- zero otherwise. The parameters of the target format and the rounding mode to \
- be used are encoded in @p fpopts.<p/>\
+ @details If the function executes without errors, then \f$ r_i \f$ is a \
+ nonzero integral value if \f$ A_i \f$ is STRING in a lower-precision target \
+ format, and zero otherwise. The parameters of the target format and the \
+ rounding mode to be used are encoded in @p fpopts.<p/>\
  \
  If OpenMP support is specified at compile time, several OpenMP threads are \
  used if @p numelem is large enough. This parameter is machine dependent.\

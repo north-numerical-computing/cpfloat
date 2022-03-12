@@ -293,27 +293,27 @@ typedef struct {
   cpfloat_randseed_t *randseed;
 } optstruct;
 
-/** \
- @brief Allocate @ref optstruct struct to store parameters of target format. \
- \
- @details This function allocates and initializes an @ref optstruct struct. \
- \
- @return The function returns a pointer to the allocated memory if the \
- execution was successful, and @b NULL otherwise.<p/>\
+/**
+ @brief Allocate @ref optstruct struct to store parameters of target format.
+
+ @details This function allocates and initializes an @ref optstruct struct.
+
+ @return The function returns a pointer to the allocated memory if the
+ execution was successful, and @b NULL otherwise.<p/>
  */
 optstruct *init_optstruct();
 
-/** \
- @brief Free the memory underlying an @ref optstruct struct. \
- \
- @details This function attempts to free all the memory used by @p fpopts. \
- \
+/**
+ @brief Free the memory underlying an @ref optstruct struct.
+
+ @details This function attempts to free all the memory used by @p fpopts.
+
  @param[in] fpopts Pointer to @ref optstruct struct to be deallocated.
- \
- @return The function returns @p 0 if the unless @p fpopts is set to @p NULL, \
- in which case it return @p -1.<p/>\
+
+ @return The function returns @p 0 if the unless @p fpopts is set to @p NULL,
+ in which case it return @p -1.<p/>
  */
-int free_optstruct(optstruct *);
+int free_optstruct(optstruct *fpopts);
 
 #endif /* #ifndef _CHOPFAST_DEFINITIONS_ */
 

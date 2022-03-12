@@ -66,7 +66,7 @@
 %     occurrence of a single bit flip striking the floating-point representation
 %     of elements of Y. Possible values are:
 %        0    no bit flips
-%        1    bit flips can occur the fraction of target-format representation
+%        1    bit flips can occur in fraction of target-format representation
 %        2    bit flips can occur in any bit of target-format representation
 %     The probability of a bit flip occurring in any element of Y is FPOPTS.p.
 %     If the exponent range of the storage format is larger than that of the
