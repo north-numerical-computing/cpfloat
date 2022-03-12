@@ -18,6 +18,7 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -196,7 +197,7 @@
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a9ffc7d3972e0a89b165c1ec70a7b5da0.html">Function cpfloat_validate_optstruct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a8eaac34cedf63a1415eb5c71fa5ce939.html">Function cpfloat_validate_optstructf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a955f8bb4cb9e417a1dbb3034c1c2e0c5.html">Function cpfloatf</a></li>
-<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__definitions_8h_1a57fd9c22cf3dfc3d5f5ef49703bff12e.html">Function free_optstruct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__definitions_8h_1a0fb8844dbe1ea4065b71c69d94b04cd5.html">Function free_optstruct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__definitions_8h_1aa86db17fe733cb8a909f4ff8441e1d8f.html">Function init_optstruct</a></li>
 </ul>
 </li>
@@ -245,8 +246,8 @@
 <span id="_CPPv310cpf_frexpfPfPiPKfK6size_tP9optstruct"></span><span id="_CPPv210cpf_frexpfPfPiPKfK6size_tP9optstruct"></span><span id="cpf_frexpf__floatP.iP.floatCP.sC.optstructP"></span><span class="target" id="cpfloat__binary32_8h_1ac01ddf1fb4c996791fc705135d58a213"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cpf_frexpf</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">X</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">exp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">A</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">numelem</span></span>, <a class="reference internal" href="structoptstruct.html#_CPPv49optstruct" title="optstruct"><span class="n"><span class="pre">optstruct</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fpopts</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410cpf_frexpfPfPiPKfK6size_tP9optstruct" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Exponent and normalized fraction of rounded floating-point number. </p>
 <p>If the function executes without errors, then: <ul class="simple">
-<li><p>if <code class="docutils literal notranslate"><span class="pre">A</span></code>[i] is <code class="docutils literal notranslate"><span class="pre">0</span></code>, then X[i] and <code class="docutils literal notranslate"><span class="pre">exp</span></code>[i] are both set to zero; </p></li>
-<li><p>otherwise, <code class="docutils literal notranslate"><span class="pre">X</span></code>[i] is a value in the range <code class="docutils literal notranslate"></code>(-1;-0.5], [0.5; 1) and <code class="docutils literal notranslate"><span class="pre">exp</span></code>[i] is an integer such that 2^exp[i] * X[i] is equal to <code class="docutils literal notranslate"><span class="pre">A</span></code>[i] rounded to a lower-precision target format.</p></li>
+<li><p>if <span class="math notranslate nohighlight">\( A_i \)</span> is 0, then <span class="math notranslate nohighlight">\( X_i \)</span> and <span class="math notranslate nohighlight">\( \exp_i \)</span> are both set to zero; </p></li>
+<li><p>otherwise, <span class="math notranslate nohighlight">\( X_i \)</span> is a value in the range <span class="math notranslate nohighlight">\( (-1;-0.5] \cup [0.5; 1) \)</span> and <span class="math notranslate nohighlight">\( \exp_i \)</span> is an integer such that <span class="math notranslate nohighlight">\( 2^{\exp_i} \times X_i \)</span> is equal to <span class="math notranslate nohighlight">\( A_i \)</span> rounded to a lower-precision target format.</p></li>
 </ul>
 
 The parameters of the target format and the rounding mode to be used are encoded in <code class="docutils literal notranslate"><span class="pre">fpopts</span></code>. If \ required, the function flips one bit in some of the entries of <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
@@ -254,7 +255,7 @@ The parameters of the target format and the rounding mode to be used are encoded
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> – <strong>[out]</strong> Array of floating-point values in (-1;-0.5], [0.5; 1).</p></li>
+<li><p><strong>X</strong> – <strong>[out]</strong> Array of floating-point values in <span class="math notranslate nohighlight">\( (-1;-0.5] \)</span>, <span class="math notranslate nohighlight">\( [0.5; 1) \)</span>.</p></li>
 <li><p><strong>exp</strong> – <strong>[out]</strong> Array of integer exponents.</p></li>
 <li><p><strong>A</strong> – <strong>[in]</strong> Input array.</p></li>
 <li><p><strong>numelem</strong> – <strong>[in]</strong> Number of elements in <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code>, and <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p></li>

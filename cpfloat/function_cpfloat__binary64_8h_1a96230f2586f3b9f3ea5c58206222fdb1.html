@@ -18,6 +18,7 @@
         <script src="../_static/doctools.js"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -196,7 +197,7 @@
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a9ffc7d3972e0a89b165c1ec70a7b5da0.html">Function cpfloat_validate_optstruct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a8eaac34cedf63a1415eb5c71fa5ce939.html">Function cpfloat_validate_optstructf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a955f8bb4cb9e417a1dbb3034c1c2e0c5.html">Function cpfloatf</a></li>
-<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__definitions_8h_1a57fd9c22cf3dfc3d5f5ef49703bff12e.html">Function free_optstruct</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__definitions_8h_1a0fb8844dbe1ea4065b71c69d94b04cd5.html">Function free_optstruct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__definitions_8h_1aa86db17fe733cb8a909f4ff8441e1d8f.html">Function init_optstruct</a></li>
 </ul>
 </li>
@@ -244,7 +245,7 @@
 <dt class="sig sig-object cpp" id="_CPPv49cpf_hypotPdPKdPKdK6size_tP9optstruct">
 <span id="_CPPv39cpf_hypotPdPKdPKdK6size_tP9optstruct"></span><span id="_CPPv29cpf_hypotPdPKdPKdK6size_tP9optstruct"></span><span id="cpf_hypot__doubleP.doubleCP.doubleCP.sC.optstructP"></span><span class="target" id="cpfloat__binary64_8h_1a96230f2586f3b9f3ea5c58206222fdb1"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cpf_hypot</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">X</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">A</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">B</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">numelem</span></span>, <a class="reference internal" href="structoptstruct.html#_CPPv49optstruct" title="optstruct"><span class="n"><span class="pre">optstruct</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fpopts</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49cpf_hypotPdPKdPKdK6size_tP9optstruct" title="Permalink to this definition"></a><br /></dt>
 <dd><p>Compute hypotenuse of a right-angle triangle in lower precision. </p>
-<p>If the function executes without errors, then X[i] = sqrt(A[i]^2 + B[i]^2) rounded to a lower-precision target format. The parameters of the target format and the rounding mode to be used are encoded in <code class="docutils literal notranslate"><span class="pre">fpopts</span></code>. If required, the function flips one bit in some of the entries of <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
+<p>If the function executes without errors, then <span class="math notranslate nohighlight">\( X_i = \sqrt{A_i^2 + B_i^2} \)</span> rounded to a lower-precision target format. The parameters of the target format and the rounding mode to be used are encoded in <code class="docutils literal notranslate"><span class="pre">fpopts</span></code>. If required, the function flips one bit in some of the entries of <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
 <p>If OpenMP support is specified at compile time, several OpenMP threads are used if <code class="docutils literal notranslate"><span class="pre">numelem</span></code> is large enough. This parameter is machine dependent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
