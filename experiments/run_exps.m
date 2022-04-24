@@ -20,6 +20,11 @@ for iter1 = 1:2
   end
 end
 
+%% Speedup of cpfloat/intlab (Figure 3)
+% for generatesubnormals = [true,false]
+%     exp_comp_intlab
+% end
+
 %% Overhead of MATLAB interface (Figure 3, second and third columns)
 exp_overhead
 
