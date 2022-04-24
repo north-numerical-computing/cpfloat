@@ -61,7 +61,7 @@ PCG_FLAGS=$(PCG_INCLUDE) $(PCG_LIB)
 
 
 .PHONY: all
-all: autotune mexmat mexoct
+all: autotune lib mexmat mexoct
 
 
 
@@ -174,6 +174,43 @@ $(LIBDIR)libcpfloat.a: $(BUILDDIR)cpfloat-static.o libpcg $(LIBDIR)
 
 
 
+MEXEXTENSION:=`$(MEXEXT)`
+
+.PHONY: mexmat
+mexmat: $(BINDIR)cpfloat.m $(BINDIR)cpfloat.$(MEXEXTENSION)
+
+.PHONY: mexoct
+mexoct: $(BINDIR)cpfloat.m $(BINDIR)cpfloat.mex
+
+$(BINDIR)cpfloat.m: $(MEXDIR)cpfloat.m $(BINDIR)
+	$(CP) $< $@
+
+MEXSTRING="cd $(MEXDIR); \
+	retval = cpfloat_compile('cpfloatdir', '$(SRCDIR)', \
+		'pcgpath', '$(DEPSDIR)pcg-c/', \
+		'compilerpath', '$(CC)'); \
+	if retval \
+		rehash(); \
+		cpfloat_autotune('cpfloatdir', '$(SRCDIR)'); \
+		cpfloat_compile('cpfloatdir', '$(SRCDIR)', \
+			'pcgpath', '$(DEPSDIR)pcg-c/', \
+			'compilerpath', '$(CC)'); \
+	end; \
+	exit;"
+
+MEXEXTENSION:=`$(MEXEXT)`
+
+$(BINDIR)cpfloat.$(MEXEXTENSION): $(MEXDIR)cpfloat.c libpcg $(BINDIR)
+	$(MATLAB) -r $(MEXSTRING)
+	$(MV) $(MEXDIR)cpfloat.$(MEXEXTENSION) $@
+
+$(BINDIR)cpfloat.mex: $(MEXDIR)cpfloat.c libpcg $(BINDIR)
+	$(OCTAVE) --eval $(MEXSTRING)
+	$(MV) $(MEXDIR)cpfloat.mex $@
+
+
+
+
 
 .PHONY: test
 test: ctest libtest mtest otest
@@ -214,34 +251,6 @@ libtest-shared: $(BINDIR)libcpfloat_shared_test
 libtest-static: $(BINDIR)libcpfloat_static_test
 	$<
 	$(MV) cpfloat_test.log $(TESTDIR)libcpfloat_static_test.log
-
-MEXSTRING="cd $(MEXDIR); \
-	retval = cpfloat_compile('cpfloatdir', '$(SRCDIR)', \
-		'pcgpath', '$(DEPSDIR)pcg-c/', \
-		'compilerpath', '$(CC)'); \
-	if retval \
-		rehash(); \
-		cpfloat_autotune('cpfloatdir', '$(SRCDIR)'); \
-		cpfloat_compile('cpfloatdir', '$(SRCDIR)', \
-			'pcgpath', '$(DEPSDIR)pcg-c/', \
-			'compilerpath', '$(CC)'); \
-	end; \
-	exit;"
-
-libtest: libtest-static libtest-shared
-
-MEXEXTENSION:=`$(MEXEXT)`
-
-$(BINDIR)cpfloat.$(MEXEXTENSION): $(MEXDIR)cpfloat.c libpcg $(BINDIR)
-	$(MATLAB) -r $(MEXSTRING)
-	$(MV) $(MEXDIR)cpfloat.$(MEXEXTENSION) $@
-
-$(BINDIR)cpfloat.mex: $(MEXDIR)cpfloat.c libpcg $(BINDIR)
-	$(OCTAVE) --eval $(MEXSTRING)
-	$(MV) $(MEXDIR)cpfloat.mex $@
-
-$(BINDIR)cpfloat.m: $(MEXDIR)cpfloat.m $(BINDIR)
-	$(CP) $< $@
 
 .PHONY: mtest
 mtest: MTESTSTRING="addpath('$(DEPSDIR)float_params'); \
