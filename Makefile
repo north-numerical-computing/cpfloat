@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 ROOTDIR=$(shell pwd)
-DEPSDIR=$(ROOTDIR)/include/
+DEPSDIR=$(ROOTDIR)/deps/
 SRCDIR=$(ROOTDIR)/src/
 DOCDIR=$(ROOTDIR)/docs/
 MEXDIR=$(ROOTDIR)/mex/
@@ -76,7 +76,7 @@ $(DEPSDIR)floatp: $(DEPSDIR)floatp.zip
 	$(PATCH) -p0 < $(DEPSDIR)floatp.patch;
 
 init(%):
-	$(GIT) submodule update --init include/$%
+	$(GIT) submodule update --init deps/$%
 
 $(DEPSDIR)pcg-c/src/libpcg_random.a: init(pcg-c)
 	cd $(DEPSDIR)pcg-c; make
