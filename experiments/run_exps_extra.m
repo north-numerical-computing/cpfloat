@@ -2,7 +2,6 @@
 % SPDX-License-Identifier: LGPL-2.1-or-later
 
 %% Initialization
-nthreads = Inf;
 storageformats = {'single', 'double'};
 
 %% Speedup cpfloat/chop, LU decomposition.

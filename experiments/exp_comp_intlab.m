@@ -8,7 +8,7 @@ fasttiming = false;
 roundingmodes = [1:4];
 intlab_roundingmodes = [0 1 -1 2];
 sizes = 1:9;
-sizes = [10*sizes, 100*sizes, 1000*sizes, 10000];
+sizes = [sizes, 10*sizes, 100*sizes, 1000*sizes, 10000];
 
 subnormal = 1;
 explim = 0;
@@ -41,8 +41,6 @@ for k = 1:nformats
       % TensorFloat-32
       precision = 11;
       emax = 127;
-      params = [precision, emax];
-      options.params = params;
   end
   emin = 1 - emax;
   emins = emin + 1 - precision;
@@ -69,22 +67,26 @@ for k = 1:nformats
       round = roundingmodes(i);
       setround(intlab_roundingmodes(i));
 
+      clear options
       options.format = format;
       options.subnormal = subnormal;
       options.round = round;
       options.flip = flip;
       options.explim = explim;
+      if format == 'c'
+        options.params = [precision, emax];
+      end
 
       if fasttiming
         t1 = tic;
-        Y = cpfloat(A, options, nthreads);
+        Y = cpfloat(A, options);
         time_cpfloat = toc(t1);
 
         t2 = tic;
         Z = flround(A, precision, emax);
         time_intlab = toc(t2);
       else
-        cpfloat_fun = @()cpfloat(A, options, nthreads);
+        cpfloat_fun = @()cpfloat(A, options);
         time_cpfloat = timeit(cpfloat_fun);
 
         intlab_fun = @()flround(A, precision, emax);

@@ -9,7 +9,6 @@
 % compile_cpfloat();
 
 %% Initialization
-nthreads = Inf;
 storageformats = {'single', 'double'};
 
 %% Speedup cpfloat/chop (Figure 2)
