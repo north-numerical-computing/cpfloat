@@ -29,15 +29,15 @@ int main() {
   /* Input parameters. */
   size_t i, j, k, l, n;
 
-  size_t nsizes = 28;
-  size_t *sizes = malloc(nsizes * sizeof(double));
+  size_t nsizes = 37;
+  size_t *sizes = malloc(nsizes*sizeof(double));
   size_t mult = 1;
-  for (i = 1; i <= 3; i++) {
-    mult *= 10;
+  for (i = 1; i <= 4; i++) {
     for (j = 1; j < 10; j++)
-      sizes[9*(i-1)+(j-1)] = mult*j;
+      sizes[9 * (i - 1) + (j - 1)] = mult * j;
+    mult *= 10;
   }
-  sizes[9*(i-1)] = mult*10;
+  sizes[9 * (i - 1)] = mult;
 
   float fmin = ldexpf(1.,-14);
 
