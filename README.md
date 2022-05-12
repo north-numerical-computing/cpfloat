@@ -1,7 +1,7 @@
-[![Version](https://img.shields.io/github/v/tag/mfasi/cpfloat?label=version)](https://github.com/mfasi/cpfloat/tags)
-[![CircleCI build](https://img.shields.io/circleci/build/github/mfasi/cpfloat/master?label=build)](https://circleci.com/gh/mfasi/cpfloat)
-[![Tests](https://img.shields.io/github/workflow/status/mfasi/cpfloat/run-tests?label=tests)](https://github.com/mfasi/cpfloat/actions/workflows/run_tests.yml)
-[![GitHub](https://img.shields.io/github/license/mfasi/cpfloat)](LICENSE.md)
+[![Version](https://img.shields.io/github/v/tag/north-numerical-computing/cpfloat?label=version)](https://github.com/north-numerical-computing/cpfloat/tags)
+[![CircleCI build](https://img.shields.io/circleci/build/github/north-numerical-computing/cpfloat/master?label=build)](https://circleci.com/gh/north-numerical-computing/cpfloat)
+[![Tests](https://img.shields.io/github/workflow/status/north-numerical-computing/cpfloat/run-tests?label=tests)](https://github.com/north-numerical-computing/cpfloat/actions/workflows/run_tests.yml)
+[![GitHub](https://img.shields.io/github/license/north-numerical-computing/cpfloat)](LICENSE.md)
 
 # CPFloat: Custom-Precision Floating-point numbers
 
