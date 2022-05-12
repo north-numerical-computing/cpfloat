@@ -4,9 +4,3 @@
 [submodule "include/float_params"]
 	path = deps/float_params
 	url = https://github.com/higham/float_params.git
-[submodule "include/FloatX"]
-	path = deps/FloatX
-	url = https://github.com/oprecomp/FloatX.git
-[submodule "include/chop"]
-	path = deps/chop
-	url = https://github.com/higham/chop.git

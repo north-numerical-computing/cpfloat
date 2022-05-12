@@ -8,7 +8,6 @@ DOCDIR=$(ROOTDIR)/docs/
 MEXDIR=$(ROOTDIR)/mex/
 EXAMPLEDIR=$(ROOTDIR)/examples/
 TESTDIR=$(ROOTDIR)/test/
-EXPDIR=$(ROOTDIR)/experiments/
 UTILDIR=$(ROOTDIR)/util/
 BINDIR=$(ROOTDIR)/bin/
 BUILDDIR=$(ROOTDIR)/build/
@@ -21,30 +20,25 @@ PCG_HEADER=$(DEPSDIR)pcg-c/include/pcg_variants.h
 
 SHELL:=/bin/sh
 CP:=cp
-CURL:=curl
 MKDIR:=mkdir
 MV:=mv
-PATCH:=patch
 RM:=rm -f
-UNZIP:=unzip
 
 CHECKMK:=checkmk
 CC:=gcc
-CXX:=g++
 CCOV:=gcov
 
 DOXYGEN:=doxygen
 SPHINXBUILD:=sphinx-build
 GIT:=git
-MATLAB:=matlab -nodesktop -nosplash
-MEXEXT:=mexext
+MATLAB:=/home/max/MATLAB/R2022a/bin/matlab -nodesktop -nosplash
+MEXEXT:=/home/max/MATLAB/R2022a/bin/mexext
 OCTAVE:=octave
 
 WFLAGS=-Wall -Wextra -pedantic
 ARCHFLAGS=-march=native
 CFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=gnu99 -I $(SRCDIR) \
 	-I /usr/local/include -L /usr/local/lib
-CXXFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=c++11
 COPTIM=-O3
 CCOVFLAGS=-Og -g --coverage
 CLIBS=-lm -fopenmp
@@ -59,21 +53,12 @@ PCG_FLAGS=$(PCG_INCLUDE) $(PCG_LIB)
 
 
 
-
 .PHONY: all
 all: autotune lib mexmat mexoct
 
 
 
 
-
-FLOATP_URL:=https://gerard-meurant.pagesperso-orange.fr/floatp.zip
-$(DEPSDIR)floatp.zip:
-	$(CURL) -o $(DEPSDIR)floatp.zip -O $(FLOATP_URL)
-
-$(DEPSDIR)floatp: $(DEPSDIR)floatp.zip
-	$(UNZIP) $(DEPSDIR)floatp.zip -d $(DEPSDIR)floatp
-	$(PATCH) -p0 < $(DEPSDIR)floatp.patch;
 
 init(%):
 	$(GIT) submodule update --init deps/$%
@@ -170,6 +155,7 @@ $(LIBDIR)libcpfloat.so: $(BUILDDIR)cpfloat-shared.o libpcg $(LIBDIR)
 
 $(LIBDIR)libcpfloat.a: $(BUILDDIR)cpfloat-static.o libpcg $(LIBDIR)
 	ar -cr $@ $< $(LIBPCG_OBJ)
+
 
 
 
@@ -318,78 +304,8 @@ $(BINDIR)example_manuscript: $(EXAMPLEDIR)example_manuscript.c libpcg $(BINDIR)
 
 
 
-.PHONY: experiments
-experiments: run_exp_ccomp run_exp_overhead run_exp_matlab
-
-
-# C experiments
-$(BINDIR)exp_comp_cpfloat: $(EXPDIR)exp_comp_cpfloat.c libpcg $(BINDIR)
-	$(CC) $(CFLAGS) $(COPTIM) -o $@ $< $(CLIBS) $(PCG_FLAGS) -I $(SRCDIR)
-
-$(BINDIR)exp_comp_mpfr: $(EXPDIR)exp_comp_mpfr.c $(BINDIR)
-	$(CC) $(CFLAGS) $(COPTIM) -o $@ $< $(CLIBS) -lmpfr -I $(SRCDIR)
-
-$(BINDIR)exp_comp_floatx: $(EXPDIR)exp_comp_floatx.cpp init(FloatX) $(BINDIR)
-	$(CXX) $(CXXFLAGS) $(COPTIM) -I $(DEPSDIR)/FloatX/src -o $@ $<
-
-.PHONY: run_exp_ccomp
-run_exp_ccomp: $(DATDIR) \
-	$(BINDIR)exp_comp_cpfloat $(BINDIR)exp_comp_mpfr $(BINDIR)exp_comp_floatx
-	$(BINDIR)exp_comp_cpfloat
-	$(BINDIR)exp_comp_mpfr
-	$(BINDIR)exp_comp_floatx
-	$(MV) *.dat $(DATDIR)
-
-$(BINDIR)exp_overhead: $(EXPDIR)exp_overhead.c libpcg $(BINDIR)
-	$(CC) $(CFLAGS) $(COPTIM) -o $@ $< $(CLIBS) $(PCG_FLAGS)
-
-run_exp_overhead: $(BINDIR)exp_overhead $(DATDIR)
-	$<
-	$(MV) *.dat $(DATDIR)
-
-# MATLAB experiments
-.PHONY: run_exp_matlab
-run_exp_matlab: EXPSTRING="addpath('$(DEPSDIR)chop'); \
-		addpath('$(BINDIR)'); \
-		addpath(genpath('$(DEPSDIR)floatp/')); \
-		cd $(EXPDIR); \
-		datdir = '$(DATDIR)'; \
-		run_exps; \
-		exit;"
-
-run_exp_matlab: mexmat init(chop) $(DATDIR)
-	$(MATLAB) -r $(EXPSTRING)
-
-
-.PHONY: experiments_extra
-experiments_extra: run_exp_openmp run_exp_matlab_extra
-
-$(BINDIR)exp_openmp: $(EXPDIR)exp_openmp.c libpcg $(BINDIR)
-	$(CC) $(CFLAGS) $(COPTIM) -o $@ $< $(CLIBS) $(PCG_FLAGS)
-
-.PHONY: run_exp_openmpn
-run_exp_openmp: $(DATDIR) $(BINDIR)exp_openmp
-	$<
-	$(MV) *.dat $(DATDIR)
-
-.PHONY: run_exp_matlab_extra
-run_exp_matlab_extra: EXPSTRING="addpath('$(DEPSDIR)chop'); \
-		addpath('$(BINDIR)'); \
-		addpath(genpath('$(DEPSDIR)floatp/')); \
-		cd $(EXPDIR); \
-		datdir = '$(DATDIR)'; \
-		run_exps_extra; \
-		exit;"
-
-run_exp_matlab_extra: mexmat init(chop) $(DATDIR)
-	$(MATLAB) -r $(EXPSTRING)
-
-
-
-
-
 .PHONY: cleanall
-cleanall: clean cleanlib cleandep cleantest cleancoverage cleandocs cleanexp cleandat
+cleanall: clean cleanlib cleandeps cleantest cleancoverage cleandocs
 
 .PHONY: clean
 clean:
@@ -399,8 +315,7 @@ clean:
 cleanlib:
 	$(RM) -r $(BUILDDIR)*
 
-
-.PHONY: cleandep
+.PHONY: cleandeps
 cleandep:
 	cd $(DEPSDIR)pcg-c; make clean
 
@@ -416,14 +331,6 @@ cleancoverage:
 cleandocs:
 	$(RM) -r $(DOCDIR)Doxyfile $(DOCDIR)xml
 	$(RM) -r $(DOCDIR)html $(DOCDIR)source/cpfloat
-
-.PHONY: cleanexp
-cleanexp:
-	$(RM) -f $(BINDIR)exp_*
-
-.PHONY: cleandat
-cleandat:
-	$(RM) $(DATDIR)*
 
 
 
