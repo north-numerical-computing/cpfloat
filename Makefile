@@ -336,7 +336,7 @@ cleandocs:
 
 
 
-license.spdx: $(UTILDIR)generate_spdx.sh
+license.spdx:
 	$(UTILDIR)generate_spdx.sh > $@
 
 # CPFloat - Custom Precision Floating-point numbers.
