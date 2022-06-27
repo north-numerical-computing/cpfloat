@@ -31,8 +31,8 @@ CCOV:=gcov
 DOXYGEN:=doxygen
 SPHINXBUILD:=sphinx-build
 GIT:=git
-MATLAB:=/home/max/MATLAB/R2022a/bin/matlab -nodesktop -nosplash
-MEXEXT:=/home/max/MATLAB/R2022a/bin/mexext
+MATLAB:=$(shell which matlab) -nodesktop -nosplash
+MEXEXT:=$(shell which mexext)
 OCTAVE:=octave
 
 WFLAGS=-Wall -Wextra -pedantic
