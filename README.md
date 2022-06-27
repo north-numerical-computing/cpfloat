@@ -111,7 +111,6 @@ make otest # Test MEX interface using Octave.
 ```
 These two commands run, in MATLAB and Octave respectively, the function `test/cpfloat_test.m`. This set of tests is based on the MATLAB script `test_chop.m`, [available on GitHub](https://github.com/higham/chop/blob/master/test_chop.m): some changes were necessary in order to make it compatible with Octave.
 
-```
 
 # References
 
