@@ -120,6 +120,10 @@ These two commands run, in MATLAB and Octave respectively, the function `test/cp
 
 <a name="ref3">[3]</a> Melissa E. O'Neill, [PCG: A family of simple fast space-efficient statistically good algorithms for random number generation](https://www.pcg-random.org/paper.html), Technical report HMC-CS-2014-0905, Harvey Mudd College, Claremont, CA, September 2014.
 
+# Acknowledgements
+
+The library was written by Max Fasi and Mantas Mikaitis. We thank Ian McInerney and Theo Mary for testing the library and suggesting improvements.
+
 # Licensing information
 
 CPFloat is distributed under the GNU Lesser General Public License, Version 2.1
