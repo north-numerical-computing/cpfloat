@@ -53,10 +53,10 @@ void mexFunction(int nlhs,
   /* Parse second argument and populate fpopts structure. */
   if (nrhs > 1) {
     bool is_subn_rnd_default = false;
-    if(!mxIsStruct(prhs[1])) {
+    if(!mxIsEmpty(prhs[1]) && !mxIsStruct(prhs[1])) {
       mexErrMsgIdAndTxt("cpfloat:invalidstruct",
                         "Second argument must be a struct.");
-    } else {
+    } else if (!mxIsEmpty(prhs[1])) {
       mxArray *tmp = mxGetField(prhs[1], 0, "format");
 
       if (tmp != NULL) {

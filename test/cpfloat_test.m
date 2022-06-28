@@ -121,6 +121,7 @@ function cpfloat_test
   c = cpfloat([]);
   cpfloat([]);
   cpfloat([],fp);
+  cpfloat(1,[]);
   cpfloat(1,fp);
   c = cpfloat(1,fp);
 
