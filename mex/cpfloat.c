@@ -73,7 +73,17 @@ void mexFunction(int nlhs,
         mexWarnMsgIdAndTxt("cpfloat:ignoredparams",
                            "Floating-point parameters ignored.");
       /* Populate fpopts->params according to fpopts->format. */
-      if (!strcmp(fpopts->format, "b") ||
+       if (!strcmp(fpopts->format, "q43") ||
+           !strcmp(fpopts->format, "fp8-e4m3") ||
+                 !strcmp(fpopts->format, "E4M3")) {
+        fpopts->precision = 4;
+        fpopts->emax = 7;
+      } else if (!strcmp(fpopts->format, "q52") ||
+                 !strcmp(fpopts->format, "fp8-e5m2") ||
+                 !strcmp(fpopts->format, "E5M2")) {
+        fpopts->precision = 3;
+        fpopts->emax = 15;
+      } else if (!strcmp(fpopts->format, "b") ||
           !strcmp(fpopts->format, "bfloat16") ||
           !strcmp(fpopts->format, "bf16")) {
         fpopts->precision = 8;

@@ -20,6 +20,8 @@
 %
 %   * The string FPOPTS.format specifies the target floating-point format.
 %     Possible values are:
+%       'q43', 'fp8-e4m3', 'E4M3', for NVIDIA E4M3;
+%       'q52', 'fp8-e5m2', 'E5M2' for NVIDIA E5M2;
 %       'b', 'bf16', 'bfloat16'            for Intel bfloat16;
 %       'h', 'fp16', 'binary16', 'half'    for IEEE binary16 (half precision);
 %       't', 'tf32', 'TeensorFloat-32'     for NVIDIA TensorFloat-32;

@@ -175,7 +175,7 @@ function cpfloat_test
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Main loop: test single and half formats.
-  for i = 1:2
+  for i = 1:4
     clear cpfloat fp options
 
     if i == 1
@@ -185,7 +185,15 @@ function cpfloat_test
     elseif i == 2
       % Half precision tests.
       [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('half');
-      options.format = 'h';
+      options.format = 'h'
+    elseif i == 3
+      % Quarter precision tests.
+      [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('q43');
+      options.format = 'E4M3';
+    elseif i == 4
+      % Quarter precision tests.
+      [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('q52');
+      options.format = 'E5M2';
     end
     options.subnormal = 0;
 
@@ -194,6 +202,10 @@ function cpfloat_test
       y = double(single(x));
     elseif i == 2
       y = pi_h; % double(fp16(x));
+    elseif i == 3
+      y = 3.25;
+    elseif i == 4
+      y = 3.0;
     end
     c = cpfloat(x,options);
     assert_eq(c,y);
@@ -207,13 +219,19 @@ function cpfloat_test
       dy = double(eps(single(y)));
     elseif i == 2
       dy = 2*y*uh; % double(eps(fp16(y)));
+    elseif i == 3
+      y = 2^4;
+      dy = 2*y*u;
+    elseif i == 4
+      y = 2^4;
+      dy = 2*y*u;
     end
     x = y + dy;
     c = cpfloat(x,options);
     assert_eq(c,x)
 
     % Number just before a power of 2.
-    y = 2^10; x = y - dy;
+    x = y - dy;
     c = cpfloat(x,options);
     assert_eq(c,x)
 
@@ -223,6 +241,10 @@ function cpfloat_test
       dy = double(eps(single(y)));
     elseif i == 2
       dy = 2*y*uh; % double(eps(fp16(y)));
+    elseif i == 3
+      dy = 2*y*u;
+    elseif i == 4
+      dy = 2*y*u;
     end
     x = y + dy;
     c = cpfloat(x,options);

@@ -236,6 +236,8 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
 
   /* Set retval to -1 if format is not valid. */
   const char *valid_formats [] = {"",
+                                  "43", "fp8-e4m3", "E4M3",
+                                  "52", "fp8-e5m2", "E5M2",
                                   "bfloat", "bf16", "b",
                                   "binary16", "fp16", "half", "h",
                                   "TensorFloat-32", "tf32", "t",
