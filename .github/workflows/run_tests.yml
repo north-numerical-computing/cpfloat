@@ -5,12 +5,13 @@ jobs:
   build-and-run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-
-      - name: Install
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Install check library
         run: |
           sudo apt update
           sudo apt install -y check
-
-      - name: Build and run
-        run: make ctest libtest
+      - name: Build and run C tests
+        run: make ctest
+      - name: Build and run library tests
+        run: make libtest
