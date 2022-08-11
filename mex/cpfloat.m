@@ -1,6 +1,5 @@
 %CPFLOAT    Round floating point numbers to lower precision.
-%
-%   [Y, OPTIONS] = CPFLOAT(X, FPOPTS) returns a matrix Y containing the elements
+%   [Y,OPTIONS] = CPFLOAT(X,FPOPTS) returns a matrix Y containing the elements
 %   of X rounded to a lower-precision floating-point format (the target format).
 %   The function can be used to simulate the occurrence of soft errors in the
 %   rounded values. X must be a real matrix with entries of class 'single' or
@@ -34,11 +33,11 @@
 %
 %   * The two-element vector FPOPTS.params specifies the parameters of the
 %     target floating-point format, and is ignored unless FPOPTS.format is set
-%     to either 'c' or 'custom'. The vector has the form [PRECISION , EMAX],
+%     to either 'c' or 'custom'. The vector has the form [PRECISION,EMAX],
 %     where PRECISION and EMAX are positive integer representing the number of
 %     binary digits in the fraction and the maximum exponent of the target
 %     format, respectively. The minimum exponent is assumed to be 1 - EMAX. The
-%     default value of this field is the vector [11, 15].
+%     default value of this field is the vector [11,15].
 %
 %   * The scalar FPOPTS.subnormal specifies the support for subnormal numbers.
 %     The target floating-point format will not support subnormal numbers if
