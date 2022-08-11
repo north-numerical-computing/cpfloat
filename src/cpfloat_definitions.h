@@ -168,7 +168,7 @@ typedef struct {
    * cpfloat_validate_optstruct() return a warning code if this field is not set
    * to either the empty string or one of the strings above.
    */
-  char format [10];
+  char format [15];
   /**
    * @brief Bits of precision of target format.
    *
