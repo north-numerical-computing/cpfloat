@@ -11,7 +11,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y check
-          sudo apt install -y octave liboctave-dev
 
       - name: Build and run
-        run: make ctest libtest otest
+        run: make ctest libtest
