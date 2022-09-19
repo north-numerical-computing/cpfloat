@@ -169,6 +169,11 @@ void mexFunction(int nlhs,
     }
   }
 
+  /* UNDOCUMENTED FEATURE: force number of OpenMP threads.
+   * If algorithm = 0, do not specify how many threads to use.
+   * If algorithm > 0, use cpfloat() with specified number of threads.
+   * If algorithm < 0, use cpfloat_parallel() with specified number of threads.
+   */
   int algorithm;
   if (nrhs > 2) {
     double *tmp = (double *)mxGetData(prhs[2]);
@@ -178,12 +183,6 @@ void mexFunction(int nlhs,
       mexErrMsgIdAndTxt("cpfloat:invalidalgorithm",
                         "Third parameters must be an integer.");
     algorithm = (int)(*tmp);
-    #ifdef _OPENMP
-    if (algorithm < -omp_get_max_threads())
-      algorithm = -omp_get_max_threads();
-    else if (algorithm > omp_get_max_threads())
-      algorithm = omp_get_max_threads();
-    #endif
   } else
     algorithm = 0;
 

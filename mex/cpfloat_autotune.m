@@ -22,20 +22,27 @@ function cpfloat_autotune(varargin)
 
   p = inputParser;
   addParameter(p, 'cpfloatdir', './', @ischar);
-  addParameter(p, 'nthreads', Inf, ...
-               @(x)(isscalar(x) && round(x) == x));
+  if exist('maxNumCompThreads', 'builtin')
+    addParameter(p, 'nthreads', maxNumCompThreads(), ...
+                 @(x)(isscalar(x) && round(x) == x));
+  else
+    pkg load parallel
+    addParameter(p, 'nthreads', parcellfun_set_nproc(Inf), ...
+                 @(x)(isscalar(x) && round(x) == x));
+  end
   parse(p,varargin{:});
   cpfloatdir = p.Results.cpfloatdir;
   nthreads = p.Results.nthreads;
 
   ntests = 100;
 
+  fprintf('Test using %d OpenMP threads.\n', nthreads);
   if exist('timeit', 'builtin')
     parfaster = @(n, fpopts, ntests, fpclass)...
-      parfaster_timeit(n, fpopts, ntests, nthreads, fpclass);
+        parfaster_timeit(n, fpopts, ntests, nthreads, fpclass);
   else
     parfaster = @(n, fpopts, ntests, fpclass)...
-      parfaster_tictoc(n, fpopts, ntests, nthreads, fpclass);
+        parfaster_tictoc(n, fpopts, ntests, nthreads, fpclass);
   end
 
   docstring =[
