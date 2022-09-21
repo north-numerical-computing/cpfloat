@@ -1,0 +1,19 @@
+name: run-octave-tests
+on:
+  push:
+jobs:
+  build-and-run-octave-tests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Install Octave and corresponding packages and libraries
+        run: |
+          sudo apt update
+          sudo apt install -y octave-parallel liboctave-dev
+          curl https://master.dl.sourceforge.net/project/octave/Octave%20Forge%20Packages/Individual%20Package%20Releases/fenv-0.1.0.tar.gz?viasf=1 -o fenv.tar.gz
+          octave --eval "pkg install fenv.tar.gz"
+      - name: Build MEX interface for Octave
+        run: make mexoct
+      - name: Run tests for MEX interface in Octave
+        run: make otest

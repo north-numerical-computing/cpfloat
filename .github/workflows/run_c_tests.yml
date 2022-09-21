@@ -1,8 +1,8 @@
-name: run-tests
+name: run-c-tests
 on:
   push:
 jobs:
-  build-and-run:
+  build-and-run-c-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
