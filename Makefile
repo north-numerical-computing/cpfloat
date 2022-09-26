@@ -111,14 +111,14 @@ $(BUILDDIR)cpfloat_template.c: $(SRCDIR)cpfloat_template.h
 	sed 's/static inline//g' $< > $@
 
 $(BUILDDIR)cpfloat.c: $(BUILDDIR)cpfloat.tmp $(BUILDDIR)cpfloat_template.c
-	echo "#include \"cpfloat_docmacros.h\"\n\
+	echo -e "#include \"cpfloat_docmacros.h\"\n\
 	#include \"cpfloat_definitions.h\"\n" > $@
 	sed 's/template.h/template.c/' $(BUILDDIR)cpfloat.tmp >> $@
 
 $(INCDIR)cpfloat.h: $(BUILDDIR)cpfloat.tmp $(BUILDDIR) $(INCDIR)
 	sed '/^\/\*\* @/,/^\/\*\* @/d' $< > $(BUILDDIR)cpfloat-h.tmp
 	sed -i '/^ \*\|\/\*/d' $(BUILDDIR)cpfloat-h.tmp
-	echo "/* SPDX-FileCopyrightText: 2020 Massimiliano Fasi and Mantas Mikaitis */\n\
+	echo -e "/* SPDX-FileCopyrightText: 2020 Massimiliano Fasi and Mantas Mikaitis */\n\
 	/* SPDX-License-Identifier: LGPL-2.1-or-later                         */\n\
 	\n\
 	/**\n\
@@ -133,7 +133,7 @@ $(INCDIR)cpfloat.h: $(BUILDDIR)cpfloat.tmp $(BUILDDIR) $(INCDIR)
 	#include \"cpfloat_definitions.h\"\n\
 	\n" > $@
 	cat $(BUILDDIR)cpfloat-h.tmp >> $@
-	echo "#endif /* #ifndef _CPFLOAT_ */" >> $@
+	echo -e "#endif /* #ifndef _CPFLOAT_ */" >> $@
 
 HEADER_DEPS=$(INCDIR)cpfloat_threshold_binary32.h \
 	$(INCDIR)cpfloat_threshold_binary64.h \
