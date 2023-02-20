@@ -11,4 +11,3 @@ Function Documentation
 
 
 .. doxygenfunction:: cpf_scalbn(double *, const double *, const int *, const size_t, optstruct *)
-   :project: CPFloat

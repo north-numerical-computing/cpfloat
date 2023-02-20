@@ -11,4 +11,3 @@ Function Documentation
 
 
 .. doxygenfunction:: cpf_llround(long long *, const double *, const size_t, optstruct *)
-   :project: CPFloat

@@ -11,4 +11,3 @@ Function Documentation
 
 
 .. doxygenfunction:: cpfloat_validate_optstructf(const optstruct *)
-   :project: CPFloat

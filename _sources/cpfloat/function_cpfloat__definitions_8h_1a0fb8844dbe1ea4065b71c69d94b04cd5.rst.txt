@@ -11,4 +11,3 @@ Function Documentation
 
 
 .. doxygenfunction:: free_optstruct(optstruct *)
-   :project: CPFloat

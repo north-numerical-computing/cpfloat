@@ -9,7 +9,6 @@ File cpfloat_binary64.h
 .. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
 
 
-
 CPFloat functions for ``double`` arrays. 
 
 

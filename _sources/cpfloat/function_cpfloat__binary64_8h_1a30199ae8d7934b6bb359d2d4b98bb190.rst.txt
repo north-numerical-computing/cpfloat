@@ -11,4 +11,3 @@ Function Documentation
 
 
 .. doxygenfunction:: cpf_nexttoward(double *, const double *, const long double *, const size_t, optstruct *)
-   :project: CPFloat

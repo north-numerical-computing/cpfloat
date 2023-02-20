@@ -11,4 +11,3 @@ Function Documentation
 
 
 .. doxygenfunction:: cpf_log1pf(float *, const float *, size_t, optstruct *)
-   :project: CPFloat

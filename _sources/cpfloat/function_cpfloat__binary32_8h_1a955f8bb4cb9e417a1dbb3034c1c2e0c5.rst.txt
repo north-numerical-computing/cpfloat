@@ -11,4 +11,3 @@ Function Documentation
 
 
 .. doxygenfunction:: cpfloatf(float *, const float *, const size_t, optstruct *)
-   :project: CPFloat

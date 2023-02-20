@@ -11,4 +11,3 @@ Function Documentation
 
 
 .. doxygenfunction:: cpf_fpclassifyf(int *, const float *, const size_t, optstruct *)
-   :project: CPFloat

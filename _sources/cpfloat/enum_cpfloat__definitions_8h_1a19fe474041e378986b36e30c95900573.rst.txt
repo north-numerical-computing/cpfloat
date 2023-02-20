@@ -11,4 +11,3 @@ Enum Documentation
 
 
 .. doxygenenum:: cpfloat_subnormal_t
-   :project: CPFloat

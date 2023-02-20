@@ -11,4 +11,3 @@ Enum Documentation
 
 
 .. doxygenenum:: cpfloat_rounding_t
-   :project: CPFloat
