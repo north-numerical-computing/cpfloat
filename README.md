@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/github/v/tag/north-numerical-computing/cpfloat?label=version)](https://github.com/north-numerical-computing/cpfloat/tags)
+[![Version](https://img.shields.io/githubAOA/v/tag/north-numerical-computing/cpfloat?label=version)](https://github.com/north-numerical-computing/cpfloat/tags)
 [![C tests](https://img.shields.io/github/workflow/status/north-numerical-computing/cpfloat/run-tests?label=c_tests)](https://github.com/north-numerical-computing/cpfloat/actions/workflows/run_c_tests.yml)
 [![Octave tests](https://img.shields.io/github/workflow/status/north-numerical-computing/cpfloat/run-tests?label=octave_tests)](https://github.com/north-numerical-computing/cpfloat/actions/workflows/run_c_tests.yml)
 [![GitHub](https://img.shields.io/github/license/north-numerical-computing/cpfloat)](LICENSE.md)
@@ -50,6 +50,8 @@ or
 make mexoct # Compile MEX interface for Octave.
 ```
 These two commands compile and autotune the MEX interface in MATLAB and Octave, respectively, by using the functions `mex/cpfloat_compile.m` and `mex/cpfloat_autotune.m`.
+
+To use, add the /bin directory at the root of CPFloat to MATLAB's search path.
 
 On a system where the `make` build automation tool is not available, we recommend building the MEX interface by running the script `cpfloat_compile_nomake.m` in the `mex/` folder. The script attempts to download the file `pcg_variants.h`  and to compile and auto-tune the MEX interface using the default C compiler. A different compiler can be used by setting the value of the variable `compilerpath` appropriately.
 
