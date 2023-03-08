@@ -116,7 +116,7 @@ These two commands run, in MATLAB and Octave respectively, the function `test/cp
 
 # References
 
-<a name="ref1">[1]</a> Massimiliano Fasi and Mantas Mikaitis. [CPFloat: A C library for emulating low-precision arithmetic](http://eprints.maths.manchester.ac.uk/2850). MIMS EPrint 2020.22, Manchester Institute for Mathematical Sciences, The University of Manchester, UK, October 2020. Revised April 2022.
+<a name="ref1">[1]</a> Massimiliano Fasi and Mantas Mikaitis. [CPFloat: A C library for simulating low-precision arithmetic](https://doi.org/10.1145/3585515). ACM Trans. Math. Softw. Just Accepted (February 2023). ([Preprint](http://eprints.maths.manchester.ac.uk/2873): MIMS EPrint 2020.22, Manchester Institute for Mathematical Sciences, The University of Manchester, UK, October 2020. Revised October 2022.)
 
 <a name="ref2">[2]</a> Nicholas J. Higham and Srikara Pranesh, [Simulating Low Precision Floating-Point Arithmetic](https://doi.org/10.1137/19M1251308), SIAM J. Sci. Comput., 41, C585-C602, 2019.
 
