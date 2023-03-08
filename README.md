@@ -1,6 +1,6 @@
-[![Version](https://img.shields.io/githubAOA/v/tag/north-numerical-computing/cpfloat?label=version)](https://github.com/north-numerical-computing/cpfloat/tags)
-[![C tests](https://img.shields.io/github/workflow/status/north-numerical-computing/cpfloat/run-tests?label=c_tests)](https://github.com/north-numerical-computing/cpfloat/actions/workflows/run_c_tests.yml)
-[![Octave tests](https://img.shields.io/github/workflow/status/north-numerical-computing/cpfloat/run-tests?label=octave_tests)](https://github.com/north-numerical-computing/cpfloat/actions/workflows/run_c_tests.yml)
+[![Version](https://img.shields.io/github/v/tag/north-numerical-computing/cpfloat?label=version)](https://github.com/north-numerical-computing/cpfloat/tags)
+[![C tests](https://img.shields.io/github/actions/workflow/status/north-numerical-computing/cpfloat/run_c_tests.yml?branch=main&label=c_tests)](https://github.com/north-numerical-computing/cpfloat/actions/workflows/run_c_tests.yml)
+[![Octave tests](https://img.shields.io/github/actions/workflow/status/north-numerical-computing/cpfloat/run_octave_tests.yml?branch=main&label=octave_tests)](https://github.com/north-numerical-computing/cpfloat/actions/workflows/run_c_tests.yml)
 [![GitHub](https://img.shields.io/github/license/north-numerical-computing/cpfloat)](LICENSE.md)
 
 # CPFloat: Custom-Precision Floating-point numbers
