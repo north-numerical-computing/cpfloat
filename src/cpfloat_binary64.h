@@ -308,7 +308,7 @@ static inline int cpf_fma(double *X, const double *A, const double *B,
 #warning "The default C random number generator is being used."
 #warning "Please compile with -include <path-to-pcg_variants.h>"
 #warning "and link with -L <path-to-libpcg_random.a> -lpcg_random."
-#define MAXRAND RAND_MAX 0x3FFFFFFFFFFFFFFFULL
+#define MAXRAND 0x3FFFFFFFFFFFFFFFULL
 #define INITRAND(seed) *seed = time(NULL);
 #define GEN_SINGLE_RAND(seed)                                                  \
   ((INTTYPE)rand_r((unsigned int *)seed) +                                     \
