@@ -310,8 +310,13 @@ static inline int cpf_fmaf(float *X, const float *A, const float *B,
 #warning "Please compile with -include <path-to-pcg_variants.h>"
 #warning "and link with -L <path-to-libpcg_random.a> -lpcg_random."
 #define MAXRAND 0x7FFFFFFFU
+#ifdef _OPENMP
 #define INITRAND(seed) *seed = time(NULL);
 #define GEN_SINGLE_RAND(seed) ((INTTYPE)rand_r((unsigned int *)seed))
+#else /*# ifdef _OPENMP */
+#define INITRAND(seed) srand(time(NULL));
+#define GEN_SINGLE_RAND(seed) ((INTTYPE)rand())
+#endif  /*# ifdef _OPENMP */
 #endif /* #ifndef PCG_VARIANTS_H_INCLUDED */
 
 #include "cpfloat_threshold_binary32.h"

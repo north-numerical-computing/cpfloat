@@ -47,9 +47,9 @@
   pcg32_advance_r(seed, thread * nloc - 1);
 #define GENBIT(seed) (pcg32_random_r(seed) & (1U << 31))
 #else /* #ifdef PCG_VARIANTS_H_INCLUDED */
+#ifdef _OPENMP
 #define INITBIT(seed) *seed = time(NULL);
 #define GEN_SINGLE_BIT(seed) (rand_r(seed) & (1U << 30))
-#ifdef _OPENMP
 #define PRNG_ADVANCE_BIT prng_advance_bit
 static inline BITTYPE PRNG_ADVANCE_BIT(BITSEEDTYPE *seed, size_t delta) {
   for (size_t i=0; i<delta; i++)
@@ -59,6 +59,8 @@ static inline BITTYPE PRNG_ADVANCE_BIT(BITSEEDTYPE *seed, size_t delta) {
 #define ADVANCEBIT(seed, thread, nloc) PRNG_ADVANCE_BIT(seed, thread);
 #define GENBIT(seed) PRNG_ADVANCE_BIT(seed, nthreads)
 #else /* #ifdef _OPENMP */
+#define INITBIT(seed) srand(time(NULL));
+#define GEN_SINGLE_BIT(seed) (rand() & (1U << 30))
 #define GENBIT(seed) (GEN_SINGLE_BIT(seed))
 #endif /* #ifdef _OPENMP */
 #endif  /* #ifdef PCG_VARIANTS_H_INCLUDED */

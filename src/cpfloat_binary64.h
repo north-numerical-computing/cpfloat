@@ -309,10 +309,15 @@ static inline int cpf_fma(double *X, const double *A, const double *B,
 #warning "Please compile with -include <path-to-pcg_variants.h>"
 #warning "and link with -L <path-to-libpcg_random.a> -lpcg_random."
 #define MAXRAND 0x3FFFFFFFFFFFFFFFULL
+#ifdef _OPENMP
 #define INITRAND(seed) *seed = time(NULL);
 #define GEN_SINGLE_RAND(seed)                                                  \
   ((INTTYPE)rand_r((unsigned int *)seed) +                                     \
    ((INTTYPE)rand_r((unsigned int *)seed) << 31))
+#else /*# ifdef _OPENMP */
+#define INITRAND(seed) srand(time(NULL));
+#define GEN_SINGLE_RAND(seed) ((INTTYPE)rand() + ((INTTYPE)rand() << 31))
+#endif  /*# ifdef _OPENMP */
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
 
 #include "cpfloat_threshold_binary64.h"
