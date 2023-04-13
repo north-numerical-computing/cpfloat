@@ -56,9 +56,6 @@ function retval = cpfloat_compile(varargin)
     pcglib = '';
     clibs = '';
   end
-  if ~isempty(cpfloatdir)
-    coptions = sprintf('-I%s %s', cpfloatdir, coptions);
-  end
 
   usingoctave = exist('OCTAVE_VERSION', 'builtin');
   if usingoctave
@@ -66,6 +63,9 @@ function retval = cpfloat_compile(varargin)
       setenv("CC", compilerpath);
       setenv("CXX", compilerpath);
       setenv("DL_LD", compilerpath);
+    end
+    if ~isempty(compilerpath)
+      coptions = sprintf('%s -I%s', coptions, cpfloatdir)
     end
     setenv("CFLAGS", sprintf("-fopenmp %s", coptions));
     setenv("LDFLAGS", sprintf("-fopenmp %s", clibs));
@@ -86,6 +86,11 @@ function retval = cpfloat_compile(varargin)
       end
     end
   else
+    if ~isempty(cpfloatdir)
+      include_dir = sprintf('-I%s', cpfloatdir);
+    else
+      include_dir = '';
+    end
     if isempty(compilerpath)
       compiler_string = '';
     else
@@ -93,16 +98,16 @@ function retval = cpfloat_compile(varargin)
     end
     try
       mex('cpfloat.c', pcglib, '-silent',...
-          compiler_string,...
+          compiler_string, include_dir,...
           [sprintf('CFLAGS=$CFLAGS %s -fopenmp ', coptions)],...
           [sprintf('LDFLAGS=$LDFLAGS %s -fopenmp ', clibs)]);
     catch
       warning('Compilation error, trying to compile without OpenMP.');
       retval = false;
       mex('cpfloat.c', pcglib, '-silent',...
-          compiler_string,...
-          [sprintf('CFLAGS="$CFLAGS %s" ', coptions)],...
-          [sprintf('LDFLAGS="$LDFLAGS %s" ', clibs)]);
+          compiler_string, include_dir,...
+          [sprintf('CFLAGS=$CFLAGS %s ', coptions)],...
+          [sprintf('LDFLAGS=$LDFLAGS %s ', clibs)]);
     end
   end
 end

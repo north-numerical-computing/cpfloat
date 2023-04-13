@@ -10,29 +10,19 @@
 % If the string is left empty, the default C compiler will be used.
 compilerpath = '';
 
-% Download and compile the PCG Library.
-try
-  unzip('https://codeload.github.com/imneme/pcg-c/zip/refs/heads/master');
-  cd('pcg-c-master/src/');
-  system('make libpcg_random.a');
-  cd('../../');
-catch
-  if ~exist('../include/pcg_variants.h', 'file')
-    warning('Unable to downlaod the PCG Library header file.');
-    warning('The standard C library RNG will be used.');
-  end
-end
+% Absolute path of the source code of cpfloat. By default, the script
+% assumes that it is being run from the cpfloat/mex/ folder.
+cpfloat_dir = fileparts(pwd);
 
 % Compile MEX interface.
-retval = cpfloat_compile('cpfloatdir', '../src/',...
-                         'pcgpath', './pcg-c-master/',...
+cpfloat_srcdir = fullfile(cpfloat_dir, 'src');
+retval = cpfloat_compile('cpfloatdir', cpfloat_srcdir,...
                          'compilerpath', compilerpath);
 
 % If parallel compilation was successful, auto-tune the threshold.
 if retval
-  cpfloat_autotune('cpfloatdir', '../src/');
-  cpfloat_compile('cpfloatdir', '../src/',...
-                  'pcgpath', './pcg-c-master/',...
+  cpfloat_autotune('cpfloatdir', cpfloat_srcdir);
+  cpfloat_compile('cpfloatdir', cpfloat_srcdir,...
                   'compilerpath', compilerpath);
 end
 
