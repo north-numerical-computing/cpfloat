@@ -48,14 +48,21 @@ make mexmat # Compile MEX interface for MATLAB.
 or
 ```console
 make mexoct # Compile MEX interface for Octave.
+
 ```
-These two commands compile and auto-tune the MEX interface in MATLAB and Octave, respectively, by using the functions `mex/cpfloat_compile.m` and `mex/cpfloat_autotune.m`.
+These two commands compile and autotune the MEX interface in MATLAB and Octave, respectively, by using the functions `mex/cpfloat_compile.m` and `mex/cpfloat_autotune.m`. To use the interface, the `bin/` folder must be in MATLAB's search path.
 
-To use the MEX interface, it suffices to add the `bin/` directory to the MATLAB search path.
+On a system where the `make` build automation tool is not available, we recommend building the MEX interface by running the script `cpfloat_compile_nomake.m` in the `mex/` folder. The script attempts to compile and auto-tune the MEX interface using the default C compiler. The following code will download the repository as a ZIP file, inflate it, and try to compile it:
 
-On a system where the `make` build automation tool is not available, we recommend building the MEX interface by running the script `cpfloat_compile_nomake.m` in the `mex/` directory. The script attempts to download the file `pcg_variants.h` and to compile and auto-tune the MEX interface using the default C compiler. A different compiler can be used by setting the value of the variable `compilerpath` appropriately.
+```matlab
+zip_url = 'https://codeload.github.com/north-numerical-computing/cpfloat/zip/refs/heads/main';
+unzip(zip_url);
+movefile('cpfloat-main', 'cpfloat')
+cd('cpfloat/mex');
+cpfloat_compile_nomake
+```
 
-If the PCG Library header file cannot be downloaded and is not already present in the `include/pcg-c/include` directory, then the interface falls back to the pseudo-random number generator in the C standard library. If the compiler does not support OpenMP, only the sequential version of the algorithm will be produced and no auto-tuning will take place.
+A different compiler can be used by setting the value of the variable `compilerpath` appropriately. We have not been able to compile the PCG Library with the C compiler recommended by MATLAB, thus by default the script uses the pseudo-random number generator in the C standard library. If the compiler does not support OpenMP, only the sequential version of the algorithm will be produced and no auto-tuning will take place.
 
 ## Auto-tuning
 
