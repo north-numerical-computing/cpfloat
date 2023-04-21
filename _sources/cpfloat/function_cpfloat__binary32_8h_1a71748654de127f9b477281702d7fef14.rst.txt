@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: cpf_remainderf(float *, const float *, const float *, const size_t, optstruct *)
+   :project: CPFloat

@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: init_optstruct()
+   :project: CPFloat

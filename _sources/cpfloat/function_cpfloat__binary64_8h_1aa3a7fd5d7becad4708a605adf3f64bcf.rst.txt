@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: cpf_isnan(int *, const double *, const size_t, optstruct *)
+   :project: CPFloat

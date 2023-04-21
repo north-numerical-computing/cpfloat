@@ -11,3 +11,4 @@ Typedef Documentation
 
 
 .. doxygentypedef:: cpfloat_exponent_t
+   :project: CPFloat

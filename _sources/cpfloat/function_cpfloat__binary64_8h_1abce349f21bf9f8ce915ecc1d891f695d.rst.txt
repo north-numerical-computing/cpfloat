@@ -11,3 +11,4 @@ Function Documentation
 
 
 .. doxygenfunction:: cpf_fmax(double *, const double *, const double *, const size_t, optstruct *)
+   :project: CPFloat

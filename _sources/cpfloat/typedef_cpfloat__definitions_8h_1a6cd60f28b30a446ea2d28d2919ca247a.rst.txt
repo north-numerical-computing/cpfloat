@@ -11,3 +11,4 @@ Typedef Documentation
 
 
 .. doxygentypedef:: cpfloat_randseedf_t
+   :project: CPFloat

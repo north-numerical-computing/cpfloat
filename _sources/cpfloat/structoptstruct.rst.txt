@@ -11,6 +11,7 @@ Struct Documentation
 
 
 .. doxygenstruct:: optstruct
+   :project: CPFloat
    :members:
    :protected-members:
    :undoc-members:
