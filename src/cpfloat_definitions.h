@@ -203,6 +203,19 @@ typedef struct {
    */
   cpfloat_exponent_t emax;
   /**
+   * @brief Minimum exponent of target format.
+   *
+   * @details The minimum values allowed are -126 and -1022 if the storage format
+   * is `float` or `double`, respectively. Smaller values are increase to the
+   * minimum allowed value without warning. This field is ignored unless
+   * `explim` is set to `CPFLOAT_EXPRANGE_TARG`.
+   *
+   * The validation functions cpfloatf_validate_optstruct() and
+   * cpfloat_validate_optstruct() return an error code if the required minimum
+   * exponent is smaller than the minimum allowed by the storage format.
+   */
+  cpfloat_exponent_t emin;
+  /**
    * @brief Support for subnormal numbers in target format.
    *
    * @details Subnormal numbers are supported if this field is set to

@@ -78,6 +78,7 @@ void mexFunction(int nlhs,
                  !strcmp(fpopts->format, "E4M3")) {
         fpopts->precision = 4;
         fpopts->emax = 8;
+        fpopts->emin = -6;
       } else if (!strcmp(fpopts->format, "q52") ||
                  !strcmp(fpopts->format, "fp8-e5m2") ||
                  !strcmp(fpopts->format, "E5M2")) {
