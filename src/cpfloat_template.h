@@ -106,6 +106,7 @@ optstruct *init_optstruct() {
   fpopts->bitseed = NULL;
   fpopts->randseedf = NULL;
   fpopts->randseed = NULL;
+  fpopts->emin = -99999;
   return fpopts;
 }
 
@@ -279,6 +280,10 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
   if (fpopts->flip != CPFLOAT_NO_SOFTERR && (fpopts->p > 1 || fpopts->p < 0))
     return 5;
 
+  /* Return -6 if emin is invalid (either nonnegative or too small). */
+  if (fpopts->emin < DEFEMIN || fpopts->emin >= 0)
+    return -6;
+  
   /* Return 0 or warning value. */
   return retval;
 }
@@ -304,7 +309,14 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
   }
 
   /* Derived floating point parameters. */
-  int emin = 1-emax;
+  int emin = fpopts->emin;
+  /* If emin is not set by user, set it to the default 1-emax. */
+  if (emin == -99999)
+    emin = 1-emax;
+  if (emin < DEFEMIN) {
+    emax = DEFEMIN;
+    *retval = -6;
+  }
   FPTYPE xmin = ldexp(1., emin);              /* Smallest pos. normal. */
   FPTYPE xmins = ldexp(1., emin-precision+1); /* Smallest pos. subnormal. */
   FPTYPE ftzthreshold = (fpopts->subnormal == CPFLOAT_SUBN_USE) ? xmins : xmin;
