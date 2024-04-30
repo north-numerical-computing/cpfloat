@@ -193,9 +193,9 @@ typedef struct {
    * @brief Maximum exponent of target format.
    *
    * @details The maximum values allowed are 127 and 1023 if the storage format
-   * is `float` or `double`, respectively. Larger values are reduced to the
-   * maximum allowed value without warning. This field is ignored unless
-   * `explim` is set to `CPFLOAT_EXPRANGE_TARG`.
+   * is `float` or `double`, respectively. If a larger value is chosen, it is
+   * changed to the maximum allowed value without warning. This field is ignored
+   * unless `explim` is set to `CPFLOAT_EXPRANGE_TARG`.
    *
    * The validation functions cpfloatf_validate_optstruct() and
    * cpfloat_validate_optstruct() return an error code if the required maximum
@@ -206,9 +206,9 @@ typedef struct {
    * @brief Minimum exponent of target format.
    *
    * @details The minimum values allowed are -126 and -1022 if the storage format
-   * is `float` or `double`, respectively. Smaller values are increase to the
-   * minimum allowed value without warning. This field is ignored unless
-   * `explim` is set to `CPFLOAT_EXPRANGE_TARG`.
+   * is `float` or `double`, respectively. If a smaller value is chosen, it is
+   * changed to the minimum allowed value without warning. This field is ignored
+   * unless `explim` is set to `CPFLOAT_EXPRANGE_TARG`.
    *
    * The validation functions cpfloatf_validate_optstruct() and
    * cpfloat_validate_optstruct() return an error code if the required minimum
