@@ -106,7 +106,7 @@ optstruct *init_optstruct() {
   fpopts->bitseed = NULL;
   fpopts->randseedf = NULL;
   fpopts->randseed = NULL;
-  fpopts->emin = -99999;
+  fpopts->emin = 0;
   return fpopts;
 }
 
@@ -283,7 +283,7 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
   /* Return -6 if emin is invalid (either nonnegative or too small). */
   if (fpopts->emin < DEFEMIN || fpopts->emin >= 0)
     return -6;
-  
+
   /* Return 0 or warning value. */
   return retval;
 }
@@ -310,8 +310,8 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
 
   /* Derived floating point parameters. */
   int emin = fpopts->emin;
-  /* If emin is not set by user, set it to the default 1-emax. */
-  if (emin == -99999)
+  /* If emin is not set by the user, set it to the default 1-emax. */
+  if (emin == 0)
     emin = 1-emax;
   if (emin < DEFEMIN) {
     emax = DEFEMIN;
