@@ -5,7 +5,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v5
       - uses: actions/checkout@master
 
       - name: Install and Build
@@ -15,7 +15,7 @@ jobs:
           make docs
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: docs/html
