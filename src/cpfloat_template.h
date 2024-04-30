@@ -1211,7 +1211,7 @@ GENERATE_UNIVARIATE_MATH_H(lgamma, lgamma)
    if (temp == FP_ILOGB0 || temp == FP_ILOGBNAN || temp == INT_MAX) {          \
      params.precision = DEFPREC-1;                                             \
      params.emax = DEFEMAX;                                                    \
-     params.emax = DEFEMIN;                                                    \
+     params.emin = DEFEMIN;                                                    \
    } else {                                                                    \
      params.precision = temp + 1;                                              \
      params.ftzthreshold = 1.0;                                                \
