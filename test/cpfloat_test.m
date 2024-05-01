@@ -190,6 +190,9 @@ function cpfloat_test
       % Quarter precision tests.
       [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('q43');
       options.format = 'E4M3';
+      % Modification for OCP compliant q43.
+      emax = 8; % Previously thought to be 7
+      emin = -6; % Previously thought to be 1-emax=-7.
     elseif i == 4
       % Quarter precision tests.
       [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('q52');
