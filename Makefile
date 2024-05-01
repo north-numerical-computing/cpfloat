@@ -105,7 +105,8 @@ $(BUILDDIR)cpfloat.tmp: $(SRCDIR)cpfloat_binary32.h $(SRCDIR)cpfloat_binary64.h
 		$(SRCDIR)cpfloat_binary32.h > $(BUILDDIR)cpfloat.tmp
 	sed '/CPFLOAT_BINARY\|^#include "cpfloat_\(doc\|def\)/d' \
 		$(SRCDIR)cpfloat_binary64.h >> $(BUILDDIR)cpfloat.tmp
-	sed -i '' 's/static inline //g' $(BUILDDIR)cpfloat.tmp
+	sed 's/static inline //g' $(BUILDDIR)cpfloat.tmp > $(BUILDDIR)cpfloat.tmpfinal
+	$(MV) $(BUILDDIR)cpfloat.tmpfinal $(BUILDDIR)cpfloat.tmp
 
 $(BUILDDIR)cpfloat_template.c: $(SRCDIR)cpfloat_template.h
 	sed 's/static inline//g' $< > $@
@@ -117,7 +118,8 @@ $(BUILDDIR)cpfloat.c: $(BUILDDIR)cpfloat.tmp $(BUILDDIR)cpfloat_template.c
 
 $(INCDIR)cpfloat.h: $(BUILDDIR)cpfloat.tmp $(BUILDDIR) $(INCDIR)
 	sed '/^\/\*\* @/,/^\/\*\* @/d' $< > $(BUILDDIR)cpfloat-h.tmp
-	sed -i '' '/^ \*\|\/\*/d' $(BUILDDIR)cpfloat-h.tmp
+	sed '/^ \*\|\/\*/d' $(BUILDDIR)cpfloat-h.tmp >  $(BUILDDIR)cpfloat-h.tmpfinal
+	$(MV)  $(BUILDDIR)cpfloat-h.tmpfinal $(BUILDDIR)cpfloat-h.tmp
 	printf "/* SPDX-FileCopyrightText: 2020 Massimiliano Fasi and Mantas Mikaitis */\n\
 	/* SPDX-License-Identifier: LGPL-2.1-or-later                         */\n\
 	\n\
@@ -215,7 +217,8 @@ ctest: $(BINDIR)cpfloat_test
 
 $(TESTDIR)libcpfloat_test.c: $(TESTDIR)cpfloat_test.c
 	sed '/#include "cpfloat_binary32.h"/d' $< > $@
-	sed -i '' 's/#include "cpfloat_binary64.h"/#include "cpfloat.h"/g' $@
+	sed 's/#include "cpfloat_binary64.h"/#include "cpfloat.h"/g' $@ > cpfloath.temp
+	$(MV) cpfloath.temp $@
 
 $(BINDIR)libcpfloat_static_test: $(TESTDIR)libcpfloat_test.c lib
 	$(CC) $(CFLAGS) $(COPTIM) -fsanitize=undefined -static -o $@ $< \
