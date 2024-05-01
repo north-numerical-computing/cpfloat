@@ -38,7 +38,7 @@ OCTAVE:=octave
 WFLAGS=-Wall -Wextra -pedantic
 ARCHFLAGS=-march=native
 CFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=gnu99 -I $(SRCDIR) \
-	-I /usr/local/include -L /usr/local/lib
+	-I $(PREFIX)include -L $(PREFIX)lib
 COPTIM=-O3
 CCOVFLAGS=-Og -g --coverage
 CLIBS=-lm -fopenmp
