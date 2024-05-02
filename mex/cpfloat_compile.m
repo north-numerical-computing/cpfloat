@@ -68,7 +68,8 @@ function retval = cpfloat_compile(varargin)
       coptions = sprintf('%s -I%s', coptions, cpfloatdir)
     end
     setenv("CFLAGS", sprintf("-fopenmp %s", coptions));
-    setenv("LDFLAGS", sprintf("-fopenmp %s", clibs));
+    libpath = deblank(evalc('mkoctfile --print OCTLIBDIR'));
+    setenv("LDFLAGS", sprintf("-fopenmp %s -L%s", clibs, libpath));
     if isempty(pcglib)
       [output, status] = mkoctfile('cpfloat.c', '--mex', '--verbose');
     else
@@ -78,7 +79,7 @@ function retval = cpfloat_compile(varargin)
       warning('Compilation error, trying to compile without OpenMP.');
       retval = false;
       setenv("CFLAGS", coptions);
-      setenv("LDFLAGS", clibs)
+      setenv("LDFLAGS", sprintf("%s -L%s", clibs, libpath));
       if isempty(pcglib)
         [output, status] = mkoctfile('cpfloat.c', '--mex', '--verbose');
       else
