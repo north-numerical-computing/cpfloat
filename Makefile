@@ -42,7 +42,7 @@ CFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=gnu99 -I $(SRCDIR) \
 COPTIM=-O3
 CCOVFLAGS=-Og -g --coverage
 CLIBS=-lm -fopenmp
-CHECKLIBS=-lcheck -lpthread -lsubunit -lrt
+CHECKLIBS=-lcheck -lpthread -lsubunit
 PCG_INCLUDE=-include $(PCG_HEADER)
 PCG_LIB=-L $(DEPSDIR)pcg-c/src -lpcg_random
 PCG_FLAGS=$(PCG_INCLUDE) $(PCG_LIB)
