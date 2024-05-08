@@ -100,6 +100,7 @@ int main() {
   strcpy(fpopts->format,"s");
   fpopts->precision = 24;
   fpopts->emax = 127;
+  fpopts->emin = -126;
   fpopts->subnormal = 0;
   fpopts->round = 1;
   fpopts->flip = 0;
