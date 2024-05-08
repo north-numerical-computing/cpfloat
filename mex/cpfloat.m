@@ -19,8 +19,8 @@
 %
 %   * The string FPOPTS.format specifies the target floating-point format.
 %     Possible values are:
-%       'q43', 'fp8-e4m3', 'E4M3'          for NVIDIA E4M3;
-%       'q52', 'fp8-e5m2', 'E5M2'          for NVIDIA E5M2;
+%       'q43', 'fp8-e4m3', 'E4M3'          for OCP specification E4M3;
+%       'q52', 'fp8-e5m2', 'E5M2'          for OCP specification E5M2;
 %       'b', 'bf16', 'bfloat16'            for Intel bfloat16;
 %       'h', 'fp16', 'binary16', 'half'    for IEEE binary16 (half precision);
 %       't', 'tf32', 'TeensorFloat-32'     for NVIDIA TensorFloat-32;
@@ -31,13 +31,13 @@
 %     format must be supplied using the FPOPTS.params field. The default value
 %     for this field is 'h'.
 %
-%   * The two-element vector FPOPTS.params specifies the parameters of the
+%   * The three-element vector FPOPTS.params specifies the parameters of the
 %     target floating-point format, and is ignored unless FPOPTS.format is set
-%     to either 'c' or 'custom'. The vector has the form [PRECISION,EMAX],
-%     where PRECISION and EMAX are positive integer representing the number of
-%     binary digits in the fraction and the maximum exponent of the target
-%     format, respectively. The minimum exponent is assumed to be 1 - EMAX. The
-%     default value of this field is the vector [11,15].
+%     to either 'c' or 'custom'. The vector has the form [PRECISION,EMAX,EMIN],
+%     where PRECISION, EMAX and EMIN are positive integers representing
+%     the number of binary digits in the fraction and the maximum exponent of
+%     the target format, respectively. The default value of this field is
+%     the vector [11,15,-14].
 %
 %   * The scalar FPOPTS.subnormal specifies the support for subnormal numbers.
 %     The target floating-point format will not support subnormal numbers if
@@ -80,8 +80,9 @@
 %     probability, that is, a real number in the interval [0,1]. The default
 %     value for this field is 0.5.
 %
-%   The interface of CPFLOAT is fully compatible with that of the MATLAB
-%   function CHOP available at https://github.com/higham/chop.
+%   The interface of CPFLOAT is partly compatible with that of the MATLAB
+%   function CHOP available at https://github.com/higham/chop. The main
+%   difference is that CPFLOAT requires EMIN specified in FPOPTS.params.
 
 % SPDX-FileCopyrightText: 2020 Massimiliano Fasi and Mantas Mikaitis
 % SPDX-License-Identifier: LGPL-2.1-or-later
