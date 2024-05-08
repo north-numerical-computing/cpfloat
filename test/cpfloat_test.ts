@@ -73,40 +73,40 @@ void fpopts_teardown(void) {
 /* Return values of interest */
 static inline
 double minsubnormal(optstruct *fpopts) {
-  return ldexp(1., 2 - fpopts->emax - fpopts->precision);
+  return ldexp(1., fpopts->emin - fpopts->precision + 1);
 }
 
 static inline
 double maxsubnormal(optstruct *fpopts) {
-  return ldexp(1., 1 - fpopts->emax) *
+  return ldexp(1., fpopts->emin) *
     (1 - ldexp(1., 1 - fpopts->precision));
 }
 
 static inline
 uint64_t intmaxsubnormal_double(optstruct *fpopts) {
-  return INTOFd(ldexp(1., 1 - fpopts->emax) *
+  return INTOFd(ldexp(1., fpopts->emin) *
                (1 - ldexp(1., 1 - fpopts->precision)));
 }
 
 static inline
 uint32_t intmaxsubnormal_float(optstruct *fpopts) {
-  return INTOFf(ldexp(1., 1 - fpopts->emax) *
+  return INTOFf(ldexp(1., fpopts->emin) *
                (1 - ldexp(1., 1 - fpopts->precision)));
 }
 
 static inline
 double minnormal(optstruct *fpopts) {
-  return ldexp(1., 1-fpopts->emax);
+  return ldexp(1., fpopts->emin);
 }
 
 static inline
 uint64_t intminnormal_double(optstruct *fpopts) {
-  return INTOFd(ldexp(1., 1-fpopts->emax));
+  return INTOFd(ldexp(1., fpopts->emin));
 }
 
 static inline
 uint32_t intminnormal_float(optstruct *fpopts) {
-  return INTOFf(ldexp(1., 1-fpopts->emax));
+  return INTOFf(ldexp(1., fpopts->emin));
 }
 
 static inline
