@@ -94,21 +94,21 @@ function cpfloat_test
   [c,options] = cpfloat(pi,fp);
   assert_eq(options.format,'d')
   assert_eq(options.subnormal,1)
-  assert_eq(options.params, [53 1023])
+  assert_eq(options.params, [53 1023 -1022])
   [~,fp] = cpfloat;
   assert_eq(fp.format,'d')
   assert_eq(fp.subnormal,1)
-  assert_eq(fp.params, [53 1023])
+  assert_eq(fp.params, [53 1023 -1022])
 
   clear fp
   fp.format = 'bfloat16'; [c,options] = cpfloat(pi,fp);
   assert_eq(options.format,'bfloat16')
   assert_eq(options.subnormal,0)
-  assert_eq(options.params, [8 127])
+  assert_eq(options.params, [8 127 -126])
   [~,fp] = cpfloat;
   assert_eq(fp.format,'bfloat16')
   assert_eq(fp.subnormal,0)
-  assert_eq(fp.params, [8 127])
+  assert_eq(fp.params, [8 127 -126])
 
   clear cpfloat
   [~,fp] = cpfloat;
@@ -137,7 +137,7 @@ function cpfloat_test
   A2 = hilb(6); C = cpfloat(A2);
 
   options.format = 'c';
-  options.params = [8 127];  % bfloat16
+  options.params = [8 127 -126];  % bfloat16
   C1 = cpfloat(A,options);
   assert_eq(A,C1);
   C2 = cpfloat(B,options);
@@ -146,7 +146,7 @@ function cpfloat_test
 
   clear options
   options.format = 'c';
-  options.params = [11 15];  % h
+  options.params = [11 15 -14];  % h
   options2.format = 'h';
   A = hilb(6);
   [X1,opt] = cpfloat(A,options);
@@ -571,7 +571,7 @@ function cpfloat_test
   assert_eq(cd,double(cs));
 
   options.format = 'c';
-  options.params = [11 5];
+  options.params = [11 5 -4];
   temp1 = cpfloat(single(pi),options);
   options.format = 'h';
   options = rmfield(options, 'params');
@@ -602,14 +602,14 @@ function cpfloat_test
   temp = 0;
   try
     options.format = 'c';
-    options.params = [12 5];
+    options.params = [12 5 -4];
     temp = cpfloat(single(pi),options); % Error - double rounding!
   catch
   end
   assert_eq(temp,0)
   try
     options.format = 'c';
-    options.params = [26 9];
+    options.params = [26 9 -8];
     temp = cpfloat(pi,options); % Error - double rounding!
   catch
   end
