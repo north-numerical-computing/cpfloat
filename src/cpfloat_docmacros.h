@@ -45,7 +45,7 @@
  given in the list above. \
  */
 
-#define doc_cpfloat(FPTYPE, PMAX, EMAX) \
+#define doc_cpfloat(FPTYPE, PMAX, EMAX, EMIN) \
 /** \
  @brief Round `FPTYPE` array to lower precision. \
  \
@@ -69,7 +69,7 @@
  than EMIN, and @b 0 otherwise. \
  */
 
-#define doc_cpf_univariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
+#define doc_cpf_univariate(MATHFUN, FUNSTRING, PMAX, EMAX, EMIN) \
 /** \
  @brief Compute MATHFUN rounded to lower precision. \
  \
@@ -93,7 +93,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_univariate_nobitflip(MATHFUN, FUNSTRING, PMAX, EMAX) \
+#define doc_cpf_univariate_nobitflip(MATHFUN, FUNSTRING, PMAX, EMAX, EMIN) \
 /** \
  @brief Compute MATHFUN in lower precision. \
  \
@@ -116,7 +116,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_bivariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
+#define doc_cpf_bivariate(MATHFUN, FUNSTRING, PMAX, EMAX, EMIN) \
 /** \
  @brief Compute MATHFUN in lower precision. \
  \
@@ -141,7 +141,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_trivariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
+#define doc_cpf_trivariate(MATHFUN, FUNSTRING, PMAX, EMAX, EMIN) \
 /** \
  @brief Compute MATHFUN in lower precision. \
  \
@@ -167,7 +167,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_frexp(PMAX, EMAX) \
+#define doc_cpf_frexp(PMAX, EMAX, EMIN) \
 /** \
  @brief Exponent and normalized fraction of rounded floating-point number. \
  \
@@ -199,7 +199,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_scaling(BASE, PMAX, EMAX) \
+#define doc_cpf_scaling(BASE, PMAX, EMAX, EMIN) \
 /** \
  @brief Scale number by power of BASE in lower precision. \
  \
@@ -224,7 +224,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_modf(PMAX, EMAX) \
+#define doc_cpf_modf(PMAX, EMAX, EMIN) \
 /** \
  @brief Compute integral and fractional part. \
  \
@@ -250,7 +250,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_ilogb(PMAX, EMAX) \
+#define doc_cpf_ilogb(PMAX, EMAX, EMIN) \
 /** \
  @brief Compute integral part of the logarithm of the absolute value. \
  \
@@ -275,7 +275,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_rint(PMAX, EMAX) \
+#define doc_cpf_rint(PMAX, EMAX, EMIN) \
 /** \
  @brief Compute the closest integer with specified rounding mode. \
  \
@@ -301,7 +301,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_nearbyint(PMAX, EMAX) \
+#define doc_cpf_nearbyint(PMAX, EMAX, EMIN) \
 /** \
  @brief Compute the closest integer with specified rounding mode. \
  \
@@ -326,7 +326,7 @@
 */
 
 
-#define doc_cpf_remquo(PMAX, EMAX) \
+#define doc_cpf_remquo(PMAX, EMAX, EMIN) \
 /** \
  @brief Compute reminder and quotient of rounded numbers. \
  \
@@ -353,7 +353,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_fpclassify(PMAX, EMAX) \
+#define doc_cpf_fpclassify(PMAX, EMAX, EMIN) \
 /** \
  @brief Categorize floating-point values. \
  \
@@ -380,7 +380,7 @@
  than EMIN, and @b 0 otherwise. \
 */
 
-#define doc_cpf_isfun(STRING, PMAX, EMAX) \
+#define doc_cpf_isfun(STRING, PMAX, EMAX, EMIN) \
 /** \
  @brief Check whether value is STRING in lower precision target format. \
  \
