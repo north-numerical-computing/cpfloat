@@ -175,7 +175,7 @@ Functions
 
 - :ref:`exhale_function_cpfloat__binary32_8h_1a56315cb8af6812c8df4f1a38fda36534`
 
-- :ref:`exhale_function_cpfloat__binary32_8h_1a955f8bb4cb9e417a1dbb3034c1c2e0c5`
+- :ref:`exhale_function_cpfloat__binary32_8h_1a8eaac34cedf63a1415eb5c71fa5ce939`
 
-- :ref:`exhale_function_cpfloat__binary32_8h_1a5422ed6c1d36b87fcb0a982b8fb2112a`
+- :ref:`exhale_function_cpfloat__binary32_8h_1a955f8bb4cb9e417a1dbb3034c1c2e0c5`
 
