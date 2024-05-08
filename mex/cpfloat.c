@@ -224,7 +224,7 @@ void mexFunction(int nlhs,
       minebits = -1022;
     }
     if (fpopts->precision > maxfbits || fpopts->emax > maxebits
-        || foptions->emin < minebits)
+        || fpopts->emin < minebits)
       if (!strcmp(fpopts->format, "c") || !strcmp(fpopts->format, "custom"))
         mexErrMsgIdAndTxt("cpfloat:invalidparams",
                           "Invalid floating-point parameters selected.");
