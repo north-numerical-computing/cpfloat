@@ -5,25 +5,29 @@
 
 # CPFloat: Custom-Precision Floating-Point numbers
 
-CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, performing arithmetic operations, evaluating  mathematical functions, and querying properties of the simulated low-precision format. Internally, numbers are stored in `float` or `double` arrays. The low-precision format (target format) follows a straightforward extension of the IEEE 754 standard and it is entirely specified by three parameters:
+CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, performing arithmetic operations, evaluating  mathematical functions, and querying properties of the simulated low-precision format. Internally, numbers are stored in `float` or `double` arrays. The low-precision format (target format) follows an extension of the IEEE 754 standard and it is entirely specified by four parameters:
 * a positive integer *p*, which represents the number of digits of precision;
-* a positive integer *e*<sub>max</sub>, which represents the maximum supported exponent; and
+* a positive integer *e*<sub>max</sub>, which represents the maximum supported exponent;
+* a positive integer *e*<sub>min</sub>, which represents the minimum supported exponent; and
 * a Boolean variable σ, set to **true** if subnormal are supported and to **false** otherwise.
 
-The largest values of *p* and *e*<sub>max</sub> that can be used depend on the format in which the converted numbers are to be stored (storage format). A more extensive description of the characteristics of the low-precision formats that can be used, together with more details on the choice of the admissible values of *p*, *e*<sub>max</sub>, and *σ* can be found in [[1]](#ref1).
+The largest values of *p* and *e*<sub>max</sub>, and the smallest value of *e*<sub>min</sub> that can be used depend on the format in which the converted numbers are to be stored (storage format). A more extensive description of the characteristics of the low-precision formats that can be used, together with more details on the choice of the admissible values of *p*, *e*<sub>max</sub>, and *σ* can be found in [[1]](#ref1).
 
 The library was originally intended as a faster version of the MATLAB function `chop` [[2]](#ref2), which is [available on GitHub](https://github.com/higham/chop).
+The latest versions of the library have a variety of subtle differences compared with `chop`.
 
-The code to reproduce the results of the tests in [[1]](#ref1) are [available on GitHub](https://github.com/north-numerical-computing/cpfloat_experiments).
+The code to reproduce the results of the tests in [[1]](#ref1) is [available on GitHub](https://github.com/north-numerical-computing/cpfloat_experiments).
 
 
 # Dependencies
 
 The only (optional) dependency of CPFloat is the [C implementation](https://github.com/imneme/pcg-c) of the [PCG Library](https://www.pcg-random.org), which provides a variety of high-quality pseudo-random number generators. For an in-depth discussion of the algorithms underlying the PCG Library, we recommend the [paper](https://www.pcg-random.org/paper.html) by [Melissa O'Neill](https://www.cs.hmc.edu/~oneill) [[3]](#ref3). If the header file `pcg_variants.h` in `include/pcg-c/include/pcg_variants.h` is not included at compile-time with the `--include` option, then CPFloat relies on the default C pseudo-random number generator.
 
-The PCG Library is free software (see the [Licensing information](#licensing-information) below), and its generators are more efficient, reliable, and flexible than any combination of the functions `srand`, `rand`, and `rand_r` from the C standard library. We see no reason not to use it, and a warning is issued at compile time if the location of `pcg_variant.h` is not specified correctly.
+The PCG Library is free software (see the [Licensing information](#licensing-information) below), and its generators are more efficient, reliable, and flexible than any combination of the functions `srand`, `rand`, and `rand_r` from the C standard  library. A warning is issued at compile time if the location of `pcg_variant.h` is not specified correctly.
 
-Compiling the MEX interface requires a reasonably recent version of MATLAB or Octave, and testing the interface requires the function `float_params`, which is [available on GitHub](https://github.com/higham/float_params). The unit tests for the C implementation in `test/cpfloat_test.ts` require the [check unit testing framework for C](https://libcheck.github.io/check).
+# Developer dependencies
+
+Compiling the MEX interface requires a reasonably recent version of MATLAB or Octave, and testing the interface requires the function `float_params`, which is [available on GitHub](https://github.com/higham/float_params). The unit tests for the C implementation in `test/cpfloat_test.ts` require the [check unit testing framework for C](https://libcheck.github.io/check) and the [subunit protocol](https://github.com/testing-cabal/subunit).
 
 # Installation
 
