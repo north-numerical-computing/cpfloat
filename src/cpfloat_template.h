@@ -269,7 +269,8 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
     retval = -2;
 
   /* Return 3 if emax is invalid (either nonpositive or too large). */
-  if (fpopts->emax > DEFEMAX || fpopts->emax <= 0)
+  if (fpopts->emax > DEFEMAX || fpopts->emax <= 0
+      || fpopts->emin < DEFEMIN || fpopts->emin >= 0)
     return 3;
 
   /* Set retval to -4 if rounding mode is set to no rounding. */
@@ -279,10 +280,6 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
   /* Return 5 if p is required but is not a valid probability. */
   if (fpopts->flip != CPFLOAT_NO_SOFTERR && (fpopts->p > 1 || fpopts->p < 0))
     return 5;
-
-  /* Return -6 if emin is invalid (either nonnegative or too small). */
-  if (fpopts->emin < DEFEMIN || fpopts->emin >= 0)
-    return -6;
 
   /* Return 0 or warning value. */
   return retval;
@@ -299,24 +296,23 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
   cpfloat_exponent_t emax = fpopts->explim == CPFLOAT_EXPRANGE_TARG ?
     fpopts->emax :
     DEFEMAX;
+  cpfloat_exponent_t emin = fpopts->emin;
+
   if (precision > DEFPREC) {
     precision = DEFPREC;
     *retval = 1;
   }
+
   if (emax > DEFEMAX) {
     emax = DEFEMAX;
     *retval = 2;
   }
 
-  /* Derived floating point parameters. */
-  int emin = fpopts->emin;
-  /* If emin is not set by the user, set it to the default 1-emax. */
-  if (emin == 0)
-    emin = 1-emax;
   if (emin < DEFEMIN) {
-    emax = DEFEMIN;
-    *retval = -6;
+    emin = DEFEMIN;
+    *retval = 2;
   }
+
   FPTYPE xmin = ldexp(1., emin);              /* Smallest pos. normal. */
   FPTYPE xmins = ldexp(1., emin-precision+1); /* Smallest pos. subnormal. */
   FPTYPE ftzthreshold = (fpopts->subnormal == CPFLOAT_SUBN_USE) ? xmins : xmin;
