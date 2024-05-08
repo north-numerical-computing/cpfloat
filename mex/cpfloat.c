@@ -40,7 +40,7 @@ void mexFunction(int nlhs,
     strcpy(fpopts->format, "h");
     fpopts->precision = 11;
     fpopts->emax = 15;
-    fptops->emin = -14;
+    fpopts->emin = -14;
     fpopts->subnormal = CPFLOAT_SUBN_USE;
     fpopts->explim = CPFLOAT_EXPRANGE_TARG;
     fpopts->round = CPFLOAT_RND_NE;
