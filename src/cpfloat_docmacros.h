@@ -4,7 +4,7 @@
 #ifndef _CPFLOAT_DOCMACROS_
 #define _CPFLOAT_DOCMACROS_
 
-#define doc_cpfloat_validate_optstruct(FPTYPE, PMIN, PMAX, EMAX) \
+#define doc_cpfloat_validate_optstruct(FPTYPE, PMIN, PMAX, EMAX, EMIN) \
 /** \
  @brief Validate fields of @ref optstruct struct for `FPTYPE` storage format. \
  \
@@ -23,6 +23,8 @@
  Possible return values are: \
  \li @b -4 The rounding mode specified in @p fpopts->round does not correspond \
  to a valid choice, thus no rounding will be performed. \
+ \li @b -3 The required minimum exponent in @p fpopts->emin is larger than \
+ EMIN, the largest possible exponent for a variable of type `FPTYPE`.   \
  \li @b -2 The required number of digits in @p fpopts->precision is between \
  PMIN and PMAX inclusive, which might cause double rounding if round-to-\
  nearest is used. \
@@ -63,7 +65,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
  */
 
 #define doc_cpf_univariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
@@ -86,7 +89,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_univariate_nobitflip(MATHFUN, FUNSTRING, PMAX, EMAX) \
@@ -108,7 +112,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_bivariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
@@ -132,7 +137,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_trivariate(MATHFUN, FUNSTRING, PMAX, EMAX) \
@@ -157,7 +163,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_frexp(PMAX, EMAX) \
@@ -188,7 +195,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_scaling(BASE, PMAX, EMAX) \
@@ -212,7 +220,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_modf(PMAX, EMAX) \
@@ -237,7 +246,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_ilogb(PMAX, EMAX) \
@@ -261,7 +271,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_rint(PMAX, EMAX) \
@@ -286,7 +297,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_nearbyint(PMAX, EMAX) \
@@ -309,7 +321,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 
@@ -336,7 +349,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_fpclassify(PMAX, EMAX) \
@@ -362,7 +376,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #define doc_cpf_isfun(STRING, PMAX, EMAX) \
@@ -384,7 +399,8 @@
  and the probability of soft errors striking the rounded values. \
  \
  @return The function returns @b 1 if @p fpopts->precision is larger than \
- PMAX, @b 2 if @p fpopts->emax is larger than EMAX, and @b 0 otherwise. \
+ PMAX, @b 2 if @p fpopts->emax is larger than EMAX or fptops->emin is smaller
+ than EMIN, and @b 0 otherwise. \
 */
 
 #endif  /* #ifndef _CPFLOAT_DOCMACROS_ */
