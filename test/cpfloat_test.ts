@@ -45,6 +45,7 @@ typedef union {
 // binary16, bfloat16, TensorFloat-32
 static size_t precision [] = {11, 8, 11};
 static size_t emax [] = {15, 127, 127};
+static size_t emin [] = {-14, -126, -126};
 static size_t nformats = 2;
 
 /* Structure for options and fixtures. */
@@ -592,7 +593,7 @@ void select_tests_det_double(double *y, double *x, double *ref,
     fpopts->round = round;
     for (format = minformat; format <= maxformat; format++) {
       fpopts->precision = precision[format];
-      fpopts->emax = emax[format];
+      fpopts->emax = emax[format]; fpopts->emin = emin[format];
       for (subnormal = minsubnormal; subnormal <= maxsubnormal; subnormal++) {
         fpopts->subnormal = subnormal;
         for (explim = minexplim; explim <= maxexplim; explim++) {
@@ -624,7 +625,7 @@ void select_tests_det_float(float *y, float *x, float *ref,
     fpopts->round = round;
     for (format = minformat; format <= maxformat; format++) {
       fpopts->precision = precision[format];
-      fpopts->emax = emax[format];
+      fpopts->emax = emax[format]; fpopts->emin = emin[format];
       for (subnormal = minsubnormal; subnormal <= maxsubnormal; subnormal++) {
         fpopts->subnormal = subnormal;
         for (explim = minexplim; explim <= maxexplim; explim++) {
@@ -656,7 +657,7 @@ void select_tests_stoc_double(double *tmpin, double *tmpout,
   fpopts->round = mode;
   for (format = minformat; format <= maxformat; format++) {
     fpopts->precision = precision[format];
-    fpopts->emax = emax[format];
+    fpopts->emax = emax[format]; fpopts->emin = emin[format];
     for (subnormal = minsubnormal; subnormal <= maxsubnormal; subnormal++) {
       fpopts->subnormal = subnormal;
       for (explim = minexplim; explim <= maxexplim; explim++) {
@@ -691,7 +692,7 @@ void select_tests_stoc_float(float *tmpin, float *tmpout,
   fpopts->round = mode;
   for (format = minformat; format <= maxformat; format++) {
     fpopts->precision = precision[format];
-    fpopts->emax = emax[format];
+    fpopts->emax = emax[format]; fpopts->emin = emin[format];
     for (subnormal = minsubnormal; subnormal <= maxsubnormal; subnormal++) {
       fpopts->subnormal = subnormal;
       for (explim = minexplim; explim <= maxexplim; explim++) {
@@ -926,7 +927,7 @@ printf("1b. No rounding: subnormal numbers\n");
 for (size_t mode=1; mode<3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
     size_t n = ldexp(1.,fpopts->precision-1) - 1; // number of subnormals
     double *xd = malloc(n * sizeof(*xd));
     init_fparray_double(xd, n, minsubnormal(fpopts), minsubnormal(fpopts));
@@ -964,7 +965,7 @@ printf("1c. No rounding: normal numbers\n");
 for (size_t mode=1; mode<3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
     size_t n = ldexp(1., fpopts->precision-1) * 2 * fpopts->emax;
     uint64_t *xd = malloc(n * sizeof(*xd));
     init_intarray_double(xd, n, intminnormal_double(fpopts),
@@ -1018,7 +1019,7 @@ for (size_t mode=1; mode<3; mode++) {
   float *yf = allocate_array_float(xf, n, mode);
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
     double xmin = minnormal(fpopts);
     double snxmin = minsubnormal(fpopts);
     double halfxmin = xmin / 2;
@@ -1168,7 +1169,7 @@ for (size_t mode=1; mode<3; mode++) {
   float *yf = allocate_array_float(xf, n, mode);
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
     double xmin = minsubnormal(fpopts);
     double halfxmin = xmin / 2;
     double xd_imm [] = {nextafter(0, INFINITY),
@@ -1312,7 +1313,7 @@ for (size_t mode=1; mode<3; mode++) {
   float *yf = allocate_array_float(xf, n, mode);
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
     double xmax = maxnormal(fpopts);
     double xbound = maxbound(fpopts);
     double xd_imm [] = {nextafter(xmax, INFINITY),
@@ -1445,7 +1446,7 @@ printf("2d. Deterministic rounding: subnormal numbers\n");
 for (size_t mode=1; mode<3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
     size_t n = 3 * ldexp(1.,fpopts->precision-1) - 1;
     double *xd_imm = malloc(n * sizeof(*xd_imm));
     double *xd = malloc(n * sizeof(*xd));
@@ -1657,7 +1658,7 @@ printf("2e. Deterministic rounding: normal numbers\n");
 for (size_t mode=1; mode<3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
     size_t n = 3 * (ldexp(1., fpopts->precision-1) * 2 * fpopts->emax - 1);
     uint64_t *xd_imm = malloc(n * sizeof(*xd_imm));
     uint64_t *refd = malloc(n * sizeof(*refd));
@@ -1881,7 +1882,7 @@ for (size_t mode=1; mode<3; mode++) {
   for(subnormal = 0; subnormal <= 1; subnormal++) {
     for(size_t i = 0; i < nformats; i++) {
       fpopts->precision = precision[i];
-      fpopts->emax = emax[i];
+      fpopts->emax = emax[i]; fpopts->emin = emin[i];
       double xmin;
       if (subnormal)
         xmin = minsubnormal(fpopts);
@@ -1932,7 +1933,7 @@ for (size_t mode=1; mode<3; mode++ ) {
   for(subnormal = 0; subnormal <= 1; subnormal++) {
     for(i = 0; i < nformats; i++) {
       fpopts->precision = precision[i];
-      fpopts->emax = emax[i];
+      fpopts->emax = emax[i]; fpopts->emin = emin[i];
       double xmax = maxnormal(fpopts);
       double xbound = maxbound(fpopts);
       double *yd =  malloc(n * sizeof(*yd));
@@ -2011,7 +2012,7 @@ double proundequi = 0.50;
 for (size_t mode=1; mode<3; mode++ ) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
     size_t n = 3 * ldexp(1.,fpopts->precision-1) - 1;
     double *xd = malloc(n * sizeof(*xd));
     double stepd = minsubnormal(fpopts);
@@ -2065,7 +2066,7 @@ for (size_t mode=1; mode<3; mode++ ) {
     for (explim = 0; explim <= 1; explim++) {
       for (size_t i = 0; i < nformats; i++) {
         fpopts->precision = precision[i];
-        fpopts->emax = emax[i];
+        fpopts->emax = emax[i]; fpopts->emin = emin[i];
 
         size_t n = 3 * (ldexp(1., fpopts->precision-1) * 2 * fpopts->emax - 1);
         uint64_t *xd = malloc(n * sizeof(*xd));
@@ -2138,7 +2139,7 @@ size_t n_roundings = 7;
 
 for (size_t i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
-  fpopts->emax = emax[i];
+  fpopts->emax = emax[i]; fpopts->emin = emin[i];
   for (size_t i = 0; i < n_roundings; i++) {
     fpopts->round = det_roundings[i];
 
@@ -2271,7 +2272,7 @@ float *reff = malloc(n * sizeof(* xf));
 
 for (size_t i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
-  fpopts->emax = emax[i];
+  fpopts->emax = emax[i]; fpopts->emin = emin[i];
   for (size_t i = 0; i < n_roundings; i++) {
     fpopts->round = det_roundings[i];
     // Univariate functions.
@@ -2412,7 +2413,7 @@ const int resd_fpclassify [] = {FP_NORMAL, FP_NORMAL,FP_NORMAL, FP_SUBNORMAL,
 
 for (size_t i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
-  fpopts->emax = emax[i];
+  fpopts->emax = emax[i]; fpopts->emin = emin[i];
   double xmind = minnormal(fpopts);
   double xminds = minsubnormal(fpopts);
   double ad[] = {-2., -1, -xmind, -xminds, xminds, xmind, 1., CONST_SQRT2,
@@ -2504,7 +2505,7 @@ const int resf_fpclassify [] = {FP_NORMAL, FP_NORMAL,FP_NORMAL,
 
 for (size_t i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
-  fpopts->emax = emax[i];
+  fpopts->emax = emax[i]; fpopts->emin = emin[i];
   float xminf = minnormal(fpopts);
   float xminfs = minsubnormal(fpopts);
   float af[] = { -2., -1, -xminf, xminf, 1., CONST_SQRT2,
@@ -2590,7 +2591,7 @@ fpopts->subnormal = CPFLOAT_SUBN_USE;
 for (size_t mode=2; mode<3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
 
     size_t n = (ldexp(1.,fpopts->precision-1) - 1) + 2;
     double *ad = malloc(n * sizeof(*ad));
@@ -2690,7 +2691,7 @@ for (size_t mode=2; mode<3; mode++) {
 for (size_t mode=2; mode<3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i];
+    fpopts->emax = emax[i]; fpopts->emin = emin[i];
 
     size_t n = ldexp(1., fpopts->precision-1) * 2 * fpopts->emax + 2;
     double *ad = malloc(n * sizeof(*ad));
@@ -2798,6 +2799,7 @@ for (size_t mode=2; mode<3; mode++) {
 printf("4c. Integer rounding\n");
 
 fpopts->emax = emax[1];
+fpopts->emin = emin[1];
 fpopts->precision = precision[1];
 
 size_t n = 32;
@@ -2970,7 +2972,7 @@ check_equality_double_long_long(rd7, xll, n-3);
 printf("4d. Arithmetic operations on large arrays\n");
 size_t i = 0;
 fpopts->precision = precision[i];
-fpopts->emax = emax[i];
+fpopts->emax = emax[i]; fpopts->emin = emin[i];
 size_t n = 3 * (ldexp(1., fpopts->precision-1) * (ldexp(1., 5) - 2) - 1) - 2;
 double *ad = malloc(n * sizeof(*ad));
 double *bd = malloc(n * sizeof(*bd));

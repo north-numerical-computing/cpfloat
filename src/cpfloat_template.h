@@ -106,7 +106,6 @@ optstruct *init_optstruct() {
   fpopts->bitseed = NULL;
   fpopts->randseedf = NULL;
   fpopts->randseed = NULL;
-  fpopts->emin = 0;
   return fpopts;
 }
 
