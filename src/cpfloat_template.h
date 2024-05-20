@@ -295,7 +295,9 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
   cpfloat_exponent_t emax = fpopts->explim == CPFLOAT_EXPRANGE_TARG ?
     fpopts->emax :
     DEFEMAX;
-  cpfloat_exponent_t emin = fpopts->emin;
+  cpfloat_exponent_t emin = fpopts->explim == CPFLOAT_EXPRANGE_TARG ?
+    fpopts->emin :
+    DEFEMIN;
 
   if (precision > DEFPREC) {
     precision = DEFPREC;
