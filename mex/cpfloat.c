@@ -39,8 +39,8 @@ void mexFunction(int nlhs,
 
     strcpy(fpopts->format, "h");
     fpopts->precision = 11;
-    fpopts->emax = 15;
     fpopts->emin = -14;
+    fpopts->emax = 15;
     fpopts->subnormal = CPFLOAT_SUBN_USE;
     fpopts->explim = CPFLOAT_EXPRANGE_TARG;
     fpopts->round = CPFLOAT_RND_NE;
@@ -78,54 +78,54 @@ void mexFunction(int nlhs,
            !strcmp(fpopts->format, "fp8-e4m3") ||
                  !strcmp(fpopts->format, "E4M3")) {
         fpopts->precision = 4;
-        fpopts->emax = 8;
         fpopts->emin = -6;
+        fpopts->emax = 8;
       } else if (!strcmp(fpopts->format, "q52") ||
                  !strcmp(fpopts->format, "fp8-e5m2") ||
                  !strcmp(fpopts->format, "E5M2")) {
         fpopts->precision = 3;
-        fpopts->emax = 15;
         fpopts->emin = -14;
+        fpopts->emax = 15;
       } else if (!strcmp(fpopts->format, "b") ||
           !strcmp(fpopts->format, "bfloat16") ||
           !strcmp(fpopts->format, "bf16")) {
         fpopts->precision = 8;
-        fpopts->emax = 127;
         fpopts->emin = -126;
+        fpopts->emax = 127;
         is_subn_rnd_default = true;
       } else if (!strcmp(fpopts->format, "h") ||
                  !strcmp(fpopts->format, "half") ||
                  !strcmp(fpopts->format, "binary16") ||
                  !strcmp(fpopts->format, "fp16")) {
         fpopts->precision = 11;
-        fpopts->emax = 15;
         fpopts->emin = -14;
+        fpopts->emax = 15;
       } else if (!strcmp(fpopts->format, "t") ||
                  !strcmp(fpopts->format, "TensorFloat-32") ||
                  !strcmp(fpopts->format, "tf32")) {
         fpopts->precision = 11;
-        fpopts->emax = 127;
         fpopts->emin = -126;
+        fpopts->emax = 127;
       } else if (!strcmp(fpopts->format, "s") ||
                  !strcmp(fpopts->format, "single") ||
                  !strcmp(fpopts->format, "binary32") ||
                  !strcmp(fpopts->format, "fp32")) {
         fpopts->precision =  24;
-        fpopts->emax = 127;
         fpopts->emin = -126;
+        fpopts->emax = 127;
       } else if (!strcmp(fpopts->format, "d") ||
                  !strcmp(fpopts->format, "double") ||
                  !strcmp(fpopts->format, "binary64") ||
                  !strcmp(fpopts->format, "fp64")) {
         fpopts->precision =   53;
-        fpopts->emax = 1023;
         fpopts->emin = -1022;
+        fpopts->emax = 1023;
       } else if (!strcmp(fpopts->format, "c") ||
                  !strcmp(fpopts->format, "custom")) {
         if ((tmp != NULL) && (mxGetClassID(tmp) == mxDOUBLE_CLASS)) {
           fpopts->precision = ((double *)mxGetData(tmp))[0];
-          fpopts->emax = ((double *)mxGetData(tmp))[1];
-          fpopts->emin = ((double *)mxGetData(tmp))[2];
+          fpopts->emin = ((double *)mxGetData(tmp))[1];
+          fpopts->emax = ((double *)mxGetData(tmp))[2];
         } else {
           mexErrMsgIdAndTxt("cpfloat:invalidparams",
                             "Invalid floating-point parameters specified.");
@@ -223,8 +223,8 @@ void mexFunction(int nlhs,
       maxebits = 1023;
       minebits = -1022;
     }
-    if (fpopts->precision > maxfbits || fpopts->emax > maxebits
-        || fpopts->emin < minebits)
+    if (fpopts->precision > maxfbits || fpopts->emin < minebits
+        ||fpopts->emax > maxebits)
       if (!strcmp(fpopts->format, "c") || !strcmp(fpopts->format, "custom"))
         mexErrMsgIdAndTxt("cpfloat:invalidparams",
                           "Invalid floating-point parameters selected.");
@@ -297,8 +297,8 @@ void mexFunction(int nlhs,
     mxArray *outparams = mxCreateDoubleMatrix(1,3,mxREAL);
     double *outparamsptr = mxGetData(outparams);
     outparamsptr[0] = fpopts->precision;
-    outparamsptr[1] = fpopts->emax;
-    outparamsptr[2] = fpopts->emin;
+    outparamsptr[1] = fpopts->emin;
+    outparamsptr[2] = fpopts->emax;
     mxSetFieldByNumber(plhs[1], 0, 1, outparams);
 
     mxArray *outsubnormal = mxCreateDoubleMatrix(1,1,mxREAL);

@@ -94,21 +94,21 @@ function cpfloat_test
   [c,options] = cpfloat(pi,fp);
   assert_eq(options.format,'d')
   assert_eq(options.subnormal,1)
-  assert_eq(options.params, [53 1023 -1022])
+  assert_eq(options.params, [53 -1022 1023])
   [~,fp] = cpfloat;
   assert_eq(fp.format,'d')
   assert_eq(fp.subnormal,1)
-  assert_eq(fp.params, [53 1023 -1022])
+  assert_eq(fp.params, [53 -1022 1023])
 
   clear fp
   fp.format = 'bfloat16'; [c,options] = cpfloat(pi,fp);
   assert_eq(options.format,'bfloat16')
   assert_eq(options.subnormal,0)
-  assert_eq(options.params, [8 127 -126])
+  assert_eq(options.params, [8 -126 127])
   [~,fp] = cpfloat;
   assert_eq(fp.format,'bfloat16')
   assert_eq(fp.subnormal,0)
-  assert_eq(fp.params, [8 127 -126])
+  assert_eq(fp.params, [8 -126 127])
 
   clear cpfloat
   [~,fp] = cpfloat;
@@ -137,7 +137,7 @@ function cpfloat_test
   A2 = hilb(6); C = cpfloat(A2);
 
   options.format = 'c';
-  options.params = [8 127 -126];  % bfloat16
+  options.params = [8 -126 127];  % bfloat16
   C1 = cpfloat(A,options);
   assert_eq(A,C1);
   C2 = cpfloat(B,options);
@@ -146,7 +146,7 @@ function cpfloat_test
 
   clear options
   options.format = 'c';
-  options.params = [11 15 -14];  % h
+  options.params = [11 -14 15];  % h
   options2.format = 'h';
   A = hilb(6);
   [X1,opt] = cpfloat(A,options);
@@ -191,8 +191,8 @@ function cpfloat_test
       [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('q43');
       options.format = 'E4M3';
       % Modification for OCP compliant q43.
-      emax = 8; % Previously thought to be 7
       emin = -6; % Previously thought to be 1-emax=-7.
+      emax = 8; % Previously thought to be 7
       emins = emin + 1 - p; % Exponent of smallest subnormal number.
       xmins = 2^emins;
       xmin = 2^emin;
@@ -571,7 +571,7 @@ function cpfloat_test
   assert_eq(cd,double(cs));
 
   options.format = 'c';
-  options.params = [11 5 -4];
+  options.params = [11 -4 5];
   temp1 = cpfloat(single(pi),options);
   options.format = 'h';
   options = rmfield(options, 'params');
@@ -602,14 +602,14 @@ function cpfloat_test
   temp = 0;
   try
     options.format = 'c';
-    options.params = [12 5 -4];
+    options.params = [12 -4 5];
     temp = cpfloat(single(pi),options); % Error - double rounding!
   catch
   end
   assert_eq(temp,0)
   try
     options.format = 'c';
-    options.params = [26 9 -8];
+    options.params = [26 -8 9];
     temp = cpfloat(pi,options); % Error - double rounding!
   catch
   end
