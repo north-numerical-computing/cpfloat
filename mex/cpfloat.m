@@ -33,11 +33,11 @@
 %
 %   * The three-element vector FPOPTS.params specifies the parameters of the
 %     target floating-point format, and is ignored unless FPOPTS.format is set
-%     to either 'c' or 'custom'. The vector has the form [PRECISION,EMAX,EMIN],
-%     where PRECISION, EMAX and EMIN are positive integers representing
+%     to either 'c' or 'custom'. The vector has the form [PRECISION,EMIN,EMAX],
+%     where PRECISION, EMIN and EMAX are positive integers representing
 %     the number of binary digits in the fraction and the maximum exponent of
 %     the target format, respectively. The default value of this field is
-%     the vector [11,15,-14].
+%     the vector [11,-14,15].
 %
 %   * The scalar FPOPTS.subnormal specifies the support for subnormal numbers.
 %     The target floating-point format will not support subnormal numbers if
@@ -80,9 +80,10 @@
 %     probability, that is, a real number in the interval [0,1]. The default
 %     value for this field is 0.5.
 %
-%   The interface of CPFLOAT is partly compatible with that of the MATLAB
-%   function CHOP available at https://github.com/higham/chop. The main
-%   difference is that CPFLOAT requires EMIN specified in FPOPTS.params.
+%   The interface of CPFLOAT is mostly compatible with that of the MATLAB
+%   function CHOP available at https://github.com/higham/chop. See
+%   https://github.com/north-numerical-computing/cpfloat/blob/main/README.md
+%   for an up-to-date list of differences.
 
 % SPDX-FileCopyrightText: 2020 Massimiliano Fasi and Mantas Mikaitis
 % SPDX-License-Identifier: LGPL-2.1-or-later
