@@ -205,7 +205,7 @@ void mexFunction(int nlhs,
                         "First argument must be a 2D real numeric array.");
     }
 
-    mwSize maxfbits, maxebits, minebits;
+    mwSize maxfbits, minexp, maxexp;
     if (mxIsSingle(prhs[0])) {
       if (!strcmp(fpopts->format, "d") ||
           !strcmp(fpopts->format, "double") ||
@@ -215,16 +215,16 @@ void mexFunction(int nlhs,
                           "Target format is too large.");
       } else {
         maxfbits = fpopts->round<=1 ? 11 : 23;
-        maxebits = 127;
-        minebits = -126;
+        minexp = -126;
+        maxexp = 127;
       }
     } else if(mxIsDouble(prhs[0])) {
       maxfbits = fpopts->round<=1 ? 25 : 52;
-      maxebits = 1023;
-      minebits = -1022;
+      minexp = -1022;
+      maxexp = 1023;
     }
-    if (fpopts->precision > maxfbits || fpopts->emin < minebits
-        ||fpopts->emax > maxebits)
+    if (fpopts->precision > maxfbits || fpopts->emin < minexp
+        ||fpopts->emax > maxexp)
       if (!strcmp(fpopts->format, "c") || !strcmp(fpopts->format, "custom"))
         mexErrMsgIdAndTxt("cpfloat:invalidparams",
                           "Invalid floating-point parameters selected.");
