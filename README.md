@@ -32,7 +32,7 @@ Compiling the MEX interface requires a reasonably recent version of MATLAB or Oc
 
 # Developer dependencies
 
-Testing the MEX interface requires the function `float_params`, which is [available on GitHub](https://github.com/higham/float_params). The unit tests for the C implementation in `test/cpfloat_test.ts` require the [check unit testing framework for C](https://libcheck.github.io/check) and the [subunit protocol](https://github.com/testing-cabal/subunit).
+Testing the MEX interface requires the function `float_params`, which is [available on GitHub](https://github.com/higham/float_params). The unit tests for the C implementation in `test/cpfloat_test.ts` require the [check unit testing framework for C](https://libcheck.github.io/check), including the [`checkmk`](https://github.com/libcheck/check/tree/master/checkmk) script, and the [subunit protocol](https://github.com/testing-cabal/subunit).
 
 # Installation
 
