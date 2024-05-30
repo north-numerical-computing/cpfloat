@@ -1,0 +1,14 @@
+.. _exhale_enum_cpfloat__definitions_8h_1a695c0a76ec919b7c08971122176a67b3:
+
+Enum cpfloat_saturation_t
+=========================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: cpfloat_saturation_t
+   :project: CPFloat
