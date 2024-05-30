@@ -289,8 +289,8 @@ static inline int cpf_fmaf(float *X, const float *A, const float *B,
 #define INTSUFFIX  U
 
 #define DEFPREC   24
-#define DEFEMAX  127
 #define DEFEMIN -126
+#define DEFEMAX  127
 #define NLEADBITS  9
 #define NBITS     32
 #define FULLMASK 0xFFFFFFFFU

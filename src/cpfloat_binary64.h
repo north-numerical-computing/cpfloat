@@ -289,8 +289,8 @@ static inline int cpf_fma(double *X, const double *A, const double *B,
 #define INTTYPE uint64_t
 #define INTSUFFIX ULL
 #define DEFPREC 53
-#define DEFEMAX 1023
 #define DEFEMIN -1022
+#define DEFEMAX 1023
 #define NLEADBITS 12
 #define NBITS 64
 #define FULLMASK 0xFFFFFFFFFFFFFFFFULL

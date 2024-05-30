@@ -20,46 +20,68 @@ function cpfloat_test
   pi_h = 6432*uh; % fp16(pi)
 
   % Check handling of defaults and persistent variable.
-  fp.format = 'bfloat16'; [c,options] = cpfloat(pi,fp);
+  fp.format = 'bfloat16';
+  [~,options] = cpfloat(pi,fp);
   assert_eq(fp.format,options.format)
   assert_eq(options.subnormal,0)
 
-  fp.format = []; [c,options] = cpfloat(pi,fp);
+  fp.format = [];
+  [~,options] = cpfloat(pi,fp);
   assert_eq(options.format,'h')  % Check default;
 
-  fp.subnormal = 0; [c,options] = cpfloat(pi,fp);
-  assert_eq(options.subnormal,0)
-
-  fp.subnormal = []; [c,options] = cpfloat(pi,fp);
-  assert_eq(options.subnormal,1)  % Check default;
-
-  fp.round = []; [c,options] = cpfloat(pi,fp);
-  assert_eq(options.round,1)  % Check default.
-
-  fp.flip = []; [c,options] = cpfloat(pi,fp);
-  assert_eq(options.flip,0)  % Check no default.
-
-  fp.explim = []; [c,options] = cpfloat(pi,fp);
+  fp.explim = [];
+  [~,options] = cpfloat(pi,fp);
   assert_eq(options.explim,1)  % Check default.
 
-  fp.explim = 0; [c,options] = cpfloat(pi,fp);
+  fp.explim = 0;
+  [~,options] = cpfloat(pi,fp);
   assert_eq(options.explim,0)  % Check no default.
 
+  fp.round = [];
+  [~,options] = cpfloat(pi,fp);
+  assert_eq(options.round,1)  % Check default.
+
+  fp.saturation = 1;
+  [~,options] = cpfloat(pi,fp);
+  assert_eq(options.saturation,1)
+
+  fp.saturation = [];
+  [~,options] = cpfloat(pi,fp);
+  assert_eq(options.saturation,0)  % Check default;
+
+  fp.subnormal = 0;
+  [~,options] = cpfloat(pi,fp);
+  assert_eq(options.subnormal,0)
+
+  fp.subnormal = [];
+  [~,options] = cpfloat(pi,fp);
+  assert_eq(options.subnormal,1)  % Check default;
+
+  fp.flip = [];
+  [~,options] = cpfloat(pi,fp);
+  assert_eq(options.flip,0)  % Check no default.
+
   clear cpfloat fp options
-  fp.flip = 1; [~,options] = cpfloat([],fp);
+  fp.flip = 1;
+  [~,options] = cpfloat([],fp);
   assert_eq(options.format,'h')
   assert_eq(options.round,1)
+  assert_eq(options.saturation,0)
   assert_eq(options.subnormal,1)
 
   clear cpfloat fp options
   % check all default options
-  fp.format = []; fp.subnormal = [];
-  fp.round = []; fp.flip = [];
+  fp.format = [];
+  fp.round = [];
+  fp.saturation = [];
+  fp.subnormal = [];
+  fp.flip = [];
   fp.p = [];
-  [c,options] = cpfloat(pi,fp);
+  [~,options] = cpfloat(pi,fp);
   assert_eq(options.format,'h')
-  assert_eq(options.subnormal,1)
   assert_eq(options.round,1)
+  assert_eq(options.saturation,0)
+  assert_eq(options.subnormal,1)
   assert_eq(options.flip,0)
   assert_eq(options.p,0.5)
   % % Takes different path from previous test since fpopts exists.
@@ -71,18 +93,22 @@ function cpfloat_test
   clear cpfloat fp
   fp.flip = 1; fp.format = 'd';
   c = ones(8,1);
-  d = cpfloat(c,fp); assert_eq(norm(d-c,1)>0,true);
-  d = cpfloat(c',fp); assert_eq(norm(d-c',1)>0,true);
+  d = cpfloat(c,fp);
+  assert_eq(norm(d-c,1)>0,true);
+  d = cpfloat(c',fp);
+  assert_eq(norm(d-c',1)>0,true);
   fp.p = 0; % No bits flipped.
-  d = cpfloat(c,fp); assert_eq(d,d);
+  d = cpfloat(c,fp);
+  assert_eq(d,d);
   fp.p = 1; % All bits flipped.
-  d = cpfloat(c,fp); assert_eq(all(d ~= c),true);
+  d = cpfloat(c,fp);
+  assert_eq(all(d ~= c),true);
 
   clear cpfloat
   [~,fp] = cpfloat;
   assert_eq(fp.subnormal,1)
   assert_eq(fp.format,'h')
-  [c,options] = cpfloat(pi);
+  [~,options] = cpfloat(pi);
   assert_eq(options.format,'h')
   assert_eq(options.subnormal,1)
   assert_eq(options.round,1)
@@ -91,7 +117,7 @@ function cpfloat_test
 
   clear fp
   fp.format = 'd';
-  [c,options] = cpfloat(pi,fp);
+  [~,options] = cpfloat(pi,fp);
   assert_eq(options.format,'d')
   assert_eq(options.subnormal,1)
   assert_eq(options.params, [53 -1022 1023])
@@ -101,7 +127,8 @@ function cpfloat_test
   assert_eq(fp.params, [53 -1022 1023])
 
   clear fp
-  fp.format = 'bfloat16'; [c,options] = cpfloat(pi,fp);
+  fp.format = 'bfloat16';
+  [~,options] = cpfloat(pi,fp);
   assert_eq(options.format,'bfloat16')
   assert_eq(options.subnormal,0)
   assert_eq(options.params, [8 -126 127])
@@ -114,7 +141,8 @@ function cpfloat_test
   [~,fp] = cpfloat;
   fp.format = 'b';
   fp = rmfield(fp, 'params');
-  [c,options] = cpfloat(pi,fp);
+  [~,options] = cpfloat(pi,fp);
+  assert_eq(options.saturation,0) % No saturation if that field was empty.
   assert_eq(options.subnormal,1) % No subnormals only if that field was empty.
 
   % Check these usages do not give an error.
@@ -134,7 +162,8 @@ function cpfloat_test
   B = A + randn(size(A))*1e-12;
   C = cpfloat(B,options);
   assert_eq(A,C);
-  A2 = hilb(6); C = cpfloat(A2);
+  A2 = hilb(6);
+  C = cpfloat(A2);
 
   options.format = 'c';
   options.params = [8 -126 127];  % bfloat16
@@ -152,7 +181,7 @@ function cpfloat_test
   [X1,opt] = cpfloat(A,options);
   [X2,opt2] = cpfloat(A,options2);
   assert_eq(X1,X2)
-  % assert_eq(cpfloat(A,options),cpfloat(A,options2));
+  assert_eq(cpfloat(A,opt),cpfloat(A,opt2));
 
   % Row vector
   clear options
@@ -185,14 +214,14 @@ function cpfloat_test
     elseif i == 2
       % Half precision tests.
       [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('half');
-      options.format = 'h'
+      options.format = 'h';
     elseif i == 3
       % Quarter precision tests.
       [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('q43');
       options.format = 'E4M3';
       % Modification for OCP compliant q43.
       emin = -6; % Previously thought to be 1-emax=-7.
-      emax = 8; % Previously thought to be 7
+      emax = 8;  % Previously thought to be 7
       emins = emin + 1 - p; % Exponent of smallest subnormal number.
       xmins = 2^emins;
       xmin = 2^emin;
@@ -282,7 +311,19 @@ function cpfloat_test
       assert_eq(c,x)
     end
 
+    % Saturation tests.
+    options.saturation = 1;
+    for j = 1:6
+      options.round = j;
+      x = inf;
+      c = cpfloat(x,options);
+      assert_eq(c,xmax)
+      c = cpfloat(-x,options);
+      assert_eq(c,-xmax)
+    end
+
     % Infinities tests.
+    options.saturation = 0;
     for j = 1:6
       options.round = j;
       x = inf;
@@ -345,14 +386,16 @@ function cpfloat_test
     end
 
     options.subnormal = 1;
-    c = cpfloat(xmin,options); assert_eq(c,xmin)
+    c = cpfloat(xmin,options);
+    assert_eq(c,xmin)
     x = [xmins xmin/2 xmin 0 xmax 2*xmax 1-delta/5 1+delta/4];
     c = cpfloat(x,options);
     c_expected = [x(1:5) inf 1 1];
     assert_eq(c,c_expected)
 
     options.subnormal = 0;
-    c = cpfloat(xmin,options); assert_eq(c,xmin)
+    c = cpfloat(xmin,options);
+    assert_eq(c,xmin)
     x = [xmins xmin/2 xmin 0 xmax 2*xmax 1-delta/5 1+delta/4];
     c = cpfloat(x,options);
     c_expected = [0 0 x(3:5) inf 1 1];
@@ -409,12 +452,24 @@ function cpfloat_test
 
     % Do not limit exponent.
     options.explim = 0;
-    x = xmin/2;  c = cpfloat(x,options); assert_eq(c,x)
-    x = -xmin/2;  c = cpfloat(x,options); assert_eq(c,x)
-    x = xmax*2;  c = cpfloat(x,options); assert_eq(c,x)
-    x = -xmax*2;  c = cpfloat(x,options); assert_eq(c,x)
-    x = xmins/2; c = cpfloat(x,options); assert_eq(c,x)
-    x = -xmins/2; c = cpfloat(x,options); assert_eq(c,x)
+    x = xmin/2;
+    c = cpfloat(x,options);
+    assert_eq(c,x)
+    x = -xmin/2;
+    c = cpfloat(x,options);
+    assert_eq(c,x)
+    x = xmax*2;
+    c = cpfloat(x,options);
+    assert_eq(c,x)
+    x = -xmax*2;
+    c = cpfloat(x,options);
+    assert_eq(c,x)
+    x = xmins/2;
+    c = cpfloat(x,options);
+    assert_eq(c,x)
+    x = -xmins/2;
+    c = cpfloat(x,options);
+    assert_eq(c,x)
     A = [pi -pi; pi -pi];
     C = cpfloat(A,options);
     options.explim = 1;
@@ -498,21 +553,32 @@ function cpfloat_test
 
   % Test rounding with CHOPFAST versus native rounding.
   options.format = 's';
-  m = 100; y = zeros(3,n); z = y;
+  m = 100;
+  y = zeros(3,n);
+  z = y;
   for i = 1:m
     x = randn;
-    options.round = 2; y(i,1) = cpfloat(x,options);
-    options.round = 3; y(i,2) = cpfloat(x,options);
-    options.round = 4; y(i,3) = cpfloat(x,options);
+    options.round = 2;
+    y(i,1) = cpfloat(x,options);
+    options.round = 3;
+    y(i,2) = cpfloat(x,options);
+    options.round = 4;
+    y(i,3) = cpfloat(x,options);
     if usingoctave
-      fesetround(inf); z(i,1) = single(x);
-      fesetround(-inf); z(i,2) = single(x);
-      fesetround(0); z(i,3) = single(x);
+      fesetround(inf);
+      z(i,1) = single(x);
+      fesetround(-inf);
+      z(i,2) = single(x);
+      fesetround(0);
+      z(i,3) = single(x);
     else
       % Use undocumented function to set rounding mode in MATLAB.
-      feature('setround',inf), z(i,1) = single(x);
-      feature('setround',-inf), z(i,2) = single(x);
-      feature('setround',0), z(i,3) = single(x);
+      feature('setround',inf);
+      z(i,1) = single(x);
+      feature('setround',-inf);
+      z(i,2) = single(x);
+      feature('setround',0);
+      z(i,3) = single(x);
     end
   end
   assert_eq(y,z)
@@ -533,9 +599,15 @@ function cpfloat_test
   c = cpfloat(x,options);
   assert_eq(c,[0 0 x(3:4)])
 
-  options.format = 'd'; options.subnormal = 0; cpfloat([],options);
-  a = cpfloat(pi); assert_eq(a,pi)
-  options.format = 'd'; options.subnormal = 1; cpfloat([],options);
+  options.format = 'd';
+  options.subnormal = 0;
+  cpfloat([],options);
+  a = cpfloat(pi);
+  assert_eq(a,pi)
+
+  options.format = 'd';
+  options.subnormal = 1;
+  cpfloat([],options);
   a = cpfloat(pi); assert_eq(a,pi)
 
   x = pi^2;
@@ -563,8 +635,10 @@ function cpfloat_test
   yd = cpfloat(pd);
   assert_eq(double(ys),yd)
 
-  options.format = 'h'; options.round = 2;
-  as = single(rand(n,1)); ad = double(as);
+  options.format = 'h';
+  options.round = 2;
+  as = single(rand(n,1));
+  ad = double(as);
   delta = single(rand(n,1));
   cd = cpfloat(ad + 1e-5*double(delta),options);
   cs = cpfloat(as + 1e-5*delta,options);
@@ -581,21 +655,21 @@ function cpfloat_test
   % Test base 2 logarithm
   options.format = 'h';
   options.round = 4;
-  x = single(2^-3 * (sum(2.^(-[0:23]))));
-  assert_eq(cpfloat(x,options), single(2^-3 * (sum(2.^(-[0:10])))))
+  x = single(2^-3 * (sum(2.^(-(0:23)))));
+  assert_eq(cpfloat(x,options), single(2^-3 * (sum(2.^(-(0:10))))))
 
-  x = 2^-3 * (sum(2.^(-[0:52])));
-  assert_eq(cpfloat(x,options), 2^-3 * (sum(2.^(-[0:10]))))
+  x = 2^-3 * (sum(2.^(-(0:52))));
+  assert_eq(cpfloat(x,options), 2^-3 * (sum(2.^(-(0:10)))))
 
   options.format = 's';
-  x = single(2^-3 * (sum(2.^(-[0:23]))));
+  x = single(2^-3 * (sum(2.^(-(0:23)))));
   assert_eq(cpfloat(x,options), x)
 
-  x = 2^-3 * (sum(2.^(-[0:52])));
-  assert_eq(cpfloat(x,options), 2^-3 * (sum(2.^(-[0:23]))))
+  x = 2^-3 * (sum(2.^(-(0:52))));
+  assert_eq(cpfloat(x,options), 2^-3 * (sum(2.^(-(0:23)))))
 
   options.format = 'd';
-  x = 2^-3 * (sum(2.^(-[0:52])));
+  x = 2^-3 * (sum(2.^(-(0:52))));
   assert_eq(cpfloat(x,options), x)
 
   options.round = 1;
