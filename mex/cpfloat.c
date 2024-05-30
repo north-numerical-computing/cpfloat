@@ -44,7 +44,7 @@ void mexFunction(int nlhs,
     fpopts->subnormal = CPFLOAT_SUBN_USE;
     fpopts->explim = CPFLOAT_EXPRANGE_TARG;
     fpopts->round = CPFLOAT_RND_NE;
-    fpopts->flip = CPFLOAT_NO_SOFTERR;
+    fpopts->flip = CPFLOAT_SOFTERR_NO;
     fpopts->p = 0.5;
     fpopts->bitseed = NULL;
     fpopts->randseedf = NULL;
@@ -164,7 +164,7 @@ void mexFunction(int nlhs,
       tmp = mxGetField(prhs[1], 0, "flip");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
-          fpopts->flip = CPFLOAT_NO_SOFTERR;
+          fpopts->flip = CPFLOAT_SOFTERR_NO;
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->flip = *((double *)mxGetData(tmp));
       }

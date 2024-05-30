@@ -8,10 +8,10 @@
  * @details This file includes all the external header files used by CPFloat,
  * defines the enumerated types
  *
- * + @ref cpfloat_subnormal_t,
  * + @ref cpfloat_explim_t,
  * + @ref cpfloat_rounding_t,
  * + @ref cpfloat_softerr_t,
+ * + @ref cpfloat_subnormal_t,
  *
  * and the structured data type @ref optstruct. It is not necessary to include
  * this file in order to use CPFloat, as it is already included by @ref
@@ -51,16 +51,6 @@ typedef unsigned int cpfloat_precision_t;
  * @brief Data type for specifying exponents in target format.
  */
 typedef int cpfloat_exponent_t;
-
-/**
- * @brief Subnormal support modes available in CPFloat.
- */
-typedef enum {
-  /** Round subnormal numbers using current rounding mode. */
-  CPFLOAT_SUBN_RND = 0,
-  /** Support storage of subnormal numbers. */
-  CPFLOAT_SUBN_USE = 1
-} cpfloat_subnormal_t;
 
 /**
  * @brief Extended exponent range modes available in CPFloat.
@@ -103,13 +93,22 @@ typedef enum {
  */
 typedef enum {
   /** Do not introduce soft errors. */
-  CPFLOAT_NO_SOFTERR = 0,
+  CPFLOAT_SOFTERR_NO = 0,
   /** Soft errors in fraction of target-format floating-point representation.*/
-  CPFLOAT_FRAC_SOFTERR = 1,
+  CPFLOAT_SOFTERR_FRAC = 1,
   /** Soft errors anywhere in target-format floating-point representation. */
-  CPFLOAT_FP_SOFTERR = 2
-
+  CPFLOAT_SOFTERR_FP = 2
 } cpfloat_softerr_t;
+
+/**
+ * @brief Subnormal support modes available in CPFloat.
+ */
+typedef enum {
+  /** Round subnormal numbers using current rounding mode. */
+  CPFLOAT_SUBN_RND = 0,
+  /** Support storage of subnormal numbers. */
+  CPFLOAT_SUBN_USE = 1
+} cpfloat_subnormal_t;
 
 /** @cond */
 #ifdef PCG_VARIANTS_H_INCLUDED
@@ -157,12 +156,12 @@ typedef struct {
    * Possible values are:
    * + `q43`, `e4m3`, `E4M3` for E4M3 (4-bit exponent, 4-bit significand);
    * + `q52`, `e5m2`, `E5M2` for E5M2 (5-bit exponent, 2-bit significand);
-   * + `b`, `bf16`, and `bfloat16` for bfloat16;
-   * + `h`, `fp16`, `binary16`, and `half` for binary16;
-   * + `t`, `tf32`, and `TensorFloat-32`, for TensorFloat-32;
-   * + `s`, `fp32`, `binary32`, and `single` for binary32;
-   * + `d`, `fp64`, `binary64`, and `double` for binary64; and
-   * + `custom`, and `c` for a format specified using `precision` and `emax`.
+   * + `b`, `bf16`, `bfloat16` for bfloat16;
+   * + `h`, `fp16`, `binary16`, `half` for binary16;
+   * + `t`, `tf32`, `TensorFloat-32`, for TensorFloat-32;
+   * + `s`, `fp32`, `binary32`, `single` for binary32;
+   * + `d`, `fp64`, `binary64`, `double` for binary64; and
+   * + `custom`, `c` for a format specifying `precision`, `emin`, and `emax`.
    *
    * The validation functions cpfloatf_validate_optstruct() and
    * cpfloat_validate_optstruct() return a warning code if this field is not set
@@ -190,6 +189,19 @@ typedef struct {
    */
   cpfloat_precision_t precision;
   /**
+   * @brief Minimum exponent of target format.
+   *
+   * @details The minimum values allowed are -126 and -1022 if the storage
+   * format is `float` or `double`, respectively. If a smaller value is chosen,
+   * it is changed to the minimum allowed value without warning. This field is
+   * ignored unless `explim` is set to `CPFLOAT_EXPRANGE_TARG`.
+   *
+   * The validation functions cpfloatf_validate_optstruct() and
+   * cpfloat_validate_optstruct() return an error code if the required minimum
+   * exponent is smaller than the minimum allowed by the storage format.
+   */
+  cpfloat_exponent_t emin;
+  /**
    * @brief Maximum exponent of target format.
    *
    * @details The maximum values allowed are 127 and 1023 if the storage format
@@ -202,19 +214,6 @@ typedef struct {
    * exponent is larger than the maximum allowed by the storage format.
    */
   cpfloat_exponent_t emax;
-  /**
-   * @brief Minimum exponent of target format.
-   *
-   * @details The minimum values allowed are -126 and -1022 if the storage format
-   * is `float` or `double`, respectively. If a smaller value is chosen, it is
-   * changed to the minimum allowed value without warning. This field is ignored
-   * unless `explim` is set to `CPFLOAT_EXPRANGE_TARG`.
-   *
-   * The validation functions cpfloatf_validate_optstruct() and
-   * cpfloat_validate_optstruct() return an error code if the required minimum
-   * exponent is smaller than the minimum allowed by the storage format.
-   */
-  cpfloat_exponent_t emin;
   /**
    * @brief Support for subnormal numbers in target format.
    *
@@ -260,12 +259,12 @@ typedef struct {
   /**
    * @brief Support for soft errors.
    *
-   * @details If this field is not set to `CPFLOAT_NO_SOFTERR`, a single bit
+   * @details If this field is not set to `CPFLOAT_SOFTERR_NO`, a single bit
    * flip is introduced in the binary floating-point representation of the
    * rounded result with probability `p`. The bit flip can strike only the
    * target-format fraction (significand without the implicit bit) if this field
-   * is set to `CPFLOAT_FRAC_SOFTERR` and any bit in the target-format
-   * representation if it is set to `CPFLOAT_FP_SOFTERR`.
+   * is set to `CPFLOAT_SOFTERR_FRAC` and any bit in the target-format
+   * representation if it is set to `CPFLOAT_SOFTERR_FP`.
    */
   cpfloat_softerr_t flip;
   /**
@@ -274,11 +273,11 @@ typedef struct {
    * @details The probability of flipping a single bit in the binary
    * floating-point representation or in the fraction (significand without the
    * implicit bit) of a number after rounding. This field is ignored if `flip`
-   * is set to `CPFLOAT_NO_SOFTERR`.
+   * is set to `CPFLOAT_SOFTERR_NO`.
    *
    * The validation functions cpfloatf_validate_optstruct() and
    * cpfloat_validate_optstruct() return an error code if `flip` is set to
-   * `CPFLOAT_FP_SOFTERR` or `CPFLOAT_FRAC_SOFTERR` and this field does not
+   * `CPFLOAT_FP_SOFTERR` or `CPFLOAT_SOFTERR_FRAC` and this field does not
    * contain a number in the interval [0,1].
    */
   double p;
