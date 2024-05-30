@@ -39,11 +39,6 @@
 %     the target format, respectively. The default value of this field is
 %     the vector [11,-14,15].
 %
-%   * The scalar FPOPTS.subnormal specifies the support for subnormal numbers.
-%     The target floating-point format will not support subnormal numbers if
-%     this field is set to 0, and will support them otherwise. The default value
-%     for this field is 0 if the target format is 'bfloat16' and 1 otherwise.
-%
 %   * The scalar FPOPTS.explim specifies the support for an extended exponent
 %     range. The target floating-point format will have the exponent range of
 %     the storage format ('single' or 'double', depending on the class of X) if
@@ -62,6 +57,16 @@
 %        7 for round-to-odd.
 %      Any other value results in no rounding. The default value for this field
 %      is 1.
+%
+%   * The scalar FPOPTS.saturation specifies whether saturation arithmetic is in
+%     use. On overflow, the target floating-point format will use the largest
+%     representable floating-point if this field is set to 0, and infinity
+%     otherwise. The default value for this field is 0.
+
+%   * The scalar FPOPTS.subnormal specifies the support for subnormal numbers.
+%     The target floating-point format will not support subnormal numbers if
+%     this field is set to 0, and will support them otherwise. The default value
+%     for this field is 0 if the target format is 'bfloat16' and 1 otherwise.
 %
 %   * The scalar FPOPTS.flip specifies whether the function should simulate the
 %     occurrence of a single bit flip striking the floating-point representation

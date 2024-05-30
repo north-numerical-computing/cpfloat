@@ -10,6 +10,7 @@
  *
  * + @ref cpfloat_explim_t,
  * + @ref cpfloat_rounding_t,
+ * + @ref cpfloat_saturation_t,
  * + @ref cpfloat_softerr_t,
  * + @ref cpfloat_subnormal_t,
  *
@@ -89,6 +90,16 @@ typedef enum {
 } cpfloat_rounding_t;
 
 /**
+ * @brief Saturation modes available in CPFloat.
+ */
+typedef enum {
+  /** Use standard arithmetic. */
+  CPFLOAT_SAT_NO = 0,
+  /** Use saturation arithmetic. */
+  CPFLOAT_SAT_USE = 1,
+} cpfloat_saturation_t;
+
+/**
  * @brief Soft fault simulation modes available in CPFloat.
  */
 typedef enum {
@@ -104,7 +115,7 @@ typedef enum {
  * @brief Subnormal support modes available in CPFloat.
  */
 typedef enum {
-  /** Round subnormal numbers using current rounding mode. */
+  /** Round subnormal numbers according to the current rounding mode. */
   CPFLOAT_SUBN_RND = 0,
   /** Support storage of subnormal numbers. */
   CPFLOAT_SUBN_USE = 1
@@ -178,8 +189,8 @@ typedef struct {
    * number of digits of precision for `float` and `double` cannot exceed 11 and
    * 25, respectively, when using stochastic rounding, and cannot exceed 23 and
    * 52, respectively, for other rounding modes. The C implementation does not
-   * have any such restrictions, but note that using larger values can cause
-   * double rounding.
+   * have any such restrictions, but using larger values can cause double
+   * rounding.
    *
    * The validation functions cpfloatf_validate_optstruct() and
    * cpfloat_validate_optstruct() return an error code if the required number of
@@ -215,14 +226,6 @@ typedef struct {
    */
   cpfloat_exponent_t emax;
   /**
-   * @brief Support for subnormal numbers in target format.
-   *
-   * @details Subnormal numbers are supported if this field is set to
-   * `CPFLOAT_SUBN_USE` and rounded to a normal number using the current
-   * rounding mode if it is set to `CPFLOAT_SUBN_RND`.
-   */
-  cpfloat_subnormal_t subnormal;
-  /**
    * @brief Support for extended exponents in target format.
    *
    * @details The upper limit of the exponent range is set to `emax` if this
@@ -257,6 +260,27 @@ typedef struct {
    */
   cpfloat_rounding_t round;
   /**
+   * @brief Support for saturation arithmetic in target format.
+   *
+   * @details If this field is set to `CPFLOAT_SAT_USE`, numbers too large to be
+   * represented in the target format are clamped to the largest floating-point
+   * number of appropriate sign. If this field is set to `CPFLOAT_SAT_NO`,
+   * numbers that are too large to be represented are rounded to either the
+   * largest normal value of appropriate sign or the closest infinity according
+   * to the current rounding mode.
+   */
+  cpfloat_saturation_t saturation;
+  /**
+   * @brief Support for subnormal numbers in target format.
+   *
+   * @details Subnormal numbers are supported if this field is set to
+   * `CPFLOAT_SUBN_USE` and rounded to a normal number according to the current
+   * rounding mode if it is set to `CPFLOAT_SUBN_RND`.
+   */
+  cpfloat_subnormal_t subnormal;
+
+  /* Bit flips. */
+  /**
    * @brief Support for soft errors.
    *
    * @details If this field is not set to `CPFLOAT_SOFTERR_NO`, a single bit
@@ -281,6 +305,8 @@ typedef struct {
    * contain a number in the interval [0,1].
    */
   double p;
+
+  /* Internal: state of pseudo-random number generator. */
   /**
    * @brief Internal state of pseudo-random number generator for single bits.
    *

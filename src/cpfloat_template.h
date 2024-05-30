@@ -158,11 +158,13 @@ typedef union {
 #define FPPARAMS ADDSUFFIXTO(fpparams)
 typedef struct {
   cpfloat_precision_t precision;
-  cpfloat_exponent_t emax;
   cpfloat_exponent_t emin;
-  cpfloat_subnormal_t subnormal;
+  cpfloat_exponent_t emax;
   cpfloat_rounding_t round;
+  cpfloat_saturation_t saturation;
+  cpfloat_subnormal_t subnormal;
   FPTYPE ftzthreshold;
+  FPTYPE ofvalue;
   FPTYPE xmin;
   FPTYPE xmax;
   FPTYPE xbnd;
@@ -292,21 +294,16 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
   /* Actual precision and exponent range. */
   *retval = 0;
   cpfloat_precision_t precision = fpopts->precision;
-  cpfloat_exponent_t emax = fpopts->explim == CPFLOAT_EXPRANGE_TARG ?
-    fpopts->emax :
-    DEFEMAX;
   cpfloat_exponent_t emin = fpopts->explim == CPFLOAT_EXPRANGE_TARG ?
     fpopts->emin :
     DEFEMIN;
+  cpfloat_exponent_t emax = fpopts->explim == CPFLOAT_EXPRANGE_TARG ?
+    fpopts->emax :
+    DEFEMAX;
 
   if (precision > DEFPREC) {
     precision = DEFPREC;
     *retval = 1;
-  }
-
-  if (emax > DEFEMAX) {
-    emax = DEFEMAX;
-    *retval = 2;
   }
 
   if (emin < DEFEMIN) {
@@ -314,18 +311,26 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
     *retval = 2;
   }
 
+  if (emax > DEFEMAX) {
+    emax = DEFEMAX;
+    *retval = 2;
+  }
+
   FPTYPE xmin = ldexp(1., emin);              /* Smallest pos. normal. */
   FPTYPE xmins = ldexp(1., emin-precision+1); /* Smallest pos. subnormal. */
   FPTYPE ftzthreshold = (fpopts->subnormal == CPFLOAT_SUBN_USE) ? xmins : xmin;
+
   FPTYPE xmax = ldexp(1., emax) * (2-ldexp(1., 1-precision));
   FPTYPE xbnd = ldexp(1., emax) * (2-ldexp(1., -precision));
+  FPTYPE ofvalue = (fpopts->saturation == CPFLOAT_SAT_USE) ? xmax : INFINITY;
 
   /* Bitmasks. */
   INTTYPE leadmask = FULLMASK << (DEFPREC-precision); /* To keep. */
   INTTYPE trailmask = leadmask ^ FULLMASK;            /* To discard. */
 
-  FPPARAMS params = {precision, emax, emin, fpopts->subnormal, fpopts->round,
-                     ftzthreshold, xmin, xmax, xbnd,
+  FPPARAMS params = {precision, emin, emax, fpopts->round,
+                     fpopts->saturation, fpopts->subnormal,
+                     ftzthreshold, ofvalue, xmin, xmax, xbnd,
                      leadmask, trailmask, NULL, NULL};
 
   return params;
@@ -401,7 +406,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     else                                                                       \
       *(x) = FPOF(SIGN(y) | INTOFCONST(p->ftzthreshold));                      \
   } else if (ABS(y) >= p->xbnd) { /* Overflow */                               \
-    *(x) = FPOF(SIGN(y) | INTOFCONST(INFINITY));                               \
+    *(x) = FPOF(SIGN(y) | INTOFCONST(p->ofvalue));                             \
   } else {                                                                     \
     UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
     *(x) = FPOF((INTOF(y) +                                                    \
@@ -425,7 +430,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     else                                                                       \
       *(x) = FPOF(SIGN(y));                                                    \
   } else if (ABS(y) > p->xbnd) { /* Overflow */                                \
-    *(x) = FPOF(SIGN(y) | INTOFCONST(INFINITY));                               \
+    *(x) = FPOF(SIGN(y) | INTOFCONST(p->ofvalue));                             \
   } else {                                                                     \
     UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
     *(x) = FPOF((INTOF(y) + (lp->trailmask>>1)) & lp->leadmask);               \
@@ -450,7 +455,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     else                                                                       \
       *(x) = FPOF(SIGN(y) | INTOFCONST(p->ftzthreshold));                      \
   } else if (ABS(y) >= p->xbnd) { /* Overflow */                               \
-    *(x) = FPOF(SIGN(y) | INTOFCONST(INFINITY));                               \
+    *(x) = FPOF(SIGN(y) | INTOFCONST(p->ofvalue));                             \
   } else {                                                                     \
     UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
     INTTYPE LSB = ((INTOF(y) >> (DEFPREC-lp->precision)) & INTCONST(1))        \
@@ -477,11 +482,11 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     *(x) = *(y) > 0 ? p->ftzthreshold : 0;                                     \
   } else if (ABS(y) > p->xmax) { /* Overflow */                                \
     if (*(y) > p->xmax)                                                        \
-      *(x) = INFINITY;                                                         \
-    else if (*(y) < -p->xmax && *(y) != -INFINITY)                             \
+      *(x) = p->ofvalue;                                                       \
+    else if (*(y) < -p->xmax && *(y) != -p->ofvalue)                           \
       *(x) = -p->xmax;                                                         \
     else /* *(y) == -INFINITY */                                               \
-      *(x) = -INFINITY;                                                        \
+      *(x) = -p->ofvalue;                                                      \
   } else {                                                                     \
     UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
     if (SIGN(y) == 0) /* Add ulp if x is positive.  */                         \
@@ -509,11 +514,11 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     *(x) = *(y) >= 0 ? 0 : -p->ftzthreshold;                                   \
   } else if (ABS(y) > p->xmax) { /* Overflow */                                \
     if (*(y) < -p->xmax)                                                       \
-      *(x) = -INFINITY;                                                        \
-    else if (*(y) > p->xmax && *(y) != INFINITY)                               \
+      *(x) = -p->ofvalue;                                                      \
+    else if (*(y) > p->xmax && *(y) != p->ofvalue)                             \
       *(x) = p->xmax;                                                          \
     else /* *(y) == INFINITY */                                                \
-      *(x) = INFINITY;                                                         \
+      *(x) = p->ofvalue;                                                       \
   } else {                                                                     \
     UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
     if (SIGN(y)) /* Subtract ulp if x is positive. */                          \
@@ -532,7 +537,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define RD_TWD_ZERO_SCALAR_OTHER_EXP(x, y, p, lp)                              \
   if (ABS(y) < p->ftzthreshold) { /* Underflow */                              \
     *(x) = FPOF(SIGN(y));                                                      \
-  } else if (ABS(y) > p->xmax && ABS(y) != INFINITY) { /* Overflow */          \
+  } else if (ABS(y) > p->xmax && ABS(y) != p->ofvalue) { /* Overflow */        \
     *(x) = FPOF(SIGN(y) | INTOFCONST(p->xmax));                                \
   } else {                                                                     \
     UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
@@ -581,7 +586,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
     *(x) = *(y);                                                               \
   }                                                                            \
   if (ABS(x) >= p->xbnd) /* Overflow */                                        \
-    *(x) = FPOF(SIGN(y) | INTOFCONST(INFINITY));
+    *(x) = FPOF(SIGN(y) | INTOFCONST(p->ofvalue));
 
 /* Stochastic rounding with equal probabilities. */
 #define RS_EQUI_SCALAR(x, y, p, lp)                                            \
@@ -589,9 +594,9 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
   if (ABS(y) < p->ftzthreshold && *(y) != 0) {         /* Underflow */         \
     randombit = GENBIT(p->BITSEED);                                            \
     *(x) = FPOF(SIGN(y) | INTOFCONST(randombit ? p->ftzthreshold : 0));        \
-  } else if (ABS(y) > p->xmax && ABS(y) != INFINITY) { /* Overflow */          \
+  } else if (ABS(y) > p->xmax && ABS(y) != p->ofvalue) { /* Overflow */        \
     randombit = GENBIT(p->BITSEED);                                            \
-    *(x) = FPOF(SIGN(y) | INTOFCONST(randombit ? INFINITY : p->xmax));         \
+    *(x) = FPOF(SIGN(y) | INTOFCONST(randombit ? p->ofvalue : p->xmax));       \
   } else if ((INTOF(y) & lp->trailmask)) { /* Not exactly representable. */    \
     randombit = GENBIT(p->BITSEED);                                            \
     *(x) = FPOF(INTOF(y) & lp->leadmask);                                      \
@@ -604,7 +609,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define RO_SCALAR(x, y, p, lp)                                                 \
   if (ABS(y) < p->ftzthreshold && *(y) != 0) {         /* Underflow */         \
     *(x) =  FPOF(SIGN(y) | INTOFCONST(p->ftzthreshold));                       \
-  } else if (ABS(y) > p->xmax && ABS(y) != INFINITY) { /* Overflow */          \
+  } else if (ABS(y) > p->xmax && ABS(y) != p->ofvalue) { /* Overflow */        \
     *(x) = FPOF(SIGN(y) | INTOFCONST(p->xmax));                                \
   } else {                                                                     \
     UPDATE_LOCAL_PARAMS(y, p, lp);                                             \
@@ -651,7 +656,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                                  numelem, p, lp)                               \
   PARALLEL_STRING(PARALLEL)                                                    \
   {                                                                            \
-    if (p->emax == DEFEMAX) {                                                  \
+    if (p->emax == DEFEMAX && p->saturation == CPFLOAT_SAT_NO) {               \
       FOR_STRING(PARALLEL)                                                     \
       for (size_t i=0; i<numelem; i++) {                                       \
         DEPARENTHESIZE_MAYBE(PREPROC)                                          \
@@ -1207,8 +1212,8 @@ GENERATE_UNIVARIATE_MATH_H(lgamma, lgamma)
    int temp = ADDSUFFIXTO(ilogb)(*(A+i));                                      \
    if (temp == FP_ILOGB0 || temp == FP_ILOGBNAN || temp == INT_MAX) {          \
      params.precision = DEFPREC-1;                                             \
-     params.emax = DEFEMAX;                                                    \
      params.emin = DEFEMIN;                                                    \
+     params.emax = DEFEMAX;                                                    \
    } else {                                                                    \
      params.precision = temp + 1;                                              \
      params.ftzthreshold = 1.0;                                                \
@@ -1490,8 +1495,8 @@ GENERATE_TRIVARIATE_MATH_H(fma, fma)
 #undef INTSUFFIX
 
 #undef DEFPREC
-#undef DEFEMAX
 #undef DEFEMIN
+#undef DEFEMAX
 #undef NLEADBITS
 #undef NBITS
 #undef FULLMASK

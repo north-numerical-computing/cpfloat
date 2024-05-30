@@ -53,10 +53,13 @@ optstruct *fpopts;
 
 void fpopts_setup(void) {
   fpopts = malloc(sizeof(optstruct));
-  fpopts->flip = 0;
-  fpopts->p = 0.5;
   fpopts->round = 1;
   fpopts->explim = CPFLOAT_EXPRANGE_STOR;
+  fpopts->saturation = CPFLOAT_SAT_NO;
+
+  fpopts->flip = 0;
+  fpopts->p = 0.5;
+
   fpopts->bitseed = NULL;
   fpopts->randseedf = NULL;
   fpopts->randseed = NULL;
@@ -163,7 +166,7 @@ void init_intarray_rounding_double(uint64_t *x, size_t n,
                                    uint64_t first, uint64_t step) {
   x[0] = first + 1ul;
   x[1] = first + (step >> 1);
-  for (size_t i = 2; i < n; i+=3) {
+  for (size_t i = 2; i < n; i += 3) {
     first += step;
     x[i] = first - 1ul;
     if (i+1 < n)
@@ -178,7 +181,7 @@ void init_intarray_rounding_float(uint32_t *x, size_t n,
                                   uint32_t first, uint32_t step) {
   x[0] = first + 1u;
   x[1] = first + (step >> 1);
-  for (size_t i = 2; i < n; i+=3) {
+  for (size_t i = 2; i < n; i += 3) {
     first += step;
     x[i] = first - 1u;
     if (i+1 < n)
@@ -209,13 +212,13 @@ void init_fparray_rounding_double(double *x, size_t n,
                                   double first, double step) {
   x[0] = FPOFd(INTOFd(first) + 1lu);
   x[1] = first + step/2;
-  for (size_t i = 2; i < n; i+=3) {
+  for (size_t i = 2; i < n; i += 3) {
     first += step;
     x[i] = FPOFd(INTOFd(first) - 1lu);
     if (i+1 < n)
-        x[i+1] = FPOFd(INTOFd(first) + 1lu);
+      x[i+1] = FPOFd(INTOFd(first) + 1lu);
     if (i+2 < n)
-        x[i+2] = first + step/2;
+      x[i+2] = first + step/2;
   }
 }
 
@@ -224,13 +227,13 @@ void init_fparray_rounding_float(float *x, size_t n,
                                  float first, float step) {
   x[0] = FPOFf(INTOFf(first) + 1lu);
   x[1] = first + step/2;
-  for (size_t i = 2; i < n; i+=3) {
+  for (size_t i = 2; i < n; i += 3) {
     first += step;
     x[i] = FPOFf(INTOFf(first) - 1lu);
     if (i+1 < n)
-        x[i+1] = FPOFf(INTOFf(first) + 1lu);
+      x[i+1] = FPOFf(INTOFf(first) + 1lu);
     if (i+2 < n)
-        x[i+2] = first + step/2;
+      x[i+2] = first + step/2;
   }
 }
 
@@ -368,7 +371,7 @@ void check_equality_double_long_long(double *x, long long *y, size_t n) {
 static inline
 void check_equality_float(float *x, float *y, size_t n) {
   for (size_t j = 0; j < n; j++) {
-        if (!nan_safe_compare_float(x[j], y[j])) {
+    if (!nan_safe_compare_float(x[j], y[j])) {
       printf("FLOAT\n");
       printf("***\nj = %ld\nx  = %23.15e [%X]\ny = %23.15e\n",
              j, x[j], *(uint32_t *)(x + j), (float)y[j]);
@@ -458,12 +461,12 @@ void check_array_float(float *y, float *x, float *ref,
              "pr = %d\n"
              "e = %d\n"
              "s = %d\n",
-          j,
-          x[j], * (uint32_t *)(x+j),
-          y[j], * (uint32_t *)(y+j),
-          ref[j], * (uint32_t *)(ref+j),
-          fpopts->round, fpopts->precision,
-          fpopts->emax, fpopts->subnormal);
+             j,
+             x[j], * (uint32_t *)(x+j),
+             y[j], * (uint32_t *)(y+j),
+             ref[j], * (uint32_t *)(ref+j),
+             fpopts->round, fpopts->precision,
+             fpopts->emax, fpopts->subnormal);
     }
     ck_assert(nan_safe_compare_float(y[j], ref[j]));
   }
@@ -593,7 +596,8 @@ void select_tests_det_double(double *y, double *x, double *ref,
     fpopts->round = round;
     for (format = minformat; format <= maxformat; format++) {
       fpopts->precision = precision[format];
-      fpopts->emax = emax[format]; fpopts->emin = emin[format];
+      fpopts->emax = emax[format];
+      fpopts->emin = emin[format];
       for (subnormal = minsubnormal; subnormal <= maxsubnormal; subnormal++) {
         fpopts->subnormal = subnormal;
         for (explim = minexplim; explim <= maxexplim; explim++) {
@@ -625,7 +629,8 @@ void select_tests_det_float(float *y, float *x, float *ref,
     fpopts->round = round;
     for (format = minformat; format <= maxformat; format++) {
       fpopts->precision = precision[format];
-      fpopts->emax = emax[format]; fpopts->emin = emin[format];
+      fpopts->emax = emax[format];
+      fpopts->emin = emin[format];
       for (subnormal = minsubnormal; subnormal <= maxsubnormal; subnormal++) {
         fpopts->subnormal = subnormal;
         for (explim = minexplim; explim <= maxexplim; explim++) {
@@ -657,7 +662,8 @@ void select_tests_stoc_double(double *tmpin, double *tmpout,
   fpopts->round = mode;
   for (format = minformat; format <= maxformat; format++) {
     fpopts->precision = precision[format];
-    fpopts->emax = emax[format]; fpopts->emin = emin[format];
+    fpopts->emax = emax[format];
+    fpopts->emin = emin[format];
     for (subnormal = minsubnormal; subnormal <= maxsubnormal; subnormal++) {
       fpopts->subnormal = subnormal;
       for (explim = minexplim; explim <= maxexplim; explim++) {
@@ -692,7 +698,8 @@ void select_tests_stoc_float(float *tmpin, float *tmpout,
   fpopts->round = mode;
   for (format = minformat; format <= maxformat; format++) {
     fpopts->precision = precision[format];
-    fpopts->emax = emax[format]; fpopts->emin = emin[format];
+    fpopts->emax = emax[format];
+    fpopts->emin = emin[format];
     for (subnormal = minsubnormal; subnormal <= maxsubnormal; subnormal++) {
       fpopts->subnormal = subnormal;
       for (explim = minexplim; explim <= maxexplim; explim++) {
@@ -709,25 +716,25 @@ void select_tests_stoc_float(float *tmpin, float *tmpout,
 
 double *alloc_init_array_double(double *x, size_t n) {
   double *y = malloc(n * sizeof(*y));
-  for (size_t i=0; i<n; i++)
+  for (size_t i = 0; i < n; i++)
     y[i] = x[i];
   return y;
 }
 
 float *alloc_init_array_float(float *x, size_t n) {
   float *y = malloc(n * sizeof(*y));
-  for (size_t i=0; i<n; i++)
+  for (size_t i = 0; i < n; i++)
     y[i] = x[i];
   return y;
 }
 
 void copy_array_double(double *y, double *x, size_t n) {
-  for (size_t i=0; i<n; i++)
+  for (size_t i = 0; i < n; i++)
     y[i] = x[i];
 }
 
 void copy_array_float(float *y, float *x, size_t n) {
-  for (size_t i=0; i<n; i++)
+  for (size_t i = 0; i < n; i++)
     y[i] = x[i];
 }
 
@@ -761,13 +768,13 @@ void free_array_float(float *y, size_t mode) {
 
 void reset_array_double(double *y, size_t n, size_t mode) {
   if (mode == 1)
-    for (size_t i=0; i<n; i++)
+    for (size_t i = 0; i < n; i++)
       y[i] = NAN;
 }
 
 void reset_array_float(float *y, size_t n, size_t mode) {
   if (mode == 1)
-    for (size_t i=0; i<n; i++)
+    for (size_t i = 0; i < n; i++)
       y[i] = NAN;
 }
 
@@ -901,7 +908,7 @@ void test_trivariate_arith_op_float(float* xd,
 
 #test no_rounding_special_values
 printf("1a. No rounding: special values\n");
-for (size_t mode=1; mode<3; mode++) {
+for (size_t mode = 1; mode < 3; mode++) {
   /* Infinity and non-a-number. */
   size_t n = 4;
   double xd [] = {0, -0, inf_double(), -inf_double(), nan_double()};
@@ -924,10 +931,11 @@ for (size_t mode=1; mode<3; mode++) {
 /* Exactly representable subnormals. */
 #test no_rounding_subnormal_numbers
 printf("1b. No rounding: subnormal numbers\n");
-for (size_t mode=1; mode<3; mode++) {
+for (size_t mode = 1; mode < 3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
+    fpopts->emax = emax[i];
+    fpopts->emin = emin[i];
     size_t n = ldexp(1.,fpopts->precision-1) - 1; // number of subnormals
     double *xd = malloc(n * sizeof(*xd));
     init_fparray_double(xd, n, minsubnormal(fpopts), minsubnormal(fpopts));
@@ -962,10 +970,11 @@ for (size_t mode=1; mode<3; mode++) {
 /* Exactly representable normals. */
 #test no_rounding_normal_numbers
 printf("1c. No rounding: normal numbers\n");
-for (size_t mode=1; mode<3; mode++) {
+for (size_t mode = 1; mode < 3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
+    fpopts->emax = emax[i];
+    fpopts->emin = emin[i];
     size_t n = ldexp(1., fpopts->precision-1) * 2 * fpopts->emax;
     uint64_t *xd = malloc(n * sizeof(*xd));
     init_intarray_double(xd, n, intminnormal_double(fpopts),
@@ -1014,12 +1023,13 @@ double *refxmind = malloc(n * sizeof(*refxmind));
 float *xf = malloc(n * sizeof(*xf));
 float *refzerof = calloc(n, sizeof(*refzerof));
 float *refxminf = malloc(n * sizeof(*refxminf));
-for (size_t mode=1; mode<3; mode++) {
+for (size_t mode = 1; mode < 3; mode++) {
   double *yd = allocate_array_double(xd, n, mode);
   float *yf = allocate_array_float(xf, n, mode);
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
+    fpopts->emax = emax[i];
+    fpopts->emin = emin[i];
     double xmin = minnormal(fpopts);
     double snxmin = minsubnormal(fpopts);
     double halfxmin = xmin / 2;
@@ -1164,12 +1174,13 @@ double *refxmind = malloc(n * sizeof(*refxmind));
 float *xf = malloc(n * sizeof(*xf));
 float *refzerof = calloc(n, sizeof(*refzerof));
 float *refxminf = malloc(n * sizeof(*refxminf));
-for (size_t mode=1; mode<3; mode++) {
+for (size_t mode = 1; mode < 3; mode++) {
   double *yd = allocate_array_double(xd, n, mode);
   float *yf = allocate_array_float(xf, n, mode);
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
+    fpopts->emax = emax[i];
+    fpopts->emin = emin[i];
     double xmin = minsubnormal(fpopts);
     double halfxmin = xmin / 2;
     double xd_imm [] = {nextafter(0, INFINITY),
@@ -1308,145 +1319,171 @@ double *refinfd = malloc(n * sizeof(*refinfd));
 float *xf = malloc(n * sizeof(*xf));
 float *refxmaxf = malloc(n * sizeof(*refxmaxf));
 float *refinff = malloc(n * sizeof(*refinff));
-for (size_t mode=1; mode<3; mode++) {
-  double *yd = allocate_array_double(xd, n, mode);
-  float *yf = allocate_array_float(xf, n, mode);
-  for (size_t i = 0; i < nformats; i++) {
-    fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
-    double xmax = maxnormal(fpopts);
-    double xbound = maxbound(fpopts);
-    double xd_imm [] = {nextafter(xmax, INFINITY),
-                        nextafter(xbound, 0),
-                    xbound,
-                    nextafter(xbound, INFINITY)};
-    double refd [] = {xmax, xmax, inf_double(), inf_double()};
-    for (size_t j = 0; j < n; j++) {
-      refxmaxd[j] = xmax;
-      refinfd[j] = inf_double();
-    }
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, -1, 1);
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refd, n, fpopts, 1, 1, i, i, -1, 1);
-    refd[2] = xmax;
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, -1, 1);
-    refd[2] = inf_double();
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refinfd, n, fpopts, 2, 2, i, i, -1, 1);
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 3, 4, i, i, -1, 1);
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 7, 7, i, i, -1, 1);
-    csign_intarray_double((uint64_t *)xd_imm, n);
-    csign_intarray_double((uint64_t *)refd, n);
-    csign_intarray_double((uint64_t *)refxmaxd, n);
-    csign_intarray_double((uint64_t *)refinfd, n);
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, -1, 1);
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refd, n, fpopts, 1, 1, i, i, -1, 1);
-    refd[2] = -xmax;
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, -1, 1);
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 2, 2, i, i, -1, 1);
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refinfd, n, fpopts, 3, 3, i, i, -1, 1);
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 4, 4, i, i, -1, 1);
-    reset_array_double(yd, n, mode);
-    copy_array_double(xd, (double *)&xd_imm, n);
-    select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 7, 7, i, i, -1, 1);
+for (size_t saturation = 0; saturation < 2; saturation++) {
+  fpopts->saturation = saturation;
+  for (size_t mode = 1; mode < 3; mode++) {
+    double *yd = allocate_array_double(xd, n, mode);
+    float *yf = allocate_array_float(xf, n, mode);
+    for (size_t i = 0; i < nformats; i++) {
+      fpopts->precision = precision[i];
+      fpopts->emax = emax[i];
+      fpopts->emin = emin[i];
+      double xmax = maxnormal(fpopts);
+      double xbound = maxbound(fpopts);
+      double xd_imm [] = {nextafter(xmax, INFINITY),
+                          nextafter(xbound, 0),
+                          xbound,
+                          nextafter(xbound, INFINITY)};
+      double refd [] = {xmax, xmax, inf_double(), inf_double()};
+      if (saturation == 0) {
+        for (size_t j = 0; j < n; j++) {
+          refxmaxd[j] = xmax;
+          refinfd[j] = inf_double();
+        }
+      } else {
+        for (size_t j = 0; j < n; j++) {
+          refd[2] = xmax;
+          refd[3] = xmax;
+          refxmaxd[j] = xmax;
+          refinfd[j] = xmax;
+        }
+      }
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, -1, 1);
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refd, n, fpopts, 1, 1, i, i, -1, 1);
+      refd[2] = xmax;
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, -1, 1);
+      if (saturation == 0)
+        refd[2] = inf_double();
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refinfd, n, fpopts, 2, 2, i, i, -1, 1);
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 3, 4, i, i, -1, 1);
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 7, 7, i, i, -1, 1);
+      csign_intarray_double((uint64_t *)xd_imm, n);
+      csign_intarray_double((uint64_t *)refd, n);
+      csign_intarray_double((uint64_t *)refxmaxd, n);
+      csign_intarray_double((uint64_t *)refinfd, n);
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, -1, 1);
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refd, n, fpopts, 1, 1, i, i, -1, 1);
+      refd[2] = -xmax;
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, -1, 1);
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 2, 2, i, i, -1, 1);
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refinfd, n, fpopts, 3, 3, i, i, -1, 1);
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 4, 4, i, i, -1, 1);
+      reset_array_double(yd, n, mode);
+      copy_array_double(xd, (double *)&xd_imm, n);
+      select_tests_det_double(yd, xd, refxmaxd, n, fpopts, 7, 7, i, i, -1, 1);
 
-    float xf_imm [] = {nextafterf(xmax, INFINITY),
-                       nextafterf(xbound, 0),
-                   xbound,
-                   nextafterf(xbound, INFINITY)};
-    float reff [] = {xmax, xmax, inf_float(), inf_float()};
-    for (size_t j = 0; j < n; j++) {
-      refxmaxf[j] = xmax;
-      refinff[j] = inf_float();
+      float xf_imm [] = {nextafterf(xmax, INFINITY),
+                         nextafterf(xbound, 0),
+                         xbound,
+                         nextafterf(xbound, INFINITY)};
+      float reff [] = {xmax, xmax, inf_float(), inf_float()};
+      if (saturation == 0) {
+        for (size_t j = 0; j < n; j++) {
+          refxmaxf[j] = xmax;
+          refinff[j] = inf_float();
+        }
+      } else {
+        reff[2] = xmax;
+        reff[3] = xmax;
+        for (size_t j = 0; j < n; j++) {
+          refxmaxf[j] = xmax;
+          refinff[j] = xmax;
+        }
+      }
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, -1, 1);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, reff, n, fpopts, 1, 1, i, i, -1, 1);
+      reff[2] = xmax;
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, -1, 1);
+      if (saturation == 0)
+        reff[2] = inf_float();
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, refinff, n, fpopts, 2, 2, i, i, -1, 1);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 3, 4, i, i, -1, 1);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 7, 7, i, i, -1, 1);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      csign_intarray_float((uint32_t *)xf_imm, n);
+      csign_intarray_float((uint32_t *)reff, n);
+      csign_intarray_float((uint32_t *)refxmaxf, n);
+      csign_intarray_float((uint32_t *)refinff, n);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, -1, 1);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, reff, n, fpopts, 1, 1, i, i, -1, 1);
+      reff[2] = -xmax;
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, -1, 1);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 2, 2, i, i, -1, 1);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, refinff, n, fpopts, 3, 3, i, i, -1, 1);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 4, 4, i, i, -1, 1);
+      reset_array_float(yf, n, mode);
+      copy_array_float(xf, (float *)&xf_imm, n);
+      select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 7, 7, i, i, -1, 1);
     }
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, -1, 1);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, reff, n, fpopts, 1, 1, i, i, -1, 1);
-    reff[2] = xmax;
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, -1, 1);
-    reff[2] = inf_float();
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, refinff, n, fpopts, 2, 2, i, i, -1, 1);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 3, 4, i, i, -1, 1);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 7, 7, i, i, -1, 1);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    csign_intarray_float((uint32_t *)xf_imm, n);
-    csign_intarray_float((uint32_t *)reff, n);
-    csign_intarray_float((uint32_t *)refxmaxf, n);
-    csign_intarray_float((uint32_t *)refinff, n);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, -1, 1);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, reff, n, fpopts, 1, 1, i, i, -1, 1);
-    reff[2] = -xmax;
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, -1, 1);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 2, 2, i, i, -1, 1);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, refinff, n, fpopts, 3, 3, i, i, -1, 1);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 4, 4, i, i, -1, 1);
-    reset_array_float(yf, n, mode);
-    copy_array_float(xf, (float *)&xf_imm, n);
-    select_tests_det_float(yf, xf, refxmaxf, n, fpopts, 7, 7, i, i, -1, 1);
+    free_array_double(yd, mode);
+    free_array_float(yf, mode);
   }
-  free_array_double(yd, mode);
-  free_array_float(yf, mode);
-}
+ }
 free(xd);
 free(refxmaxd);
 free(refinfd);
 free(xf);
 free(refxmaxf);
 free(refinff);
+fpopts->saturation = CPFLOAT_SAT_NO;
 
 /* Rounding of numbers in the subnormal range. */
 #test deterministic_rounding_subnormal_numbers
 printf("2d. Deterministic rounding: subnormal numbers\n");
-for (size_t mode=1; mode<3; mode++) {
+for (size_t mode = 1; mode < 3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
+    fpopts->emax = emax[i];
+    fpopts->emin = emin[i];
     size_t n = 3 * ldexp(1.,fpopts->precision-1) - 1;
     double *xd_imm = malloc(n * sizeof(*xd_imm));
     double *xd = malloc(n * sizeof(*xd));
@@ -1472,7 +1509,7 @@ for (size_t mode=1; mode<3; mode++) {
                             -1, -1, i, i, 1, 1);
     csign_intarray_double((uint64_t *)xd_imm, n);
     csign_intarray_double((uint64_t *)refd, n);
-    for (size_t j = 1; j < n; j+=3)
+    for (size_t j = 1; j < n; j += 3)
       refd[j] -= stepd;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, xd_imm, n);
@@ -1488,7 +1525,7 @@ for (size_t mode=1; mode<3; mode++) {
     csign_intarray_double((uint64_t *)refd, n);
     reset_array_double(yd, n, mode);
     copy_array_double(xd, xd_imm, n);
-    for (size_t j = 1; j < n; j+=6)
+    for (size_t j = 1; j < n; j += 6)
       refd[j] += stepd;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, xd_imm, n);
@@ -1573,7 +1610,7 @@ for (size_t mode=1; mode<3; mode++) {
                            -1, -1, i, i, 1, 1);
     csign_intarray_float((uint32_t *)xf_imm, n);
     csign_intarray_float((uint32_t *)reff, n);
-    for (size_t j = 1; j < n; j+=3)
+    for (size_t j = 1; j < n; j += 3)
       reff[j] -= stepf;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, xf_imm, n);
@@ -1587,7 +1624,7 @@ for (size_t mode=1; mode<3; mode++) {
                            0, 0, i, i, 1, 1);
     csign_intarray_float((uint32_t *)xf_imm, n);
     csign_intarray_float((uint32_t *)reff, n);
-    for (size_t j = 1; j < n; j+=6)
+    for (size_t j = 1; j < n; j += 6)
       reff[j] += stepf;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, xf_imm, n);
@@ -1655,10 +1692,11 @@ for (size_t mode=1; mode<3; mode++) {
 /* Rounding of numbers in the normal range. */
 #test deterministic_rounding_normal_numbers
 printf("2e. Deterministic rounding: normal numbers\n");
-for (size_t mode=1; mode<3; mode++) {
+for (size_t mode = 1; mode < 3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
+    fpopts->emax = emax[i];
+    fpopts->emin = emin[i];
     size_t n = 3 * (ldexp(1., fpopts->precision-1) * 2 * fpopts->emax - 1);
     uint64_t *xd_imm = malloc(n * sizeof(*xd_imm));
     uint64_t *refd = malloc(n * sizeof(*refd));
@@ -1684,7 +1722,7 @@ for (size_t mode=1; mode<3; mode++) {
                             -1, -1, i, i, -1, -1);
     csign_intarray_double(xd_imm, n);
     csign_intarray_double(refd, n);
-    for (size_t j = 1; j < n; j+=3)
+    for (size_t j = 1; j < n; j += 3)
       refd[j] -= stepd;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)xd_imm, n);
@@ -1698,7 +1736,7 @@ for (size_t mode=1; mode<3; mode++) {
                             0, 0, i, i, -1, -1);
     csign_intarray_double(xd_imm, n);
     csign_intarray_double(refd, n);
-    for (size_t j = 4; j < n; j+=6)
+    for (size_t j = 4; j < n; j += 6)
       refd[j] += stepd;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)xd_imm, n);
@@ -1785,7 +1823,7 @@ for (size_t mode=1; mode<3; mode++) {
                            -1, -1, i, i, -1, -1);
     csign_intarray_float(xf_imm, n);
     csign_intarray_float(reff, n);
-    for (size_t j = 1; j < n; j+=3)
+    for (size_t j = 1; j < n; j += 3)
       reff[j] -= stepf;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)xf_imm, n);
@@ -1799,7 +1837,7 @@ for (size_t mode=1; mode<3; mode++) {
                            0, 0, i, i, -1, -1);
     csign_intarray_float(xf_imm, n);
     csign_intarray_float(reff, n);
-    for (size_t j = 4; j < n; j+=6)
+    for (size_t j = 4; j < n; j += 6)
       reff[j] += stepf;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)xf_imm, n);
@@ -1878,11 +1916,12 @@ double *tmpdout = malloc(NREPS * sizeof(*tmpdout));
 float *tmpfin = malloc(NREPS * sizeof(*tmpfin));
 float *tmpfout = malloc(NREPS * sizeof(*tmpfout));
 double proundequi = 0.50;
-for (size_t mode=1; mode<3; mode++) {
+for (size_t mode = 1; mode < 3; mode++) {
   for(subnormal = 0; subnormal <= 1; subnormal++) {
     for(size_t i = 0; i < nformats; i++) {
       fpopts->precision = precision[i];
-      fpopts->emax = emax[i]; fpopts->emin = emin[i];
+      fpopts->emax = emax[i];
+      fpopts->emin = emin[i];
       double xmin;
       if (subnormal)
         xmin = minsubnormal(fpopts);
@@ -1929,11 +1968,12 @@ double *tmpdout = malloc(NREPS * sizeof(*tmpdout));
 float *tmpfin = malloc(NREPS * sizeof(*tmpfin));
 float *tmpfout = malloc(NREPS * sizeof(*tmpfout));
 double proundequi = 0.50;
-for (size_t mode=1; mode<3; mode++ ) {
+for (size_t mode = 1; mode < 3; mode++ ) {
   for(subnormal = 0; subnormal <= 1; subnormal++) {
     for(i = 0; i < nformats; i++) {
       fpopts->precision = precision[i];
-      fpopts->emax = emax[i]; fpopts->emin = emin[i];
+      fpopts->emax = emax[i];
+      fpopts->emin = emin[i];
       double xmax = maxnormal(fpopts);
       double xbound = maxbound(fpopts);
       double *yd =  malloc(n * sizeof(*yd));
@@ -2009,10 +2049,11 @@ double *tmpdout = malloc(NREPS * sizeof(*tmpdout));
 float *tmpfin = malloc(NREPS * sizeof(*tmpfin));
 float *tmpfout = malloc(NREPS * sizeof(*tmpfout));
 double proundequi = 0.50;
-for (size_t mode=1; mode<3; mode++ ) {
+for (size_t mode = 1; mode < 3; mode++ ) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
+    fpopts->emax = emax[i];
+    fpopts->emin = emin[i];
     size_t n = 3 * ldexp(1.,fpopts->precision-1) - 1;
     double *xd = malloc(n * sizeof(*xd));
     double stepd = minsubnormal(fpopts);
@@ -2061,12 +2102,13 @@ double *tmpdout = malloc(NREPS * sizeof(*tmpdout));
 float *tmpfin = malloc(NREPS * sizeof(*tmpfin));
 float *tmpfout = malloc(NREPS * sizeof(*tmpfout));
 double proundequi = 0.50;
-for (size_t mode=1; mode<3; mode++ ) {
+for (size_t mode = 1; mode < 3; mode++ ) {
   for (subnormal = 0; subnormal <= 1; subnormal++) {
     for (explim = 0; explim <= 1; explim++) {
       for (size_t i = 0; i < nformats; i++) {
         fpopts->precision = precision[i];
-        fpopts->emax = emax[i]; fpopts->emin = emin[i];
+        fpopts->emax = emax[i];
+        fpopts->emin = emin[i];
 
         size_t n = 3 * (ldexp(1., fpopts->precision-1) * 2 * fpopts->emax - 1);
         uint64_t *xd = malloc(n * sizeof(*xd));
@@ -2139,7 +2181,8 @@ size_t n_roundings = 7;
 
 for (size_t i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
-  fpopts->emax = emax[i]; fpopts->emin = emin[i];
+  fpopts->emax = emax[i];
+  fpopts->emin = emin[i];
   for (size_t i = 0; i < n_roundings; i++) {
     fpopts->round = det_roundings[i];
 
@@ -2272,7 +2315,8 @@ float *reff = malloc(n * sizeof(* xf));
 
 for (size_t i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
-  fpopts->emax = emax[i]; fpopts->emin = emin[i];
+  fpopts->emax = emax[i];
+  fpopts->emin = emin[i];
   for (size_t i = 0; i < n_roundings; i++) {
     fpopts->round = det_roundings[i];
     // Univariate functions.
@@ -2413,7 +2457,8 @@ const int resd_fpclassify [] = {FP_NORMAL, FP_NORMAL,FP_NORMAL, FP_SUBNORMAL,
 
 for (size_t i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
-  fpopts->emax = emax[i]; fpopts->emin = emin[i];
+  fpopts->emax = emax[i];
+  fpopts->emin = emin[i];
   double xmind = minnormal(fpopts);
   double xminds = minsubnormal(fpopts);
   double ad[] = {-2., -1, -xmind, -xminds, xminds, xmind, 1., CONST_SQRT2,
@@ -2505,7 +2550,8 @@ const int resf_fpclassify [] = {FP_NORMAL, FP_NORMAL,FP_NORMAL,
 
 for (size_t i = 0; i < nformats; i++) {
   fpopts->precision = precision[i];
-  fpopts->emax = emax[i]; fpopts->emin = emin[i];
+  fpopts->emax = emax[i];
+  fpopts->emin = emin[i];
   float xminf = minnormal(fpopts);
   float xminfs = minsubnormal(fpopts);
   float af[] = { -2., -1, -xminf, xminf, 1., CONST_SQRT2,
@@ -2588,10 +2634,11 @@ printf("4c. Next and previous floating-point number\n");
 fpopts->explim = CPFLOAT_EXPRANGE_TARG;
 fpopts->subnormal = CPFLOAT_SUBN_USE;
 // Subnormals
-for (size_t mode=2; mode<3; mode++) {
+for (size_t mode = 2; mode < 3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
+    fpopts->emax = emax[i];
+    fpopts->emin = emin[i];
 
     size_t n = (ldexp(1.,fpopts->precision-1) - 1) + 2;
     double *ad = malloc(n * sizeof(*ad));
@@ -2688,10 +2735,11 @@ for (size_t mode=2; mode<3; mode++) {
 }
 
 // Normals
-for (size_t mode=2; mode<3; mode++) {
+for (size_t mode = 2; mode < 3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
-    fpopts->emax = emax[i]; fpopts->emin = emin[i];
+    fpopts->emax = emax[i];
+    fpopts->emin = emin[i];
 
     size_t n = ldexp(1., fpopts->precision-1) * 2 * fpopts->emax + 2;
     double *ad = malloc(n * sizeof(*ad));
@@ -2972,7 +3020,8 @@ check_equality_double_long_long(rd7, xll, n-3);
 printf("4d. Arithmetic operations on large arrays\n");
 size_t i = 0;
 fpopts->precision = precision[i];
-fpopts->emax = emax[i]; fpopts->emin = emin[i];
+fpopts->emax = emax[i];
+fpopts->emin = emin[i];
 size_t n = 3 * (ldexp(1., fpopts->precision-1) * (ldexp(1., 5) - 2) - 1) - 2;
 double *ad = malloc(n * sizeof(*ad));
 double *bd = malloc(n * sizeof(*bd));

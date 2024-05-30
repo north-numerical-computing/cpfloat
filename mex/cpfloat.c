@@ -41,11 +41,14 @@ void mexFunction(int nlhs,
     fpopts->precision = 11;
     fpopts->emin = -14;
     fpopts->emax = 15;
-    fpopts->subnormal = CPFLOAT_SUBN_USE;
     fpopts->explim = CPFLOAT_EXPRANGE_TARG;
     fpopts->round = CPFLOAT_RND_NE;
+    fpopts->saturation = CPFLOAT_SAT_NO;
+    fpopts->subnormal = CPFLOAT_SUBN_USE;
+
     fpopts->flip = CPFLOAT_SOFTERR_NO;
     fpopts->p = 0.5;
+
     fpopts->bitseed = NULL;
     fpopts->randseedf = NULL;
     fpopts->randseed = NULL;
@@ -62,7 +65,7 @@ void mexFunction(int nlhs,
 
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
-          /* Use default format, for compatibility with chop. */
+          /* Set default format, for compatibility with chop. */
           strcpy(fpopts->format, "h");
         else if (mxGetClassID(tmp) == mxCHAR_CLASS)
           strcpy(fpopts->format, mxArrayToString(tmp));
@@ -161,6 +164,28 @@ void mexFunction(int nlhs,
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->round = *((double *)mxGetData(tmp));
       }
+      tmp = mxGetField(prhs[1], 0, "saturation");
+      if (tmp != NULL) {
+        if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
+          fpopts->saturation = CPFLOAT_SAT_NO;
+        else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
+          fpopts->saturation = *((double *)mxGetData(tmp));
+      } else {
+          fpopts->saturation = CPFLOAT_SAT_NO;
+      }
+      tmp = mxGetField(prhs[1], 0, "subnormal");
+      if (tmp != NULL) {
+        if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
+          fpopts->subnormal = CPFLOAT_SUBN_USE;
+        else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
+          fpopts->subnormal = *((double *)mxGetData(tmp));
+      } else {
+        if (is_subn_rnd_default)
+          fpopts->subnormal = CPFLOAT_SUBN_RND; /* Default for bfloat16. */
+        else
+          fpopts->subnormal = CPFLOAT_SUBN_USE;
+      }
+
       tmp = mxGetField(prhs[1], 0, "flip");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
@@ -288,10 +313,11 @@ void mexFunction(int nlhs,
 
   /* Allocate and return second output. */
   if (nlhs > 1) {
-    const char* field_names[] = {"format", "params", "subnormal", "round",
-                                 "flip", "p", "explim"};
+    const char* field_names[] = {"format", "params", "explim",
+                                 "round", "saturation", "subnormal",
+                                 "flip", "p"};
     mwSize dims[2] = {1, 1};
-    plhs[1] = mxCreateStructArray(2, dims, 7, field_names);
+    plhs[1] = mxCreateStructArray(2, dims, 8, field_names);
     mxSetFieldByNumber(plhs[1], 0, 0, mxCreateString(fpopts->format));
 
     mxArray *outparams = mxCreateDoubleMatrix(1,3,mxREAL);
@@ -301,30 +327,35 @@ void mexFunction(int nlhs,
     outparamsptr[2] = fpopts->emax;
     mxSetFieldByNumber(plhs[1], 0, 1, outparams);
 
-    mxArray *outsubnormal = mxCreateDoubleMatrix(1,1,mxREAL);
-    double *outsubnormalptr = mxGetData(outsubnormal);
-    outsubnormalptr[0] = fpopts->subnormal;
-    mxSetFieldByNumber(plhs[1], 0, 2, outsubnormal);
+    mxArray *outexplim = mxCreateDoubleMatrix(1, 1, mxREAL);
+    double *outexplimptr = mxGetData(outexplim);
+    outexplimptr[0] = fpopts->explim;
+    mxSetFieldByNumber(plhs[1], 0, 2, outexplim);
 
     mxArray *outround = mxCreateDoubleMatrix(1,1,mxREAL);
     double *outroundptr = mxGetData(outround);
     outroundptr[0] = fpopts->round;
     mxSetFieldByNumber(plhs[1], 0, 3, outround);
 
+    mxArray *outsaturation = mxCreateDoubleMatrix(1,1,mxREAL);
+    double *outsaturationptr = mxGetData(outsaturation);
+    outsaturationptr[0] = fpopts->saturation;
+    mxSetFieldByNumber(plhs[1], 0, 4, outsaturation);
+
+    mxArray *outsubnormal = mxCreateDoubleMatrix(1,1,mxREAL);
+    double *outsubnormalptr = mxGetData(outsubnormal);
+    outsubnormalptr[0] = fpopts->subnormal;
+    mxSetFieldByNumber(plhs[1], 0, 5, outsubnormal);
+
     mxArray *outflip = mxCreateDoubleMatrix(1,1,mxREAL);
     double *outflipptr = mxGetData(outflip);
     outflipptr[0] = fpopts->flip;
-    mxSetFieldByNumber(plhs[1], 0, 4, outflip);
+    mxSetFieldByNumber(plhs[1], 0, 6, outflip);
 
     mxArray *outp = mxCreateDoubleMatrix(1,1,mxREAL);
     double *outpptr = mxGetData(outp);
     outpptr[0] = fpopts->p;
-    mxSetFieldByNumber(plhs[1], 0, 5, outp);
-
-    mxArray *outexplim = mxCreateDoubleMatrix(1,1,mxREAL);
-    double *outexplimptr = mxGetData(outexplim);
-    outexplimptr[0] = fpopts->explim;
-    mxSetFieldByNumber(plhs[1], 0, 6, outexplim);
+    mxSetFieldByNumber(plhs[1], 0, 7, outp);
 
   }
   if (nlhs > 2)
