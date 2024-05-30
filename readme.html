@@ -56,7 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="#developer-dependencies">Developer dependencies</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#installation">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#mex-interface">MEX interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#auto-tuning">Auto-tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#autotuning">Autotuning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
 </ul>
 </li>
@@ -100,7 +100,7 @@
 <a class="reference external image-reference" href="LICENSE.md"><img alt="GitHub" src="https://img.shields.io/github/license/north-numerical-computing/cpfloat" /></a>
 <section id="cpfloat-custom-precision-floating-point-numbers">
 <h1>CPFloat: Custom-Precision Floating-Point numbers<a class="headerlink" href="#cpfloat-custom-precision-floating-point-numbers" title="Link to this heading"></a></h1>
-<p>CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, performing arithmetic operations, evaluating  mathematical functions, and querying properties of the simulated low-precision format. Internally, numbers are stored in <code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">double</span></code> arrays. The low-precision format (target format) follows an extension of the IEEE 754 standard and it is entirely specified by four parameters:</p>
+<p>CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, performing arithmetic operations, evaluating  mathematical functions, and querying properties of the simulated low-precision format. Internally, numbers are stored in <code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">double</span></code> arrays. The low-precision format (target format) follows an extension of the formats defined in the IEEE 754 standard is entirely specified by four parameters:</p>
 <ul class="simple">
 <li><p>a positive integer <em>p</em>, which represents the number of digits of precision;</p></li>
 <li><p>a positive integer <em>e</em><span class="raw-html-m2r"><sub>min</sub></span>, which represents the minimum supported exponent;</p></li>
@@ -109,11 +109,11 @@
 </ul>
 <p>Valid choices of <em>p</em>, <em>e</em><span class="raw-html-m2r"><sub>min</sub></span>, and <em>e</em><span class="raw-html-m2r"><sub>max</sub></span> depend on the format in which the converted numbers are to be stored (storage format). A more extensive description of the characteristics of the low-precision formats that can be used, together with more details on admissible values for <em>p</em>, <em>e</em><span class="raw-html-m2r"><sub>min</sub></span>, <em>e</em><span class="raw-html-m2r"><sub>max</sub></span>, and <em>σ</em> can be found in <a class="reference external" href="#ref1">[1]</a>.</p>
 <p>The library was originally intended as a faster version of the MATLAB function <code class="docutils literal notranslate"><span class="pre">chop</span></code> <a class="reference external" href="#ref2">[2]</a>, which is <a class="reference external" href="https://github.com/higham/chop">available on GitHub</a>.
-The latest versions of the library have a variety of subtle differences compared with <code class="docutils literal notranslate"><span class="pre">chop</span></code>:</p>
+The latest versions of the library have a variety of subtle differences compared with <code class="docutils literal notranslate"><span class="pre">chop</span></code>.</p>
 <ul class="simple">
-<li><p>since June 14, 2022 <code class="docutils literal notranslate"><span class="pre">chop</span></code> supports specifying the function for generating random numbers. The MEX interface of CPFloat does not offer this capability;</p></li>
-<li><p>since v0.6.0 CPFloat allows to specify <em>e</em><span class="raw-html-m2r"><sub>min</sub></span> and <em>e</em><span class="raw-html-m2r"><sub>max</sub></span> instead of the previous strategy of specifying <em>e</em><span class="raw-html-m2r"><sub>max</sub></span> and enforcing <em>e</em><span class="raw-html-m2r"><sub>min</sub></span>=1-<em>e</em><span class="raw-html-m2r"><sub>max</sub></span>;</p></li>
-<li><p>since v0.6.0 the default 8-bit format E4M3 has <em>e</em><span class="raw-html-m2r"><sub>max</sub></span>=8 (in <code class="docutils literal notranslate"><span class="pre">chop</span></code> it is set to 7).</p></li>
+<li><p>Since <a class="reference external" href="https://github.com/higham/chop/commit/1d37238067042416a3554a1f5e6cdd248b613999">14 June 2022</a>, <code class="docutils literal notranslate"><span class="pre">chop</span></code> supports specifying the function for generating pseudo-random numbers. The MEX interface of CPFloat does not offer this capability, as the pseudo-random numbers are generated in C and not in MATLAB.</p></li>
+<li><p>Since v0.6.0, CPFloat allows users to specify <em>e</em><span class="raw-html-m2r"><sub>min</sub></span> and <em>e</em><span class="raw-html-m2r"><sub>max</sub></span> separately. In earlier versions, users can only specify <em>e</em><span class="raw-html-m2r"><sub>max</sub></span>, while <em>e</em><span class="raw-html-m2r"><sub>min</sub></span> is set to 1 – <em>e</em><span class="raw-html-m2r"><sub>max</sub></span>.</p></li>
+<li><p>Since v0.6.0, the default 8-bit format <code class="docutils literal notranslate"><span class="pre">E4M3</span></code> has <em>e</em><span class="raw-html-m2r"><sub>max</sub></span> = 8 and <em>e</em><span class="raw-html-m2r"><sub>min</sub></span> = –6, which is consistent with the homonymous format in the December 2023 revision of the OCP 8-bit Floating Point Specification (OFP8). In <code class="docutils literal notranslate"><span class="pre">chop</span></code>, <em>e</em><span class="raw-html-m2r"><sub>max</sub></span> = 7 and <em>e</em><span class="raw-html-m2r"><sub>max</sub></span> = –6.</p></li>
 </ul>
 <p>The code to reproduce the results of the tests in <a class="reference external" href="#ref1">[1]</a> is <a class="reference external" href="https://github.com/north-numerical-computing/cpfloat_experiments">available on GitHub</a>.</p>
 </section>
@@ -159,10 +159,12 @@ The default value of <code class="docutils literal notranslate"><span class="pre
 <span class="n">cpfloat_compile_nomake</span>
 </pre></div>
 </div>
-<p>A different compiler can be used by setting the value of the variable <code class="docutils literal notranslate"><span class="pre">compilerpath</span></code> appropriately. We have not been able to compile the PCG Library with the C compiler recommended by MATLAB, thus by default the script uses the pseudo-random number generator in the C standard library. If the compiler does not support OpenMP, only the sequential version of the algorithm will be produced and no auto-tuning will take place.</p>
+<p>A different compiler can be used by setting the value of the variable <code class="docutils literal notranslate"><span class="pre">compilerpath</span></code> appropriately.
+If the chosen compiler does not support OpenMP, only the sequential version of the algorithm will be produced and no autotuning will take place.</p>
+<p>On Windows, we have not been able to compile the PCG Library using the C compiler recommended by MATLAB. Therefore, the script uses the pseudo-random number generator in the C standard library by default.</p>
 </section>
-<section id="auto-tuning">
-<h2>Auto-tuning<a class="headerlink" href="#auto-tuning" title="Link to this heading"></a></h2>
+<section id="autotuning">
+<h2>Autotuning<a class="headerlink" href="#autotuning" title="Link to this heading"></a></h2>
 <p>CPFloat provides a sequential and a parallel implementation of the rounding functions. OpenMP introduces some overhead, and using a single thread is typically faster for arrays with few elements. Therefore, the library provides a facility to switch between the single-threaded and the multi-threaded variants automatically, depending on the size of the input. The threshold is machine-dependent, and the best value for a given system can be found by invoking</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make autotune</span>
 </pre></div>
@@ -222,7 +224,7 @@ The Makefile target <code class="docutils literal notranslate"><span class="pre"
 </section>
 <section id="acknowledgements">
 <h1>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Link to this heading"></a></h1>
-<p>The library was written by Massimiliano Fasi and Mantas Mikaitis. We thank Theo Mary, Ian McInerney, and Siegfried Rump for testing the library and suggesting improvements.</p>
+<p>The library was written by Massimiliano Fasi and Mantas Mikaitis. We thank Theo Mary, Ian McInerney, and Siegfried Rump for reporting bugs and suggesting improvements.</p>
 </section>
 <section id="id8">
 <h1>Licensing information<a class="headerlink" href="#id8" title="Link to this heading"></a></h1>
