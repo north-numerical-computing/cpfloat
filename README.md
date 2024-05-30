@@ -5,7 +5,7 @@
 
 # CPFloat: Custom-Precision Floating-Point numbers
 
-CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, performing arithmetic operations, evaluating  mathematical functions, and querying properties of the simulated low-precision format. Internally, numbers are stored in `float` or `double` arrays. The low-precision format (target format) follows an extension of the formats defined in the IEEE 754 standard and is entirely specified by four parameters:
+CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, performing arithmetic operations, evaluating  mathematical functions, and querying properties of the simulated low-precision format. Internally, numbers are stored in `float` or `double` arrays. The low-precision format (target format) follows an extension of the formats defined in the IEEE 754 standard [[5]](#ref5) and is entirely specified by four parameters:
 * a positive integer *p*, which represents the number of digits of precision;
 * a positive integer *e*<sub>min</sub>, which represents the minimum supported exponent;
 * a positive integer *e*<sub>max</sub>, which represents the maximum supported exponent; and
@@ -17,14 +17,14 @@ The library was originally intended as a faster version of the MATLAB function `
 The latest versions of the library have a variety of subtle differences compared with `chop`.
 * Since [14 June 2022](https://github.com/higham/chop/commit/1d37238067042416a3554a1f5e6cdd248b613999), `chop` supports specifying the function for generating random numbers. The MEX interface of CPFloat does not offer this capability, as the pseudo-random numbers used are generated in C and not in MATLAB.
 * Since v0.6.0, CPFloat allows users to specify *e*<sub>min</sub> and *e*<sub>max</sub> separately. In earlier versions, users can only specify *e*<sub>max</sub>, while *e*<sub>min</sub> is set to 1 – *e*<sub>max</sub>.
-* Since v0.6.0, the default 8-bit format `E4M3` has *e*<sub>max</sub> = 8 and *e*<sub>min</sub> = –6, which is consistent with the homonymous format in the December 2023 revision of the OCP 8-bit Floating Point Specification (OFP8). In `chop`, *e*<sub>max</sub> = 7 and *e*<sub>min</sub> = –6.
+* Since v0.6.0, the default 8-bit format `E4M3` has *e*<sub>max</sub> = 8 and *e*<sub>min</sub> = –6, which is consistent with the homonymous format in the December 2023 revision of the OCP 8-bit Floating Point Specification (OFP8) [[3]](#ref3). In `chop`, *e*<sub>max</sub> = 7 and *e*<sub>min</sub> = –6.
 
 The code to reproduce the results of the tests in [[1]](#ref1) is [available on GitHub](https://github.com/north-numerical-computing/cpfloat_experiments).
 
 
 # Dependencies
 
-The only (optional) dependency of CPFloat is the [C implementation](https://github.com/imneme/pcg-c) of the [PCG Library](https://www.pcg-random.org), which provides a variety of high-quality pseudo-random number generators. For an in-depth discussion of the algorithms underlying the PCG Library, we recommend the [paper](https://www.pcg-random.org/paper.html) by [Melissa O'Neill](https://www.cs.hmc.edu/~oneill) [[3]](#ref3). If the header file `pcg_variants.h` in `include/pcg-c/include/pcg_variants.h` is not included at compile-time with the `--include` option, then CPFloat relies on the default C pseudo-random number generator.
+The only (optional) dependency of CPFloat is the [C implementation](https://github.com/imneme/pcg-c) of the [PCG Library](https://www.pcg-random.org), which provides a variety of high-quality pseudo-random number generators. For an in-depth discussion of the algorithms underlying the PCG Library, we recommend the [paper](https://www.pcg-random.org/paper.html) by [Melissa O'Neill](https://www.cs.hmc.edu/~oneill) [[4]](#ref4). If the header file `pcg_variants.h` in `include/pcg-c/include/pcg_variants.h` is not included at compile-time with the `--include` option, then CPFloat relies on the default C pseudo-random number generator.
 
 The PCG Library is free software (see the [Licensing information](#licensing-information) below), and its generators are more efficient, reliable, and flexible than any combination of the functions `srand`, `rand`, and `rand_r` from the C standard library. A warning is issued at compile time if the location of `pcg_variant.h` is not specified correctly.
 
@@ -134,7 +134,11 @@ These two commands run, in MATLAB and Octave respectively, the function `test/cp
 
 <a name="ref2">[2]</a> Nicholas J. Higham and Srikara Pranesh, [Simulating Low Precision Floating-Point Arithmetic](https://doi.org/10.1137/19M1251308), SIAM J. Sci. Comput., 41, C585-C602, 2019.
 
-<a name="ref3">[3]</a> Melissa E. O'Neill, [PCG: A family of simple fast space-efficient statistically good algorithms for random number generation](https://www.pcg-random.org/paper.html), Technical report HMC-CS-2014-0905, Harvey Mudd College, Claremont, CA, September 2014.
+<a name="ref3">[3]</a> Paulius Micikevicius, Stuart Oberman, Pradeep Dubey, Marius Cornea, Andres Rodriguez, Ian Bratt, Richard Grisenthwaite, Norm Jouppi, Chiachen Chou, Amber Huffman, Michael Schulte, Ralph Wittig, Dharmesh Jani, Summer Deng. [OCP 8-bit Floating Point Specification (OFP8)](https://www.opencompute.org/documents/ocp-8-bit-floating-point-specification-ofp8-revision-1-0-2023-12-01-pdf-1), pp. 1–16, Revision 1.0, Open Compute Project, June 2023. Revised December 2023.
+
+<a name="ref4">[4]</a> Melissa E. O'Neill, [PCG: A family of simple fast space-efficient statistically good algorithms for random number generation](https://www.pcg-random.org/paper.html), Technical report HMC-CS-2014-0905, Harvey Mudd College, Claremont, CA, September 2014.
+
+<a name="ref5">[5]</a> [754-2019 IEEE Standard for Floating-Point Arithmetic](https://doi.org/10.1109/IEEESTD.2019.8766229), pp. 1–84, Institute of Electrical and Electronics Engineers, July 2019. Revision of IEEE Std 754-2008.
 
 # Acknowledgements
 
