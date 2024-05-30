@@ -5,7 +5,7 @@
 
 # CPFloat: Custom-Precision Floating-Point numbers
 
-CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, performing arithmetic operations, evaluating  mathematical functions, and querying properties of the simulated low-precision format. Internally, numbers are stored in `float` or `double` arrays. The low-precision format (target format) follows an extension of the IEEE 754 standard and it is entirely specified by four parameters:
+CPFloat is a C library for simulating low-precision floating-point arithmetics. CPFloat provides efficient routines for rounding, performing arithmetic operations, evaluating  mathematical functions, and querying properties of the simulated low-precision format. Internally, numbers are stored in `float` or `double` arrays. The low-precision format (target format) follows an extension of the formats defined in the IEEE 754 standard and is entirely specified by four parameters:
 * a positive integer *p*, which represents the number of digits of precision;
 * a positive integer *e*<sub>min</sub>, which represents the minimum supported exponent;
 * a positive integer *e*<sub>max</sub>, which represents the maximum supported exponent; and
@@ -14,10 +14,10 @@ CPFloat is a C library for simulating low-precision floating-point arithmetics. 
 Valid choices of *p*, *e*<sub>min</sub>, and *e*<sub>max</sub> depend on the format in which the converted numbers are to be stored (storage format). A more extensive description of the characteristics of the low-precision formats that can be used, together with more details on admissible values for *p*, *e*<sub>min</sub>, *e*<sub>max</sub>, and *σ* can be found in [[1]](#ref1).
 
 The library was originally intended as a faster version of the MATLAB function `chop` [[2]](#ref2), which is [available on GitHub](https://github.com/higham/chop).
-The latest versions of the library have a variety of subtle differences compared with `chop`:
-* since June 14, 2022 `chop` supports specifying the function for generating random numbers. The MEX interface of CPFloat does not offer this capability;
-* since v0.6.0 CPFloat allows to specify *e*<sub>min</sub> and *e*<sub>max</sub> instead of the previous strategy of specifying *e*<sub>max</sub> and enforcing *e*<sub>min</sub>=1-*e*<sub>max</sub>;
-* since v0.6.0 the default 8-bit format E4M3 has *e*<sub>max</sub>=8 (in `chop` it is set to 7).
+The latest versions of the library have a variety of subtle differences compared with `chop`.
+* Since [14 June 2022](https://github.com/higham/chop/commit/1d37238067042416a3554a1f5e6cdd248b613999), `chop` supports specifying the function for generating random numbers. The MEX interface of CPFloat does not offer this capability, as the pseudo-random numbers used are generated in C and not in MATLAB.
+* Since v0.6.0, CPFloat allows users to specify *e*<sub>min</sub> and *e*<sub>max</sub> separately. In earlier versions, users can only specify *e*<sub>max</sub>, while *e*<sub>min</sub> is set to 1 – *e*<sub>max</sub>.
+* Since v0.6.0, the default 8-bit format `E4M3` has *e*<sub>max</sub> = 8 and *e*<sub>min</sub> = –6, which is consistent with the homonymous format in the December 2023 revision of the OCP 8-bit Floating Point Specification (OFP8). In `chop`, *e*<sub>max</sub> = 7 and *e*<sub>min</sub> = –6.
 
 The code to reproduce the results of the tests in [[1]](#ref1) is [available on GitHub](https://github.com/north-numerical-computing/cpfloat_experiments).
 
@@ -71,9 +71,12 @@ cd('cpfloat/mex');
 cpfloat_compile_nomake
 ```
 
-A different compiler can be used by setting the value of the variable `compilerpath` appropriately. We have not been able to compile the PCG Library with the C compiler recommended by MATLAB, thus by default the script uses the pseudo-random number generator in the C standard library. If the compiler does not support OpenMP, only the sequential version of the algorithm will be produced and no auto-tuning will take place.
+A different compiler can be used by setting the value of the variable `compilerpath` appropriately.
+If the chosen compiler does not support OpenMP, only the sequential version of the algorithm will be produced and no autotuning will take place.
 
-## Auto-tuning
+On Windows, we have not been able to compile the PCG Library using the C compiler recommended by MATLAB. Therefore, the script uses the pseudo-random number generator in the C standard library by default.
+
+## Autotuning
 
 CPFloat provides a sequential and a parallel implementation of the rounding functions. OpenMP introduces some overhead, and using a single thread is typically faster for arrays with few elements. Therefore, the library provides a facility to switch between the single-threaded and the multi-threaded variants automatically, depending on the size of the input. The threshold is machine-dependent, and the best value for a given system can be found by invoking
 ```console
@@ -135,7 +138,7 @@ These two commands run, in MATLAB and Octave respectively, the function `test/cp
 
 # Acknowledgements
 
-The library was written by Massimiliano Fasi and Mantas Mikaitis. We thank Theo Mary, Ian McInerney, and Siegfried Rump for testing the library and suggesting improvements.
+The library was written by Massimiliano Fasi and Mantas Mikaitis. We thank Theo Mary, Ian McInerney, and Siegfried Rump for reporting bugs and suggesting improvements.
 
 # Licensing information
 
