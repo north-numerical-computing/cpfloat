@@ -277,7 +277,7 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
     retval = -4;
 
   /* Return 5 if p is required but is not a valid probability. */
-  if (fpopts->flip != CPFLOAT_NO_SOFTERR && (fpopts->p > 1 || fpopts->p < 0))
+  if (fpopts->flip != CPFLOAT_SOFTERR_NO && (fpopts->p > 1 || fpopts->p < 0))
     return 5;
 
   /* Return 0 or warning value. */
@@ -783,10 +783,10 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 #define ADD_BITFLIP_CODE_NO_BITFLIP(PARALLEL_TYPE, X)
 #define ADD_BITFLIP_CODE_INTRODUCE_BITFLIP(PARALLEL_TYPE, X)                   \
   /* Introduce bit flips anywhere in the binary representation. */             \
-  if (fpopts->flip != CPFLOAT_NO_SOFTERR) {                                    \
+  if (fpopts->flip != CPFLOAT_SOFTERR_NO) {                                    \
     PRNG_RAND_INIT                                                             \
     size_t flippos;                                                            \
-    const size_t totbits = fpopts->flip == CPFLOAT_FP_SOFTERR ?                \
+    const size_t totbits = fpopts->flip == CPFLOAT_SOFTERR_FP ?                \
                              NBITS : DEFPREC;                                  \
     FOR_STRING(PARALLEL_TYPE)                                                  \
     for (size_t i = 0; i < numelem; i++) {                                     \
