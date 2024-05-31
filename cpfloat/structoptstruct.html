@@ -195,8 +195,8 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N9optstruct10saturationE">
 <span id="_CPPv3N9optstruct10saturationE"></span><span id="_CPPv2N9optstruct10saturationE"></span><span id="optstruct::saturation__cpfloat_saturation_t"></span><span class="target" id="structoptstruct_1a40aa4925fda0a07a39434ce48c94b25d"></span><a class="reference internal" href="enum_cpfloat__definitions_8h_1a695c0a76ec919b7c08971122176a67b3.html#_CPPv420cpfloat_saturation_t" title="cpfloat_saturation_t"><span class="n"><span class="pre">cpfloat_saturation_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">saturation</span></span></span><a class="headerlink" href="#_CPPv4N9optstruct10saturationE" title="Link to this definition"></a><br /></dt>
-<dd><p>Support for subnormal numbers in target format. </p>
-<p>Subnormal numbers are supported if this field is set to <code class="docutils literal notranslate"><span class="pre">CPFLOAT_SUBN_USE</span></code> and rounded to a normal number using the current rounding mode if it is set to <code class="docutils literal notranslate"><span class="pre">CPFLOAT_SUBN_RND</span></code>. </p>
+<dd><p>Support for saturation arithmetic in target format. </p>
+<p>If this field is set to <code class="docutils literal notranslate"><span class="pre">CPFLOAT_SAT_USE</span></code>, numbers too large to be represented in the target format are clamped to the largest floating-point number of appropriate sign. I this field is set to <code class="docutils literal notranslate"><span class="pre">CPFLOAT_SAT_NO</span></code>, numbers that are too large to be represented are rounded to the largest normal value of appropriate sign or to the infinity of appropriate sign using the current rounding mode. </p>
 </dd></dl>
 
 <dl class="cpp var">
