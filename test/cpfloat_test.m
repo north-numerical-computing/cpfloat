@@ -127,6 +127,18 @@ function cpfloat_test
   assert_eq(fp.params, [53 -1022 1023])
 
   clear fp
+  fp.format = 'E4M3';
+  [~,options] = cpfloat(pi,fp);
+  assert_eq(options.format,'E4M3')
+  assert_eq(options.infinity,0)
+  assert_eq(options.params, [4 -6 8])
+  [~,fp] = cpfloat;
+  assert_eq(fp.format,'E4M3')
+  assert_eq(fp.infinity,0)
+  assert_eq(fp.params, [4 -6 8])
+
+
+  clear fp
   fp.format = 'bfloat16';
   [~,options] = cpfloat(pi,fp);
   assert_eq(options.format,'bfloat16')
@@ -323,6 +335,9 @@ function cpfloat_test
     end
 
     % Infinities tests.
+    [~,fpopts] = cpfloat;
+    prev_infinity = fpopts.infinity;
+    options.infinity = 1;
     options.saturation = 0;
     for j = 1:6
       options.round = j;
@@ -400,6 +415,7 @@ function cpfloat_test
     c = cpfloat(x,options);
     c_expected = [0 0 x(3:5) inf 1 1];
     assert_eq(c,c_expected)
+    options.infinity = prev_infinity;
 
     % Smallest normal number and spacing between the subnormal numbers.
     y = xmin; delta = xmin*2^(1-p);

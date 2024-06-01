@@ -9,6 +9,7 @@
  * defines the enumerated types
  *
  * + @ref cpfloat_explim_t,
+ * + @ref cpfloat_infinity_t,
  * + @ref cpfloat_rounding_t,
  * + @ref cpfloat_saturation_t,
  * + @ref cpfloat_softerr_t,
@@ -62,6 +63,16 @@ typedef enum {
   /** Use exponent range of target format. */
   CPFLOAT_EXPRANGE_TARG = 1
 } cpfloat_explim_t;
+
+/**
+ * @brief Infinity support modes available in CPFloat.
+ */
+typedef enum {
+  /** Use infinities in target format. */
+  CPFLOAT_INF_NO = 0,
+  /** Replace infinities with NaNs in target format. */
+  CPFLOAT_INF_USE = 1,
+} cpfloat_infinity_t;
 
 /**
  * @brief Rounding modes available in CPFloat.
@@ -234,6 +245,14 @@ typedef struct {
    * `CPFLOAT_EXPRANGE_STOR`.
    */
   cpfloat_explim_t explim;
+  /**
+   * @brief Support for infinities in target format.
+   *
+   * @details If this field is set to `CPFLOAT_INF_USE`, the target format
+   * supports signed infinities. If the field is set to `CPFLOAT_INF_NO`,
+   * infinities are replaced with a quiet NaN.
+   */
+  cpfloat_infinity_t infinity;
   /**
    * @brief Rounding mode to be used for the conversion.
    *

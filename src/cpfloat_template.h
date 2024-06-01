@@ -160,6 +160,7 @@ typedef struct {
   cpfloat_precision_t precision;
   cpfloat_exponent_t emin;
   cpfloat_exponent_t emax;
+  cpfloat_infinity_t infinity;
   cpfloat_rounding_t round;
   cpfloat_saturation_t saturation;
   cpfloat_subnormal_t subnormal;
@@ -322,13 +323,19 @@ static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
 
   FPTYPE xmax = ldexp(1., emax) * (2-ldexp(1., 1-precision));
   FPTYPE xbnd = ldexp(1., emax) * (2-ldexp(1., -precision));
-  FPTYPE ofvalue = (fpopts->saturation == CPFLOAT_SAT_USE) ? xmax : INFINITY;
+  /*
+   * Here, fpopts->saturation takes precedence over fpopts->infinity. Therefore,
+   * when saturation arithmetic is used, infinities are not produced even when
+   * the target format supports them.
+   */
+  FPTYPE ofvalue = (fpopts->saturation == CPFLOAT_SAT_USE) ? xmax :
+    (fpopts->infinity == CPFLOAT_INF_USE ? INFINITY : NAN);
 
   /* Bitmasks. */
   INTTYPE leadmask = FULLMASK << (DEFPREC-precision); /* To keep. */
   INTTYPE trailmask = leadmask ^ FULLMASK;            /* To discard. */
 
-  FPPARAMS params = {precision, emin, emax, fpopts->round,
+  FPPARAMS params = {precision, emin, emax, fpopts->infinity, fpopts->round,
                      fpopts->saturation, fpopts->subnormal,
                      ftzthreshold, ofvalue, xmin, xmax, xbnd,
                      leadmask, trailmask, NULL, NULL};
@@ -656,7 +663,9 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
                                  numelem, p, lp)                               \
   PARALLEL_STRING(PARALLEL)                                                    \
   {                                                                            \
-    if (p->emax == DEFEMAX && p->saturation == CPFLOAT_SAT_NO) {               \
+    if (p->emax == DEFEMAX                                                     \
+        && p->saturation == CPFLOAT_SAT_NO                                     \
+        && p->infinity == CPFLOAT_INF_USE) {                                   \
       FOR_STRING(PARALLEL)                                                     \
       for (size_t i=0; i<numelem; i++) {                                       \
         DEPARENTHESIZE_MAYBE(PREPROC)                                          \

@@ -42,6 +42,7 @@ void mexFunction(int nlhs,
     fpopts->emin = -14;
     fpopts->emax = 15;
     fpopts->explim = CPFLOAT_EXPRANGE_TARG;
+    fpopts->infinity = CPFLOAT_INF_USE;
     fpopts->round = CPFLOAT_RND_NE;
     fpopts->saturation = CPFLOAT_SAT_NO;
     fpopts->subnormal = CPFLOAT_SUBN_USE;
@@ -57,6 +58,7 @@ void mexFunction(int nlhs,
   /* Parse second argument and populate fpopts structure. */
   if (nrhs > 1) {
     bool is_subn_rnd_default = false;
+    bool is_inf_no_default = false;
     if(!mxIsEmpty(prhs[1]) && !mxIsStruct(prhs[1])) {
       mexErrMsgIdAndTxt("cpfloat:invalidstruct",
                         "Second argument must be a struct.");
@@ -83,6 +85,7 @@ void mexFunction(int nlhs,
         fpopts->precision = 4;
         fpopts->emin = -6;
         fpopts->emax = 8;
+        is_inf_no_default = true;
       } else if (!strcmp(fpopts->format, "q52") ||
                  !strcmp(fpopts->format, "fp8-e5m2") ||
                  !strcmp(fpopts->format, "E5M2")) {
@@ -137,6 +140,7 @@ void mexFunction(int nlhs,
         mexErrMsgIdAndTxt("cpfloat:invalidformat",
                           "Invalid floating-point format specified.");
       }
+
       /* Set default values to be compatible with MATLAB chop. */
       tmp = mxGetField(prhs[1], 0, "subnormal");
       if (tmp != NULL) {
@@ -147,9 +151,8 @@ void mexFunction(int nlhs,
       } else {
         if (is_subn_rnd_default)
           fpopts->subnormal = CPFLOAT_SUBN_RND; /* Default for bfloat16. */
-        else
-          fpopts->subnormal = CPFLOAT_SUBN_USE;
       }
+
       tmp = mxGetField(prhs[1], 0, "explim");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
@@ -157,6 +160,18 @@ void mexFunction(int nlhs,
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->explim = *((double *)mxGetData(tmp));
       }
+
+      tmp = mxGetField(prhs[1], 0, "infinity");
+      if (tmp != NULL) {
+        if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
+          fpopts->infinity = CPFLOAT_INF_USE;
+        else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
+          fpopts->infinity = *((double *)mxGetData(tmp));
+      } else {
+        if (is_inf_no_default)
+          fpopts->infinity = CPFLOAT_INF_NO; /* Default for E4M5. */
+      }
+
       tmp = mxGetField(prhs[1], 0, "round");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
@@ -164,15 +179,15 @@ void mexFunction(int nlhs,
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->round = *((double *)mxGetData(tmp));
       }
+
       tmp = mxGetField(prhs[1], 0, "saturation");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
           fpopts->saturation = CPFLOAT_SAT_NO;
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->saturation = *((double *)mxGetData(tmp));
-      } else {
-          fpopts->saturation = CPFLOAT_SAT_NO;
       }
+
       tmp = mxGetField(prhs[1], 0, "subnormal");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
@@ -313,11 +328,11 @@ void mexFunction(int nlhs,
 
   /* Allocate and return second output. */
   if (nlhs > 1) {
-    const char* field_names[] = {"format", "params", "explim",
+    const char* field_names[] = {"format", "params", "explim", "infinity",
                                  "round", "saturation", "subnormal",
                                  "flip", "p"};
     mwSize dims[2] = {1, 1};
-    plhs[1] = mxCreateStructArray(2, dims, 8, field_names);
+    plhs[1] = mxCreateStructArray(2, dims, 9, field_names);
     mxSetFieldByNumber(plhs[1], 0, 0, mxCreateString(fpopts->format));
 
     mxArray *outparams = mxCreateDoubleMatrix(1,3,mxREAL);
@@ -332,30 +347,35 @@ void mexFunction(int nlhs,
     outexplimptr[0] = fpopts->explim;
     mxSetFieldByNumber(plhs[1], 0, 2, outexplim);
 
+    mxArray *outinfinity = mxCreateDoubleMatrix(1, 1, mxREAL);
+    double *outinfinityptr = mxGetData(outinfinity);
+    outinfinityptr[0] = fpopts->infinity;
+    mxSetFieldByNumber(plhs[1], 0, 3, outinfinity);
+
     mxArray *outround = mxCreateDoubleMatrix(1,1,mxREAL);
     double *outroundptr = mxGetData(outround);
     outroundptr[0] = fpopts->round;
-    mxSetFieldByNumber(plhs[1], 0, 3, outround);
+    mxSetFieldByNumber(plhs[1], 0, 4, outround);
 
     mxArray *outsaturation = mxCreateDoubleMatrix(1,1,mxREAL);
     double *outsaturationptr = mxGetData(outsaturation);
     outsaturationptr[0] = fpopts->saturation;
-    mxSetFieldByNumber(plhs[1], 0, 4, outsaturation);
+    mxSetFieldByNumber(plhs[1], 0, 5, outsaturation);
 
     mxArray *outsubnormal = mxCreateDoubleMatrix(1,1,mxREAL);
     double *outsubnormalptr = mxGetData(outsubnormal);
     outsubnormalptr[0] = fpopts->subnormal;
-    mxSetFieldByNumber(plhs[1], 0, 5, outsubnormal);
+    mxSetFieldByNumber(plhs[1], 0, 6, outsubnormal);
 
     mxArray *outflip = mxCreateDoubleMatrix(1,1,mxREAL);
     double *outflipptr = mxGetData(outflip);
     outflipptr[0] = fpopts->flip;
-    mxSetFieldByNumber(plhs[1], 0, 6, outflip);
+    mxSetFieldByNumber(plhs[1], 0, 7, outflip);
 
     mxArray *outp = mxCreateDoubleMatrix(1,1,mxREAL);
     double *outpptr = mxGetData(outp);
     outpptr[0] = fpopts->p;
-    mxSetFieldByNumber(plhs[1], 0, 7, outp);
+    mxSetFieldByNumber(plhs[1], 0, 8, outp);
 
   }
   if (nlhs > 2)
