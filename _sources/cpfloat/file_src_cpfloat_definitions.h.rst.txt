@@ -33,6 +33,8 @@ This file includes all the external header files used by CPFloat, defines the en
 
 - :ref:`exhale_enum_cpfloat__definitions_8h_1a9d6b6ecb3dadc890bbb77bd737507847`,
 
+- :ref:`exhale_enum_cpfloat__definitions_8h_1a1e1dfbf3c8aa0ed8de0e433797cd5486`,
+
 - :ref:`exhale_enum_cpfloat__definitions_8h_1a9f79e24cc89b42b57e660ceea5b6e113`,
 
 - :ref:`exhale_enum_cpfloat__definitions_8h_1a695c0a76ec919b7c08971122176a67b3`,
@@ -93,6 +95,8 @@ Enums
 
 
 - :ref:`exhale_enum_cpfloat__definitions_8h_1a9d6b6ecb3dadc890bbb77bd737507847`
+
+- :ref:`exhale_enum_cpfloat__definitions_8h_1a1e1dfbf3c8aa0ed8de0e433797cd5486`
 
 - :ref:`exhale_enum_cpfloat__definitions_8h_1a9f79e24cc89b42b57e660ceea5b6e113`
 

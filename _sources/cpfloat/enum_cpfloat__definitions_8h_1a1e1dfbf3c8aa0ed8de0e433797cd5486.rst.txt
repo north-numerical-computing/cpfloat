@@ -1,0 +1,14 @@
+.. _exhale_enum_cpfloat__definitions_8h_1a1e1dfbf3c8aa0ed8de0e433797cd5486:
+
+Enum cpfloat_infinity_t
+=======================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: cpfloat_infinity_t
+   :project: CPFloat
