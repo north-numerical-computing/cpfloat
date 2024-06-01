@@ -45,6 +45,11 @@
 %     this field is set to 0, and the exponent range of the format specified in
 %     FPOPTS.format otherwise. The default value for this field is 1.
 %
+%   * The scalar FPOPTS.infinity specifies whether infinities are supported. The
+%     target floating-point format will support infinities if this field is set
+%     to 1, and they will be replaced by NaNs otherwise. The default value for
+%     this field is 0 if the target format is 'E4M3' and 1 otherwise.
+%
 %   * The scalar FPOPTS.round specifies the rounding mode. Possible values are:
 %       -1 for round-to-nearest with ties-to-away;
 %        0 for round-to-nearest with ties-to-zero;
