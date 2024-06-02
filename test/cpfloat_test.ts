@@ -35,17 +35,15 @@ typedef union {
 #define CONST_PI        3.14159265358979323846
 #define CONST_SQRT2     1.41421356237309504880
 
-#define MINFORMAT 0
-#define MAXFORMAT 2
 #define MINMODE  -1
 #define MAXMODE   8
 #define NREPS  1000
 
 /* Define default target formats. */
-// binary16, bfloat16, TensorFloat-32
-static size_t precision [] = {11, 8, 11};
-static size_t emax [] = {15, 127, 127};
-static size_t emin [] = {-14, -126, -126};
+// E5M2, bfloat16
+static size_t precision [] = {3, 8};
+static size_t emax [] = {15, 127};
+static size_t emin [] = {-14, -126};
 static size_t nformats = 2;
 
 /* Structure for options and fixtures. */
@@ -324,7 +322,7 @@ void check_equality_double(double *x, double *y, size_t n) {
   for (size_t j = 0; j < n; j++) {
     if (!nan_safe_compare_double(x[j], y[j])) {
       printf("DOUBLE\n");
-      printf("***\nj = %ld\nx  = %23.15e [%" PRIu64 "]\ny = %23.15e [%" PRIu64 "]\n",
+      printf("***\nj = %ld\nx = %23.15e [%" PRIu64 "]\ny = %23.15e [%" PRIu64 "]\n",
              j,
              x[j], *(uint64_t *)(x + j),
              y[j], *(uint64_t *)(y + j));
@@ -338,7 +336,7 @@ void check_equality_double_int(double *x, int *y, size_t n) {
   for (size_t j = 0; j < n; j++) {
     if (!nan_safe_compare_double(x[j], y[j])) {
       printf("DOUBLE\n");
-      printf("***\nj = %ld\nx  = %23.15e [%" PRIu64 "]\ny = %23.15e\n",
+      printf("***\nj = %ld\nx = %23.15e [%" PRIu64 "]\ny = %23.15e\n",
              j, x[j], *(uint64_t *)(x + j), (double)y[j]);
     }
     ck_assert(nan_safe_compare_double(x[j], (double)y[j]));
@@ -916,7 +914,7 @@ for (size_t mode = 1; mode < 3; mode++) {
   double *zd = alloc_init_array_double(xd, n);
   double *yd = allocate_array_double(xd, n, mode);
   select_tests_det_double(yd, xd, zd, n, fpopts,
-                          MINMODE, MAXMODE, 0, 2, -1, -1);
+                          MINMODE, MAXMODE, 0, nformats - 1, -1, -1);
   free(zd);
   free_array_double(yd, mode);
 
@@ -924,7 +922,7 @@ for (size_t mode = 1; mode < 3; mode++) {
   float *zf = alloc_init_array_float(xf, n);
   float *yf = allocate_array_float(xf, n, mode);
   select_tests_det_float(yf, xf, zf, n, fpopts,
-                         MINMODE, MAXMODE, 0, 2, -1, -1);
+                         MINMODE, MAXMODE, 0, nformats - 1, -1, -1);
   free(zf);
   free_array_float(yf, mode);
 }
@@ -2624,13 +2622,16 @@ free(onef);
 free(exp);
 free(lexp);
 
-#test enumeration_floating_point_numbers
-printf("4c. Next and previous floating-point number\n");
+#test floating_point_enumeration_subnormal_numbers
+printf("4c. Next and previous floating-point number: subnormal numbers\n");
+fpopts->infinity = CPFLOAT_INF_USE;
 fpopts->explim = CPFLOAT_EXPRANGE_TARG;
+fpopts->saturation = CPFLOAT_SAT_NO;
 fpopts->subnormal = CPFLOAT_SUBN_USE;
-// Subnormals
-for (size_t mode = 2; mode < 3; mode++) {
+fpopts->round = CPFLOAT_RND_NE;
+for (size_t mode = 3; mode < 3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
+
     fpopts->precision = precision[i];
     fpopts->emax = emax[i];
     fpopts->emin = emin[i];
@@ -2653,8 +2654,10 @@ for (size_t mode = 2; mode < 3; mode++) {
     copy_array_double(ad, refd, n);
     cpf_nexttoward(xd, ad, infl, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
+
     csign_intarray_double((uint64_t *)infd, n);
-    for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
+    for (size_t j = 0; j < n; j++)
+      infl[j] = -infl[j];
     copy_array_double(ad, refd, n);
     cpf_nextafter(xd, ad+1, infd, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
@@ -2669,8 +2672,10 @@ for (size_t mode = 2; mode < 3; mode++) {
     copy_array_double(ad, refd, n);
     cpf_nexttoward(xd, ad+1, infl, n-1, fpopts);
     check_equality_double(xd, refd, n-1);
+
     csign_intarray_double((uint64_t *) infd, n);
-    for (size_t j = 0; j < n; j++) infl[j] = -infl[j];
+    for (size_t j = 0; j < n; j++)
+      infl[j] = -infl[j];
     copy_array_double(ad, refd, n);
     cpf_nextafter(xd, ad, infd, n-1, fpopts);
     check_equality_double(xd, refd+1, n-1);
@@ -2729,8 +2734,9 @@ for (size_t mode = 2; mode < 3; mode++) {
   }
 }
 
-// Normals
-for (size_t mode = 2; mode < 3; mode++) {
+#test floating_point_enumeration_normal_numbers
+printf("4d. Next and previous floating-point number: normal numbers\n");
+for (size_t mode = 3; mode < 3; mode++) {
   for (size_t i = 0; i < nformats; i++) {
     fpopts->precision = precision[i];
     fpopts->emax = emax[i];
@@ -2839,12 +2845,10 @@ for (size_t mode = 2; mode < 3; mode++) {
 }
 
 #test integer_rounding
-printf("4c. Integer rounding\n");
-
+printf("4e. Integer rounding\n");
 fpopts->emax = emax[1];
 fpopts->emin = emin[1];
 fpopts->precision = precision[1];
-
 size_t n = 32;
 double *xd = malloc(n * sizeof(*xd));
 int *xi = malloc(n * sizeof(*xi));
@@ -3012,7 +3016,7 @@ check_equality_double_long_long(rd7, xll, n-3);
 
 
 #test arithmetic_operations_large
-printf("4d. Arithmetic operations on large arrays\n");
+printf("4f. Arithmetic operations on large arrays\n");
 size_t i = 0;
 fpopts->precision = precision[i];
 fpopts->emax = emax[i];
