@@ -496,7 +496,9 @@ void check_array_stoc_double(double *tmpin, double *tmpout,
         ck_abort_msg("Not rounding to either closest number.");
     fpopts->round = mode;
     if (fabs(counter[0]/NREPS - prounddown[i % 3]) > 0.1) {
-      printf("%e\n", fabs(counter[0]/NREPS - prounddown[i % 3]));
+      printf("DOUBLE\n");
+      printf("***\ni = %ld\nexp = %23.15e\nact = %23.15e\n",
+             i, counter[0]/NREPS, prounddown[i % 3]);
       ck_abort_msg("Error in stochasting rounding.");
     }
   }
@@ -527,7 +529,9 @@ void check_array_stoc_float(float *tmpin, float *tmpout,
         ck_abort_msg("Not rounding to either closest number.");
     fpopts->round = mode;
     if (fabs(counter[0]/(double)NREPS - prounddown[i % 3]) > 0.1) {
-      printf("%e\n", fabs(counter[0]/NREPS - prounddown[i % 3]));
+      printf("FLOAT\n");
+      printf("***\ni = %ld\nexp = %23.15e\nact = %23.15e\n",
+             i, counter[0]/NREPS, prounddown[i % 3]);
       ck_abort_msg("Error in stochasting rounding.");
     }
   }
@@ -548,7 +552,9 @@ void check_array_equi_double(double *tmpin, double *tmpout,
       else
         counter[0]++;
     if (fabs(counter[0]/NREPS - *prounddown) > 0.1) {
-      printf("%e\n", fabs(counter[0]/NREPS - prounddown[i % 3]));
+      printf("DOUBLE\n");
+      printf("***\ni = %ld\nexp = %23.15e\nact = %23.15e\n",
+             i, counter[0]/NREPS, prounddown[i % 3]);
       ck_abort_msg("Error in stochasting rounding.");
     }
   }
@@ -569,7 +575,9 @@ void check_array_equi_float(float *tmpin, float *tmpout,
       else
         counter[0]++;
     if (fabs(counter[0]/(double)NREPS - *prounddown) > 0.1) {
-      printf("%e\n", fabs(counter[0]/NREPS - prounddown[i % 3]));
+      printf("FLOAT\n");
+      printf("***\ni = %ld\nexp = %23.15e\nact = %23.15e\n",
+             i, counter[0]/NREPS, prounddown[i % 3]);
       ck_abort_msg("Error in stochasting rounding.");
     }
   }
@@ -974,7 +982,8 @@ for (size_t mode = 1; mode < 3; mode++) {
     fpopts->precision = precision[i];
     fpopts->emax = emax[i];
     fpopts->emin = emin[i];
-    size_t n = ldexp(1., fpopts->precision-1) * 2 * fpopts->emax;
+    size_t n = ldexp(1., fpopts->precision-1) *
+      (fpopts->emax - fpopts->emin + 1);
     uint64_t *xd = malloc(n * sizeof(*xd));
     init_intarray_double(xd, n, intminnormal_double(fpopts),
                          1ul << (52-fpopts->precision + 1));
@@ -1690,7 +1699,8 @@ for (size_t mode = 1; mode < 3; mode++) {
     fpopts->precision = precision[i];
     fpopts->emax = emax[i];
     fpopts->emin = emin[i];
-    size_t n = 3 * (ldexp(1., fpopts->precision-1) * 2 * fpopts->emax - 1);
+    size_t n = 3 *
+      (ldexp(1., fpopts->precision-1) * (fpopts->emax - fpopts->emin + 1) - 1);
     uint64_t *xd_imm = malloc(n * sizeof(*xd_imm));
     uint64_t *refd = malloc(n * sizeof(*refd));
     double *xd = malloc(n * sizeof(*xd));
@@ -2103,7 +2113,8 @@ for (size_t mode = 1; mode < 3; mode++ ) {
         fpopts->emax = emax[i];
         fpopts->emin = emin[i];
 
-        size_t n = 3 * (ldexp(1., fpopts->precision-1) * 2 * fpopts->emax - 1);
+        size_t n = 3 * (ldexp(1., fpopts->precision-1)
+                        * (fpopts->emax - fpopts->emin +1) - 1);
         uint64_t *xd = malloc(n * sizeof(*xd));
         double xmin = minnormal(fpopts);
         uint64_t stepd = 1ul << (52-fpopts->precision + 1);
@@ -2742,7 +2753,8 @@ for (size_t mode = 3; mode < 3; mode++) {
     fpopts->emax = emax[i];
     fpopts->emin = emin[i];
 
-    size_t n = ldexp(1., fpopts->precision-1) * 2 * fpopts->emax + 2;
+    size_t n = ldexp(1., fpopts->precision-1) *
+      (fpopts->emax - fpopts->emin + 1) + 2;
     double *ad = malloc(n * sizeof(*ad));
     double *xd = allocate_array_double(ad, n, mode);
     double *refd = malloc(n * sizeof(*refd));
