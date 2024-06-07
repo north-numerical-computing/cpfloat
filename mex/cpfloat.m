@@ -67,7 +67,7 @@
 %     use. On overflow, the target floating-point format will use the largest
 %     representable floating-point if this field is set to 0, and infinity
 %     otherwise. The default value for this field is 0.
-
+%
 %   * The scalar FPOPTS.subnormal specifies the support for subnormal numbers.
 %     The target floating-point format will not support subnormal numbers if
 %     this field is set to 0, and will support them otherwise. The default value
