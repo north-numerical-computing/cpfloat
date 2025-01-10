@@ -142,7 +142,7 @@ These two commands run, in MATLAB and Octave respectively, the function `test/cp
 
 # Acknowledgements
 
-The library was written by Massimiliano Fasi and Mantas Mikaitis. We thank Theo Mary, Ian McInerney, and Siegfried Rump for reporting bugs and suggesting improvements.
+The library was written by Massimiliano Fasi and Mantas Mikaitis. We thank Nicolas Louvet, Theo Mary, Ian McInerney, and Siegfried Rump for reporting bugs and suggesting improvements.
 
 # Licensing information
 

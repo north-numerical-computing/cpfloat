@@ -12,10 +12,11 @@ int main () {
 
   // Set up the parameters for binary16 target format.
   fpopts->precision = 11;                 // Bits in the significand + 1.
+  fpopts->emin = -14;                     // The minimum exponent value.
   fpopts->emax = 15;                      // The maximum exponent value.
   fpopts->subnormal = CPFLOAT_SUBN_USE;   // Support for subnormals is on.
   fpopts->round = CPFLOAT_RND_TP;         // Round toward +infinity.
-  fpopts->flip = CPFLOAT_NO_SOFTERR;      // Bit flips are off.
+  fpopts->flip = CPFLOAT_SOFTERR_NO;      // Bit flips are off.
   fpopts->p = 0;                          // Bit flip probability (not used).
   fpopts->explim = CPFLOAT_EXPRANGE_TARG; // Limited exponent in target format.
 
