@@ -288,7 +288,7 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
 }
 
 /* Compute floating-point parameters required by the rounding functions. */
-#define COMPUTE_GLOBAL_PARAMS ADDSUFFIXTO(compute_golbal_params)
+#define COMPUTE_GLOBAL_PARAMS ADDSUFFIXTO(compute_global_params)
 static inline FPPARAMS COMPUTE_GLOBAL_PARAMS(const optstruct *fpopts,
                                              int *retval) {
 
