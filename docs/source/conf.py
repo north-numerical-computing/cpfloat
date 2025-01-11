@@ -34,7 +34,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'breathe',
     'exhale',
-    'm2r2',
+    'myst_parser',
 ]
 
 # Setup the breathe extension

@@ -10,8 +10,7 @@ jobs:
 
       - name: Install and Build
         run: |
-          sudo apt install -y doxygen graphviz
-          pip install sphinx sphinx_rtd_theme breathe exhale m2r2
+          sudo apt install -y doxygen graphviz python3-sphinx python3-breathe python3-sphinx-rtd-theme python3-breathe python3-exhale python3-myst-parser
           make docs
 
       - name: Deploy
