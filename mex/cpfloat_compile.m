@@ -64,7 +64,7 @@ function retval = cpfloat_compile(varargin)
       setenv("CXX", compilerpath);
       setenv("DL_LD", compilerpath);
     end
-    if ~isempty(compilerpath)
+    if ~isempty(cpfloatdir)
       coptions = sprintf('%s -I%s', coptions, cpfloatdir)
     end
     setenv("CFLAGS", sprintf("-fopenmp %s", coptions));
