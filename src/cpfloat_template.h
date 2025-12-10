@@ -49,7 +49,7 @@
 #else  /* #ifdef PCG_VARIANTS_H_INCLUDED */
 #ifdef _OPENMP
 #define INITBIT(seed) *seed = time(NULL);
-#define GEN_SINGLE_BIT(seed) (rand_r(seed) & (1U << 30))
+#define GEN_SINGLE_BIT(seed) (thread_safe_rand(seed) & (1U << 30))
 #define PRNG_ADVANCE_BIT prng_advance_bit
 static inline BITTYPE PRNG_ADVANCE_BIT(BITSEEDTYPE *seed, size_t delta) {
   for (size_t i=0; i<delta; i++)
@@ -191,7 +191,7 @@ typedef struct {
 #define PRNG_ADVANCE_RAND ADDSUFFIXTO(prng_advance_rand)
 static inline INTTYPE PRNG_ADVANCE_RAND(RANDSEEDTYPE *seed, size_t delta) {
   for (size_t i=0; i<delta; i++)
-    rand_r((unsigned int *)seed);
+    thread_safe_rand((unsigned int *)seed);
   return GEN_SINGLE_RAND(seed);
 }
 #define ADVANCERAND(seed, thread, nloc) PRNG_ADVANCE_RAND(seed, thread);
