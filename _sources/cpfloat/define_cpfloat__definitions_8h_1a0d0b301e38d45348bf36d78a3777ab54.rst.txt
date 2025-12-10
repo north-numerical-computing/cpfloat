@@ -1,0 +1,14 @@
+.. _exhale_define_cpfloat__definitions_8h_1a0d0b301e38d45348bf36d78a3777ab54:
+
+Define _CRT_RAND_S
+==================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: _CRT_RAND_S
+   :project: CPFloat
