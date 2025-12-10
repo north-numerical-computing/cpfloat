@@ -312,7 +312,7 @@ static inline int cpf_fmaf(float *X, const float *A, const float *B,
 #define MAXRAND 0x7FFFFFFFU
 #ifdef _OPENMP
 #define INITRAND(seed) *seed = time(NULL);
-#define GEN_SINGLE_RAND(seed) ((INTTYPE)rand_r((unsigned int *)seed))
+#define GEN_SINGLE_RAND(seed) ((INTTYPE)thread_safe_rand((unsigned int *)seed))
 #else /*# ifdef _OPENMP */
 #define INITRAND(seed) srand(time(NULL));
 #define GEN_SINGLE_RAND(seed) ((INTTYPE)rand())
