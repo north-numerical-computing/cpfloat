@@ -36,22 +36,6 @@
 #define CONCATENATE_INNER(arg1, arg2) arg1 ## arg2
 #define CONCATENATE(arg1, arg2) CONCATENATE_INNER(arg1, arg2)
 
-/* Portable thread-safe pseudo-random number generator. */
-#ifdef _WIN32
-  // Use rand_s.
-  #include <errno.h>
-  unsigned int thread_safe_rand(unsigned int *seed_state) {
-      unsigned int result;
-      errno_t err = rand_s(&result); 
-      return result;
-  }
-#else  /* #ifdef _WIN32 */
-  // Use rand_r.
-  unsigned int thread_safe_rand(unsigned int *seed_state) {
-      return rand_r(seed_state);
-  }
-#endif /* #ifdef _WIN32 */
-
 /* Functions to initialize bit pseudo-random generators and generate bits. */
 #define BITSEED bitseed
 #define BITSEEDTYPE cpfloat_bitseed_t

@@ -23,7 +23,7 @@
 #ifndef _CHOPFAST_DEFINITIONS_
 #define _CHOPFAST_DEFINITIONS_
 
-#define _CRT_RAND_S
+// #define _CRT_RAND_S
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -38,6 +38,37 @@
 
 #if defined(_OPENMP)
 #include <omp.h>
+
+/* Portable thread-safe pseudo-random number generator. */
+/* 
+ * FIXME: The version below would be a bit more robust,
+ * but I don't have access to a Windows machine to test it.
+ * This needs to be revisited later.
+ *
+#ifdef _WIN32
+  // Use rand_s.
+  #include <errno.h>
+  unsigned int thread_safe_rand(unsigned int *seed_state) {
+      unsigned int result;
+      errno_t err = rand_s(&result); 
+      return result;
+  }
+#else  /* #ifdef _WIN32 
+  // Use rand_r.
+  unsigned int thread_safe_rand(unsigned int *seed_state) {
+      return rand_r(seed_state);
+  }
+#endif /* #ifdef _WIN32 */
+unsigned int thread_safe_rand(unsigned int* seedp)
+{
+    unsigned int oldstate = *seedp;
+    // Advance internal state
+    *seedp = oldstate * 6364136223846793005ULL + 1;
+    // Calculate output function (XSH RR), uses old state for max ILP
+    unsigned int xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
+    unsigned int rot = oldstate >> 59u;
+    return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
+}
 #endif /* #if defined(_OPENMP) */
 
 /**
