@@ -23,6 +23,7 @@
 #ifndef _CHOPFAST_DEFINITIONS_
 #define _CHOPFAST_DEFINITIONS_
 
+#define _CRT_RAND_S
 #include <stdlib.h>
 #include <stdint.h>
 

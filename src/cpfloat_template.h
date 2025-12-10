@@ -36,6 +36,22 @@
 #define CONCATENATE_INNER(arg1, arg2) arg1 ## arg2
 #define CONCATENATE(arg1, arg2) CONCATENATE_INNER(arg1, arg2)
 
+/* Portable thread-safe pseudo-random number generator. */
+#ifdef _WIN32
+  // Use rand_s.
+  #include <errno.h>
+  unsigned int thread_safe_rand(unsigned int *seed_state) {
+      unsigned int result;
+      errno_t err = rand_s(&result); 
+      return result;
+  }
+#else  /* #ifdef _WIN32 */
+  // Use rand_r.
+  unsigned int thread_safe_rand(unsigned int *seed_state) {
+      return rand_r(seed_state);
+  }
+#endif /* #ifdef _WIN32 */
+
 /* Functions to initialize bit pseudo-random generators and generate bits. */
 #define BITSEED bitseed
 #define BITSEEDTYPE cpfloat_bitseed_t
@@ -46,24 +62,24 @@
 #define ADVANCEBIT(seed, thread, nloc) \
   pcg32_advance_r(seed, thread * nloc - 1);
 #define GENBIT(seed) (pcg32_random_r(seed) & (1U << 31))
-#else /* #ifdef PCG_VARIANTS_H_INCLUDED */
+#else  /* #ifdef PCG_VARIANTS_H_INCLUDED */
 #ifdef _OPENMP
 #define INITBIT(seed) *seed = time(NULL);
 #define GEN_SINGLE_BIT(seed) (rand_r(seed) & (1U << 30))
 #define PRNG_ADVANCE_BIT prng_advance_bit
 static inline BITTYPE PRNG_ADVANCE_BIT(BITSEEDTYPE *seed, size_t delta) {
   for (size_t i=0; i<delta; i++)
-    rand_r(seed);
+    thread_safe_rand(seed);
   return GEN_SINGLE_BIT(seed);
 }
 #define ADVANCEBIT(seed, thread, nloc) PRNG_ADVANCE_BIT(seed, thread);
 #define GENBIT(seed) PRNG_ADVANCE_BIT(seed, nthreads)
-#else /* #ifdef _OPENMP */
+#else  /* #ifdef _OPENMP */
 #define INITBIT(seed) srand(time(NULL));
 #define GEN_SINGLE_BIT(seed) (rand() & (1U << 30))
 #define GENBIT(seed) (GEN_SINGLE_BIT(seed))
 #endif /* #ifdef _OPENMP */
-#endif  /* #ifdef PCG_VARIANTS_H_INCLUDED */
+#endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
 
 #define PRNG_BIT_INIT                                                          \
   if (fpopts->BITSEED == NULL) {                                               \
