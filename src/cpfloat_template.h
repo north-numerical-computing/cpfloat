@@ -195,7 +195,7 @@ static inline INTTYPE PRNG_ADVANCE_RAND(RANDSEEDTYPE *seed, size_t delta) {
   return GEN_SINGLE_RAND(seed);
 }
 #define ADVANCERAND(seed, thread, nloc) PRNG_ADVANCE_RAND(seed, thread);
-#define GENRAND(seed) PRNG_ADVANCE_RAND(seed, nthreads)
+#define GENRAND(seed) PRNG_ADVANCE_RAND(seed, omp_get_num_threads())
 #else /* #ifdef _OPENMP */
 #define GENRAND(seed) (GEN_SINGLE_RAND(seed))
 #endif /* #ifdef _OPENMP */
