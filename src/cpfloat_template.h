@@ -101,6 +101,63 @@ static inline BITTYPE PRNG_ADVANCE_BIT(BITSEEDTYPE *seed, size_t delta) {
  * Prototypes are in cpfloat_definitions.
  */
 
+int cpfloat_populate_optstruct_from_format(optstruct *fpopts) {
+  if (fpopts == NULL)
+    return -1;
+  const char *fmt = fpopts->format;
+  bool format_is_valid = true;
+  bool is_subn_rnd_default = false;
+  bool is_inf_no_default = false;
+  if (fmt == NULL || fmt[0] == '\0')
+    return 1;
+  else if (strcmp(fmt, "custom") == 0 || strcmp(fmt, "c") == 0) {
+    return 2;
+  } else if (strcmp(fmt, "q43") == 0 || strcmp(fmt, "e4m3") == 0 || strcmp(fmt, "E4M3") == 0) {
+    fpopts->precision = 4;
+    fpopts->emin = -6;
+    fpopts->emax = 8;
+    is_inf_no_default = true;
+  } else if (strcmp(fmt, "q52") == 0 || strcmp(fmt, "e5m2") == 0 || strcmp(fmt, "E5M2") == 0) {
+    fpopts->precision = 3;
+    fpopts->emin = -14;
+    fpopts->emax = 15;
+  } else if (strcmp(fmt, "b") == 0 || strcmp(fmt, "bf16") == 0 || strcmp(fmt, "bfloat16") == 0) {
+    fpopts->precision = 8;
+    fpopts->emin = -126;
+    fpopts->emax = 127;
+    is_subn_rnd_default = true;
+  } else if (strcmp(fmt, "h") == 0 || strcmp(fmt, "fp16") == 0 || strcmp(fmt, "binary16") == 0 || strcmp(fmt, "half") == 0) {
+    fpopts->precision = 11;
+    fpopts->emin = -14;
+    fpopts->emax = 15;
+  } else if (strcmp(fmt, "t") == 0 || strcmp(fmt, "tf32") == 0 || strcmp(fmt, "TensorFloat-32") == 0) {
+    fpopts->precision = 11;
+    fpopts->emin = -126;
+    fpopts->emax = 127;
+  } else if (strcmp(fmt, "s") == 0 || strcmp(fmt, "fp32") == 0 || strcmp(fmt, "binary32") == 0 || strcmp(fmt, "single") == 0) {
+    fpopts->precision =  24;
+    fpopts->emin = -126;
+    fpopts->emax = 127;
+  } else if (strcmp(fmt, "d") == 0 || strcmp(fmt, "fp64") == 0 || strcmp(fmt, "binary64") == 0 || strcmp(fmt, "double") == 0) {
+    fpopts->precision =   53;
+    fpopts->emin = -1022;
+    fpopts->emax = 1023;
+  } else {
+    format_is_valid = false;
+  }
+  fpopts->subnormal = is_subn_rnd_default ? CPFLOAT_SUBN_RND : CPFLOAT_SUBN_USE;
+  fpopts->explim = CPFLOAT_EXPRANGE_TARG;
+  fpopts->infinity = is_inf_no_default ? CPFLOAT_INF_NO : CPFLOAT_INF_USE;
+  fpopts->round = CPFLOAT_RND_NE;
+  fpopts->saturation = CPFLOAT_SAT_NO;
+  fpopts->flip = CPFLOAT_SOFTERR_NO;
+  fpopts->p = 0.0;
+  if (format_is_valid)
+    return 0;
+  else
+    return -1;
+}
+
 optstruct *init_optstruct() {
   optstruct *fpopts = malloc(sizeof(*fpopts));
   fpopts->bitseed = NULL;

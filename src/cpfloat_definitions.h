@@ -24,6 +24,7 @@
 #define _CHOPFAST_DEFINITIONS_
 
 // #define _CRT_RAND_S
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -383,6 +384,21 @@ typedef struct {
    */
   cpfloat_randseed_t *randseed;
 } optstruct;
+
+/**
+ @brief Populate fields of @ref optstruct from `format` field.
+
+ @details This function populates the fields of @p fpopts based on the
+ string in the @p fpopts->format.
+
+ @param[in] fpopts Parameters describing the target format, the rounding mode,
+ and the probability of soft errors striking the rounded values.
+
+ @return The function returns @b 0 if the string in @p fpopts->format is a
+ valid format name, @b 1 if the string is empty or @p NULL, @b 2 if the string
+ is "custom" or "c", and @b -1 if the string is not a valid format name.<p/>
+ */
+int cpfloat_populate_optstruct_from_format(optstruct *fpopts);
 
 /**
  @brief Allocate @ref optstruct struct to store parameters of target format.
