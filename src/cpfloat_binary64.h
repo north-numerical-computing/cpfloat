@@ -316,8 +316,7 @@ static inline int cpf_fma(double *X, const double *A, const double *B,
    ((INTTYPE)thread_safe_rand((unsigned int *)seed) << 31))
 #else /*# ifdef _OPENMP */
 #define INITRAND(seed) srand(time(NULL));
-#define GEN_SINGLE_RAND(seed) ((INTTYPE)rand((unsigned int *)seed) + \
-  ((INTTYPE)rand((unsigned int *)seed  ) << 31))
+#define GEN_SINGLE_RAND(seed) ((INTTYPE)rand() + ((INTTYPE)rand() << 31))
 #endif  /*# ifdef _OPENMP */
 #endif /* #ifdef PCG_VARIANTS_H_INCLUDED */
 
