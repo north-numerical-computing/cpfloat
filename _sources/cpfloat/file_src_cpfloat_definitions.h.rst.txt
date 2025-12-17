@@ -62,6 +62,8 @@ Includes
 
 - ``math.h``
 
+- ``stdbool.h``
+
 - ``stdint.h``
 
 - ``stdlib.h``
@@ -110,6 +112,8 @@ Enums
 Functions
 ---------
 
+
+- :ref:`exhale_function_cpfloat__definitions_8h_1af85f7e4c0bb9728592039a10549e9a8d`
 
 - :ref:`exhale_function_cpfloat__definitions_8h_1a0fb8844dbe1ea4065b71c69d94b04cd5`
 

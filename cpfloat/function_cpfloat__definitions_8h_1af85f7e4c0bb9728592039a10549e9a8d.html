@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Function cpf_llrint &mdash; CPFloat latest documentation</title>
+  <title>Function cpfloat_populate_optstruct_from_format &mdash; CPFloat latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
@@ -18,12 +18,11 @@
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
         <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Function cpf_llrintf" href="function_cpfloat__binary32_8h_1a7f242c671b3961385afc6eaff7441939.html" />
-    <link rel="prev" title="Function cpf_lgammaf" href="function_cpfloat__binary32_8h_1abde2759f4f62554f453957079293c877.html" /> 
+    <link rel="next" title="Function cpfloat_validate_optstruct" href="function_cpfloat__binary64_8h_1a9ffc7d3972e0a89b165c1ec70a7b5da0.html" />
+    <link rel="prev" title="Function cpfloat" href="function_cpfloat__binary64_8h_1a96b9a0679ebfe724ae15ad96647bc246.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -141,7 +140,7 @@
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a39d185377069cbda8ee13627e5664a69.html">Function cpf_ldexpf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1ace9ba7f3dae49e2dce74508a6dcf9787.html">Function cpf_lgamma</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1abde2759f4f62554f453957079293c877.html">Function cpf_lgammaf</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Function cpf_llrint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a169da198dade03a6c86908b8f4c5e76e.html">Function cpf_llrint</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a7f242c671b3961385afc6eaff7441939.html">Function cpf_llrintf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a1e34aa7c12db136452055fdb64f5f7d7.html">Function cpf_llround</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a4b2c6abf629d8c2ac94a2d942621b851.html">Function cpf_llroundf</a></li>
@@ -200,7 +199,7 @@
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a0d6a1a2e0db61dd8f3c2cfc536baf373.html">Function cpf_trunc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a56315cb8af6812c8df4f1a38fda36534.html">Function cpf_truncf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a96b9a0679ebfe724ae15ad96647bc246.html">Function cpfloat</a></li>
-<li class="toctree-l4"><a class="reference internal" href="function_cpfloat__definitions_8h_1af85f7e4c0bb9728592039a10549e9a8d.html">Function cpfloat_populate_optstruct_from_format</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Function cpfloat_populate_optstruct_from_format</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary64_8h_1a9ffc7d3972e0a89b165c1ec70a7b5da0.html">Function cpfloat_validate_optstruct</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a8eaac34cedf63a1415eb5c71fa5ce939.html">Function cpfloat_validate_optstructf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="function_cpfloat__binary32_8h_1a955f8bb4cb9e417a1dbb3034c1c2e0c5.html">Function cpfloatf</a></li>
@@ -231,9 +230,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="cpfloat_root.html">CPFloat API</a></li>
-      <li class="breadcrumb-item active">Function cpf_llrint</li>
+      <li class="breadcrumb-item active">Function cpfloat_populate_optstruct_from_format</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/cpfloat/function_cpfloat__binary64_8h_1a169da198dade03a6c86908b8f4c5e76e.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/cpfloat/function_cpfloat__definitions_8h_1af85f7e4c0bb9728592039a10549e9a8d.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -241,31 +240,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="function-cpf-llrint">
-<span id="exhale-function-cpfloat-binary64-8h-1a169da198dade03a6c86908b8f4c5e76e"></span><h1>Function cpf_llrint<a class="headerlink" href="#function-cpf-llrint" title="Link to this heading"></a></h1>
+  <section id="function-cpfloat-populate-optstruct-from-format">
+<span id="exhale-function-cpfloat-definitions-8h-1af85f7e4c0bb9728592039a10549e9a8d"></span><h1>Function cpfloat_populate_optstruct_from_format<a class="headerlink" href="#function-cpfloat-populate-optstruct-from-format" title="Link to this heading"></a></h1>
 <ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file_src_cpfloat_binary64.h.html#file-src-cpfloat-binary64-h"><span class="std std-ref">File cpfloat_binary64.h</span></a></p></li>
+<li><p>Defined in <a class="reference internal" href="file_src_cpfloat_definitions.h.html#file-src-cpfloat-definitions-h"><span class="std std-ref">File cpfloat_definitions.h</span></a></p></li>
 </ul>
 <section id="function-documentation">
 <h2>Function Documentation<a class="headerlink" href="#function-documentation" title="Link to this heading"></a></h2>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv410cpf_llrintPxPiPKdK6size_tP9optstruct">
-<span id="_CPPv310cpf_llrintPxPiPKdK6size_tP9optstruct"></span><span id="_CPPv210cpf_llrintPxPiPKdK6size_tP9optstruct"></span><span id="cpf_llrint__l-lP.iP.doubleCP.sC.optstructP"></span><span class="target" id="cpfloat__binary64_8h_1a169da198dade03a6c86908b8f4c5e76e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cpf_llrint</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">X</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">exception</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">A</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">numelem</span></span>, <a class="reference internal" href="structoptstruct.html#_CPPv49optstruct" title="optstruct"><span class="n"><span class="pre">optstruct</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fpopts</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410cpf_llrintPxPiPKdK6size_tP9optstruct" title="Link to this definition"></a><br /></dt>
-<dd><p>Compute the closest integer with specified rounding mode. </p>
-<p>If the function executes without errors, then <span class="math notranslate nohighlight">\( X_i \)</span> is the integral part of <span class="math notranslate nohighlight">\( A_i \)</span> rounded to a lower-precision target format and <span class="math notranslate nohighlight">\( \mathrm{exception}_i \)</span> is set to 0 if <span class="math notranslate nohighlight">\( X_i \)</span> is equal to <span class="math notranslate nohighlight">\( A_i \)</span> and to FE_INEXACT otherwise. The parameters of the target format and the rounding mode to be used are encoded in <code class="docutils literal notranslate"><span class="pre">fpopts</span></code>. If required, the function flips one bit in some of the entries of <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p>
-<p>If OpenMP support is specified at compile time, several OpenMP threads are used if <code class="docutils literal notranslate"><span class="pre">numelem</span></code> is large enough. This parameter is machine dependent.</p>
+<dt class="sig sig-object cpp" id="_CPPv438cpfloat_populate_optstruct_from_formatP9optstruct">
+<span id="_CPPv338cpfloat_populate_optstruct_from_formatP9optstruct"></span><span id="_CPPv238cpfloat_populate_optstruct_from_formatP9optstruct"></span><span id="cpfloat_populate_optstruct_from_format__optstructP"></span><span class="target" id="cpfloat__definitions_8h_1af85f7e4c0bb9728592039a10549e9a8d"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cpfloat_populate_optstruct_from_format</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="structoptstruct.html#_CPPv49optstruct" title="optstruct"><span class="n"><span class="pre">optstruct</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fpopts</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv438cpfloat_populate_optstruct_from_formatP9optstruct" title="Link to this definition"></a><br /></dt>
+<dd><p>Populate fields of <a class="reference internal" href="structoptstruct.html#structoptstruct"><span class="std std-ref">optstruct</span></a> from <code class="docutils literal notranslate"><span class="pre">format</span></code> field. </p>
+<p>This function populates the fields of <code class="docutils literal notranslate"><span class="pre">fpopts</span></code> based on the string in the <code class="docutils literal notranslate"><span class="pre">fpopts-&gt;format</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> – <strong>[out]</strong> Array of rounded values.</p></li>
-<li><p><strong>exception</strong> – <strong>[out]</strong> Array of floating-point exceptions.</p></li>
-<li><p><strong>A</strong> – <strong>[in]</strong> Input array.</p></li>
-<li><p><strong>numelem</strong> – <strong>[in]</strong> Number of elements in <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
-<li><p><strong>fpopts</strong> – <strong>[in]</strong> Parameters describing the target format, the rounding mode, and the probability of soft errors striking the rounded values. </p></li>
-</ul>
+<dd class="field-odd"><p><strong>fpopts</strong> – <strong>[in]</strong> Parameters describing the target format, the rounding mode, and the probability of soft errors striking the rounded values.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The function returns <strong>1</strong> if <code class="docutils literal notranslate"><span class="pre">fpopts-&gt;precision</span></code> is larger than 53 , <strong>2</strong> if <code class="docutils literal notranslate"><span class="pre">fptops-&gt;emin</span></code> is smaller than -1022 or fpopts-&gt;emax is larger than 1023 , and <strong>0</strong> otherwise. </p>
+<dd class="field-even"><p>The function returns <strong>0</strong> if the string in <code class="docutils literal notranslate"><span class="pre">fpopts-&gt;format</span></code> is a valid format name, <strong>1</strong> if the string is empty or <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, <strong>2</strong> if the string is “custom” or “c”, and <strong>-1</strong> if the string is not a valid format name.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -277,8 +269,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="function_cpfloat__binary32_8h_1abde2759f4f62554f453957079293c877.html" class="btn btn-neutral float-left" title="Function cpf_lgammaf" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="function_cpfloat__binary32_8h_1a7f242c671b3961385afc6eaff7441939.html" class="btn btn-neutral float-right" title="Function cpf_llrintf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="function_cpfloat__binary64_8h_1a96b9a0679ebfe724ae15ad96647bc246.html" class="btn btn-neutral float-left" title="Function cpfloat" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="function_cpfloat__binary64_8h_1a9ffc7d3972e0a89b165c1ec70a7b5da0.html" class="btn btn-neutral float-right" title="Function cpfloat_validate_optstruct" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

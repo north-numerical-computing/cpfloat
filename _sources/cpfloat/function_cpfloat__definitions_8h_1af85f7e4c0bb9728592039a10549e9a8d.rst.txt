@@ -1,0 +1,14 @@
+.. _exhale_function_cpfloat__definitions_8h_1af85f7e4c0bb9728592039a10549e9a8d:
+
+Function cpfloat_populate_optstruct_from_format
+===============================================
+
+- Defined in :ref:`file_src_cpfloat_definitions.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cpfloat_populate_optstruct_from_format(optstruct *)
+   :project: CPFloat
