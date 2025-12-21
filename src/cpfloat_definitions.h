@@ -60,6 +60,12 @@
       return rand_r(seed_state);
   }
 #endif /* #ifdef _WIN32 */
+
+// Implementation below is available at:
+//    https://www.pcg-random.org/download.html
+//
+// *Really* minimal PCG32 code / (c) 2014 M.E. O'Neill / pcg-random.org
+// Licensed under Apache License 2.0 (NO WARRANTY, etc. see website)
 unsigned int thread_safe_rand(unsigned int* seedp)
 {
     unsigned int oldstate = *seedp;
