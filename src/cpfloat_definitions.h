@@ -216,7 +216,7 @@ typedef struct {
    *
    * Possible values are:
    * + `q43`, `e4m3`, `E4M3` for E4M3 (4-bit exponent, 4-bit significand);
-   * + `q52`, `e5m2`, `E5M2` for E5M2 (5-bit exponent, 2-bit significand);
+   * + `q52`, `e5m2`, `E5M2` for E5M2 (5-bit exponent, 3-bit significand);
    * + `b`, `bf16`, `bfloat16` for bfloat16;
    * + `h`, `fp16`, `binary16`, `half` for binary16;
    * + `t`, `tf32`, `TensorFloat-32`, for TensorFloat-32;
