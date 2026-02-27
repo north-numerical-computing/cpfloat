@@ -41,7 +41,7 @@
 #include <omp.h>
 
 /* Portable thread-safe pseudo-random number generator. */
-/* 
+/*
  * FIXME: The version below would be a bit more robust,
  * but I don't have access to a Windows machine to test it.
  * This needs to be revisited later.
@@ -51,10 +51,10 @@
   #include <errno.h>
   unsigned int thread_safe_rand(unsigned int *seed_state) {
       unsigned int result;
-      errno_t err = rand_s(&result); 
+      errno_t err = rand_s(&result);
       return result;
   }
-#else  /* #ifdef _WIN32 
+#else  /* #ifdef _WIN32
   // Use rand_r.
   unsigned int thread_safe_rand(unsigned int *seed_state) {
       return rand_r(seed_state);
