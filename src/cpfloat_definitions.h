@@ -423,7 +423,7 @@ optstruct *init_optstruct();
 
  @param[in] fpopts Pointer to @ref optstruct struct to be deallocated.
 
- @return The function returns @p 0 if the unless @p fpopts is set to @p NULL,
+ @return The function returns @p 0 unless @p fpopts is set to @p NULL,
  in which case it return @p -1.<p/>
  */
 int free_optstruct(optstruct *fpopts);
