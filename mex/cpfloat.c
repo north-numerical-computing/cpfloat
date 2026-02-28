@@ -170,6 +170,8 @@ void mexFunction(int nlhs,
       } else {
         if (is_inf_no_default)
           fpopts->infinity = CPFLOAT_INF_NO; /* Default for E4M5. */
+        else
+          fpopts->infinity = CPFLOAT_INF_USE;
       }
 
       tmp = mxGetField(prhs[1], 0, "round");
