@@ -74,14 +74,13 @@ void mexFunction(int nlhs,
       }
       tmp = mxGetField(prhs[1], 0, "params");
       if ((tmp != NULL) &&
-          (strcmp(fpopts->format, "c")
-           && strcmp(fpopts->format, "custom")))
+          (strcmp(fpopts->format, "c") && strcmp(fpopts->format, "custom")))
         mexWarnMsgIdAndTxt("cpfloat:ignoredparams",
                            "Floating-point parameters ignored.");
       /* Populate fpopts->params according to fpopts->format. */
-       if (!strcmp(fpopts->format, "q43") ||
-           !strcmp(fpopts->format, "fp8-e4m3") ||
-                 !strcmp(fpopts->format, "E4M3")) {
+      if (!strcmp(fpopts->format, "q43") ||
+          !strcmp(fpopts->format, "fp8-e4m3") ||
+          !strcmp(fpopts->format, "E4M3")) {
         fpopts->precision = 4;
         fpopts->emin = -6;
         fpopts->emax = 8;
@@ -93,8 +92,8 @@ void mexFunction(int nlhs,
         fpopts->emin = -14;
         fpopts->emax = 15;
       } else if (!strcmp(fpopts->format, "b") ||
-          !strcmp(fpopts->format, "bfloat16") ||
-          !strcmp(fpopts->format, "bf16")) {
+                 !strcmp(fpopts->format, "bfloat16") ||
+                 !strcmp(fpopts->format, "bf16")) {
         fpopts->precision = 8;
         fpopts->emin = -126;
         fpopts->emax = 127;
@@ -116,7 +115,7 @@ void mexFunction(int nlhs,
                  !strcmp(fpopts->format, "single") ||
                  !strcmp(fpopts->format, "binary32") ||
                  !strcmp(fpopts->format, "fp32")) {
-        fpopts->precision =  24;
+        fpopts->precision = 24;
         fpopts->emin = -126;
         fpopts->emax = 127;
       } else if (!strcmp(fpopts->format, "d") ||
