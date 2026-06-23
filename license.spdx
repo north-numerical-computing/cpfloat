@@ -5,11 +5,11 @@
 SPDXVersion: SPDX-2.2
 DataLicense: CC0-1.0
 SPDXID: SPDXRef-DOCUMENT
-DocumentName: cpfloat-0.5.0
+DocumentName: cpfloat-0.6.0
 DocumentNamespace: https://raw.githubusercontent.com/north-numerical-computing/cpfloat/master/license.spdx
-Creator: Person: Massimiliano Fasi (massimiliano.fasi@durham.ac.uk)
-Creator: Person: Mantas Mikaitis (mantas.mikaitis@manchester.ac.uk)
-Created: 2022-05-13T07:37:31Z
+Creator: Person: Massimiliano Fasi (m.fasi@leeds.ac.uk)
+Creator: Person: Mantas Mikaitis (m.mikaitis@leeds.ac.uk)
+Created: 2026-06-23T16:58:59Z
 
 
 
@@ -19,9 +19,9 @@ Created: 2022-05-13T07:37:31Z
 
 PackageName: cpfloat
 SPDXID: SPDXRef-1
-PackageVersion: 0.5.0
+PackageVersion: 0.6.0
 PackageDownloadLocation: git://github.com/north-numerical-computing/cpfloat
-PackageVerificationCode: e7abe3759c76a48cf70348f35121079126b5846e (excludes: ./license.spdx)
+PackageVerificationCode: cc63c6a61143cda7da75584cd49d59afbb7ccc0f (excludes: ./license.spdx)
 PackageHomePage: https://github.com/north-numerical-computing/cpfloat
 PackageLicenseConcluded: LGPL-2.1-or-later
 PackageLicenseInfoFromFiles: LGPL-2.1-or-later
@@ -35,201 +35,193 @@ PackageSummary:<text>Custom Precision Floating-point numbers.</text>
 ## File Information
 ##
 
-FileName: ./src/cpfloat_binary64.h
-SPDXID: SPDXRef-1-1
-FileType: SOURCE
-FileChecksum: SHA1: a12904f3e5531acf30bcd087c18d3d728adc26ef
-FileChecksum: MD5: a048b24c8c72370e134004985b956b51
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
-
-FileName: ./src/cpfloat_binary32.h
-SPDXID: SPDXRef-1-2
-FileType: SOURCE
-FileChecksum: SHA1: 0659f31bfaa75fb0bee0af49916b29e87481b902
-FileChecksum: MD5: ace80b75d287d8c86459430c24608cba
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
-
-FileName: ./src/cpfloat_threshold_binary64.h
-SPDXID: SPDXRef-1-3
-FileType: SOURCE
-FileChecksum: SHA1: 84d787a6e3dd3bc8d8615575e0d18272e2378b9d
-FileChecksum: MD5: 68ac8be2a018baae453d325084221bdd
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
-
-FileName: ./src/cpfloat_template.h
-SPDXID: SPDXRef-1-4
-FileType: SOURCE
-FileChecksum: SHA1: 35d1080ced6bff3dc57d96e2d01af65aa4fec0ab
-FileChecksum: MD5: a024bf10be172b3e9e42acae6bd84c40
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
-
-FileName: ./src/cpfloat_definitions.h
-SPDXID: SPDXRef-1-5
-FileType: SOURCE
-FileChecksum: SHA1: 44a75ba26b33d3b08771eafef03b62e15a419cea
-FileChecksum: MD5: 3c7e1ee37e5f04399dabf6862cff2062
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
-
-FileName: ./src/cpfloat_autotune.c
-SPDXID: SPDXRef-1-6
-FileType: SOURCE
-FileChecksum: SHA1: 6790f95b7876857496fc2ab77650edbeefedb8e5
-FileChecksum: MD5: 96bf1b5da96174fa8cbf51f33586389d
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-laterLGPL-2.1-or-later
-
-FileName: ./src/cpfloat_docmacros.h
-SPDXID: SPDXRef-1-7
-FileType: DOCUMENTATION
-FileChecksum: SHA1: f34e8ed8a5205320f6c1401f0ed45e5f068f59e2
-FileChecksum: MD5: 41b2b3faaad6061c9f5f1aa6bed6f634
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
-
-FileName: ./src/cpfloat_threshold_binary32.h
-SPDXID: SPDXRef-1-8
-FileType: SOURCE
-FileChecksum: SHA1: abf295420daa865fc903e28d6b60e05d7e569b80
-FileChecksum: MD5: bfca1b34e8098b5f0e667983e2ac5813
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
-
 FileName: ./LICENSE.md
-SPDXID: SPDXRef-1-9
+SPDXID: SPDXRef-1-1
 FileType: TEXT
-FileChecksum: SHA1: b386b371ce94933e63ced1052aa72a60da5485ff
-FileChecksum: MD5: 1803fa9c2c3ce8cb06b4861d75310742
+FileChecksum: SHA1: 3caad6221aa3a1430b365bbbba68010295e27c7c
+FileChecksum: MD5: f438d1cbf663cb0c496fdf4aed5cd0ca
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: NONE
-
-FileName: ./examples/example_manuscript.c
-SPDXID: SPDXRef-1-10
-FileType: SOURCE
-FileChecksum: SHA1: 933d2b2eeac0f9b4e41c539d358c2f747ae11f40
-FileChecksum: MD5: 3c68422c91c8ca3fca3e3bf165d0a094
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
-
-FileName: ./Makefile
-SPDXID: SPDXRef-1-11
-FileType: OTHER
-FileChecksum: SHA1: 53accae589b9c06617915432474ffe91ecc72921
-FileChecksum: MD5: 26cebbb7f04a8cece8f6af36ad8557fb
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-laterLGPL-2.1-or-later
-
-FileName: ./.circleci/config.yml
-SPDXID: SPDXRef-1-12
-FileType: OTHER
-FileChecksum: SHA1: 0a0b634f2a0eda8c23f4107e3c7066a741593b2b
-FileChecksum: MD5: 24d7ea179d64d1a084aab198ddfc2569
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: NONE
-
-FileName: ./test/cpfloat_test.m
-SPDXID: SPDXRef-1-13
-FileType: SOURCE
-FileChecksum: SHA1: fb9b197d5f5e6da78ae851a3e59ec70d7bccf056
-FileChecksum: MD5: 19db4e188c505d7c4931a57d4eb5b7f6
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
 
 FileName: ./test/cpfloat_test.ts
-SPDXID: SPDXRef-1-14
+SPDXID: SPDXRef-1-2
 FileType: SOURCE
-FileChecksum: SHA1: 7fafef4423e408ff0b96569248e2fe6386c7cffe
-FileChecksum: MD5: 8deece3b4537745bbaa9abfbddbc1957
+FileChecksum: SHA1: 95340e93f19110d84553317a3b6d2df131f1c01a
+FileChecksum: MD5: 979acac26030dfd5f0798ad5cd1b87e7
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
-FileName: ./README.md
-SPDXID: SPDXRef-1-15
-FileType: TEXT
-FileChecksum: SHA1: 42d03ec1e4c3a135169cd9d5391b22b7ab64cd39
-FileChecksum: MD5: 30b0c4e7d8454b5af00c78f1cddad335
+FileName: ./test/cpfloat_test.m
+SPDXID: SPDXRef-1-3
+FileType: SOURCE
+FileChecksum: SHA1: 487b3b230b9adb11631b260258173d11f2ffdb2d
+FileChecksum: MD5: c2a331a8803bfe7ad2c430c873d25979
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./util/generate_spdx.sh
+SPDXID: SPDXRef-1-4
+FileChecksum: SHA1: 0e09a107b165cb6f8a0a17ce9aa966c3e8834e96
+FileChecksum: MD5: df8cc79465336094bca0e44020b27560
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: NONE
 
-FileName: ./docs/source/conf.py
-SPDXID: SPDXRef-1-16
-FileType: DOCUMENTATION
-FileChecksum: SHA1: 0f5066f0d287b33573181ff889ed443a081713e1
-FileChecksum: MD5: 6b70370507cd57c2dd530f89e7513bc2
+FileName: ./Makefile
+SPDXID: SPDXRef-1-5
+FileType: OTHER
+FileChecksum: SHA1: 37c7cc052ee7d5c3deeb6ba185fecaf525ad5519
+FileChecksum: MD5: d6a5fb47e72c508eeb4dad2c0f467828
 LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: NONE
-
-FileName: ./docs/source/readme.rst
-SPDXID: SPDXRef-1-17
-FileType: DOCUMENTATION
-FileChecksum: SHA1: 49d43efb093c16b067c2aee7caaaf0533e44e797
-FileChecksum: MD5: e251e18defff7c8f718661967ee61f9d
-LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: NONE
+LicenseInfoInFile: LGPL-2.1-or-later
 
 FileName: ./docs/source/index.rst
-SPDXID: SPDXRef-1-18
+SPDXID: SPDXRef-1-6
 FileType: DOCUMENTATION
 FileChecksum: SHA1: d35eb28b1379ca0e7a2de0de003fe7a72f2eb47f
 FileChecksum: MD5: 2e1701ca9f6ea0d59e669d0a4fe031fd
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: NONE
 
-FileName: ./docs/Doxyfile-project
-SPDXID: SPDXRef-1-19
+FileName: ./docs/source/conf.py
+SPDXID: SPDXRef-1-7
 FileType: DOCUMENTATION
-FileChecksum: SHA1: c86f08fbca4704f813dbe94b02699e8a74859337
-FileChecksum: MD5: ac6eb56dbf3895c4ea6e2ca1cf1899d3
+FileChecksum: SHA1: 1026ead8f07faf586659219f5e42ff62ef394c07
+FileChecksum: MD5: 4c2ab8133edcba592af01ff8a78c37de
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: NONE
 
-FileName: ./mex/cpfloat_compile_nomake.m
-SPDXID: SPDXRef-1-20
-FileType: SOURCE
-FileChecksum: SHA1: bda8544e616b10b9062187facb703db1ea507ae6
-FileChecksum: MD5: 222dd89700f55d7e2e472edff1ef9f51
+FileName: ./docs/source/readme.rst
+SPDXID: SPDXRef-1-8
+FileType: DOCUMENTATION
+FileChecksum: SHA1: 5b3fe862c23a6a7803f88182e2a152517f762aef
+FileChecksum: MD5: 6b8e403954745a148479acc3ccf05c2a
 LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
 
-FileName: ./mex/cpfloat_autotune.m
-SPDXID: SPDXRef-1-21
-FileType: SOURCE
-FileChecksum: SHA1: bb687d02ee15d94776b7d381fc906ced380df785
-FileChecksum: MD5: c05a7f8d328b78ac514f1098c0f62d3d
+FileName: ./docs/Doxyfile-project
+SPDXID: SPDXRef-1-9
+FileType: DOCUMENTATION
+FileChecksum: SHA1: e0c8bbfae93840e4ee87944bf05afee65ed0035a
+FileChecksum: MD5: 8258837e80da93b928927a61fe98a6b4
 LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-laterLGPL-2.1-or-later
+LicenseInfoInFile: NONE
 
-FileName: ./mex/cpfloat_compile.m
-SPDXID: SPDXRef-1-22
-FileType: SOURCE
-FileChecksum: SHA1: c95b613db79fd5cbf87ea400940487bdee3ba618
-FileChecksum: MD5: 426237158bd953e9cb686686e3c18129
+FileName: ./README.md
+SPDXID: SPDXRef-1-10
+FileType: TEXT
+FileChecksum: SHA1: c0db0f9c846434417cf8dd42ac049b5c83991f51
+FileChecksum: MD5: 32bde105bde4eb56009d2c827f578439
 LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: LGPL-2.1-or-later
+LicenseInfoInFile: NONE
 
-FileName: ./mex/cpfloat.m
-SPDXID: SPDXRef-1-23
+FileName: ./examples/example_manuscript.c
+SPDXID: SPDXRef-1-11
 FileType: SOURCE
-FileChecksum: SHA1: fff373eccbb247b46122a789ce322866040471e9
-FileChecksum: MD5: ac5180f0c0af963a7943d852303e9d39
+FileChecksum: SHA1: f2e29b18dab8889e0c6f631c93cee34c363704f6
+FileChecksum: MD5: 6d3f8a35e6dea3a30ede2f9e6610e11a
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
 FileName: ./mex/cpfloat.c
-SPDXID: SPDXRef-1-24
+SPDXID: SPDXRef-1-12
 FileType: SOURCE
-FileChecksum: SHA1: dbece5f24974ceeb3bfeb81ebbd975b469665b16
-FileChecksum: MD5: f99f0653546b1e3d5c00ea0321a13049
+FileChecksum: SHA1: 643f58844eaa82799b335557d6b83150ad3252bc
+FileChecksum: MD5: 1386d13d92e54d9fe9f4c33e9fe9a878
 LicenseConcluded: LGPL-2.1-or-later
 LicenseInfoInFile: LGPL-2.1-or-later
 
-FileName: ./util/generate_spdx.sh
-SPDXID: SPDXRef-1-25
-FileChecksum: SHA1: 021746898641abec17280530c3f26434038d2fd7
-FileChecksum: MD5: 605929ccf1b08e259e29dff8fbd1f067
+FileName: ./mex/cpfloat.m
+SPDXID: SPDXRef-1-13
+FileType: SOURCE
+FileChecksum: SHA1: 94ea71ff252dc83e2019426212175925ddb7c980
+FileChecksum: MD5: 18fd4792744e21d45ca5707f640de248
 LicenseConcluded: LGPL-2.1-or-later
-LicenseInfoInFile: $file
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./mex/cpfloat_compile.m
+SPDXID: SPDXRef-1-14
+FileType: SOURCE
+FileChecksum: SHA1: 7642186c23d4a1824278794d933974fd6d12ccbd
+FileChecksum: MD5: 1a862cd1948658b78bc53ab4d9ca0921
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./mex/cpfloat_autotune.m
+SPDXID: SPDXRef-1-15
+FileType: SOURCE
+FileChecksum: SHA1: 3a508bcb43c6466da18a1b2ce5426a950fc3a7f0
+FileChecksum: MD5: 8a894b2cd990786745c06231554e7a2d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-laterLGPL-2.1-or-later
+
+FileName: ./mex/cpfloat_compile_nomake.m
+SPDXID: SPDXRef-1-16
+FileType: SOURCE
+FileChecksum: SHA1: 125ea8c177415f9794997bfda2c8288c80f99fe7
+FileChecksum: MD5: eeeb34a9f0a85705aeca7e77078fe632
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_binary64.h
+SPDXID: SPDXRef-1-17
+FileType: SOURCE
+FileChecksum: SHA1: cffde0236260c8b9a209db82747f07c702b8bf18
+FileChecksum: MD5: 6593b32af7735ce26845b27b5ff4ff34
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_threshold_binary32.h
+SPDXID: SPDXRef-1-18
+FileType: SOURCE
+FileChecksum: SHA1: abf295420daa865fc903e28d6b60e05d7e569b80
+FileChecksum: MD5: bfca1b34e8098b5f0e667983e2ac5813
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_template.h
+SPDXID: SPDXRef-1-19
+FileType: SOURCE
+FileChecksum: SHA1: 721c56150cb15c6ece01165820e81bb9c968628d
+FileChecksum: MD5: bc5e1abc712fb547ca29db94a1a8ec4d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_definitions.h
+SPDXID: SPDXRef-1-20
+FileType: SOURCE
+FileChecksum: SHA1: 55c51d16b1e1e0d5b49a08fe1719ad22935c6a0e
+FileChecksum: MD5: de5ceb5031b5d2df52d9fc67bc4d3d25
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_autotune.c
+SPDXID: SPDXRef-1-21
+FileType: SOURCE
+FileChecksum: SHA1: 8b97e0c0b398d0b5df0f2c99e5627ec515aa99ce
+FileChecksum: MD5: 02d31b06f2bf8372d9c02fed1842b98d
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-laterLGPL-2.1-or-later
+
+FileName: ./src/cpfloat_threshold_binary64.h
+SPDXID: SPDXRef-1-22
+FileType: SOURCE
+FileChecksum: SHA1: 84d787a6e3dd3bc8d8615575e0d18272e2378b9d
+FileChecksum: MD5: 68ac8be2a018baae453d325084221bdd
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_docmacros.h
+SPDXID: SPDXRef-1-23
+FileType: DOCUMENTATION
+FileChecksum: SHA1: d48a6a7c96d5d1281ae7ee3ff7293248840fe14d
+FileChecksum: MD5: 6de5d151cfb9d4d219aae373ec751787
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later
+
+FileName: ./src/cpfloat_binary32.h
+SPDXID: SPDXRef-1-24
+FileType: SOURCE
+FileChecksum: SHA1: 1704c6b1af034cf67909cf610ded5072fe9bc8f2
+FileChecksum: MD5: 549fc711122a67743ad25ce9ba5a9c7c
+LicenseConcluded: LGPL-2.1-or-later
+LicenseInfoInFile: LGPL-2.1-or-later

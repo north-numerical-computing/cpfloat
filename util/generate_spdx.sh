@@ -1,6 +1,6 @@
 #! /bin/zsh
 
-VERSION='0.5.0'
+VERSION='0.6.0'
 
 # Compute package hash using spdx-tools.
 CURL=curl
@@ -26,8 +26,8 @@ DataLicense: CC0-1.0
 SPDXID: SPDXRef-DOCUMENT
 DocumentName: cpfloat-$VERSION
 DocumentNamespace: https://raw.githubusercontent.com/north-numerical-computing/cpfloat/master/license.spdx
-Creator: Person: Massimiliano Fasi (massimiliano.fasi@durham.ac.uk)
-Creator: Person: Mantas Mikaitis (mantas.mikaitis@manchester.ac.uk)
+Creator: Person: Massimiliano Fasi (m.fasi@leeds.ac.uk)
+Creator: Person: Mantas Mikaitis (m.mikaitis@leeds.ac.uk)
 Created: `date -u +%Y-%m-%dT%H:%M:%SZ`
 
 
