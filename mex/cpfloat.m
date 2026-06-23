@@ -90,6 +90,10 @@
 %     probability, that is, a real number in the interval [0,1]. The default
 %     value for this field is 0.5.
 %
+%   * The scalar FPOPTS.drcheck specifies whether double rounding should raise
+%     an error. The error will be raised unless this field is set to 0.
+%     The default value fot this field is 1.
+%
 %   The interface of CPFLOAT is mostly compatible with that of the MATLAB
 %   function CHOP available at https://github.com/higham/chop. See
 %   https://github.com/north-numerical-computing/cpfloat/blob/main/README.md

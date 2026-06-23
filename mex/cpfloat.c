@@ -11,10 +11,16 @@
 #include "cpfloat_binary32.h"
 #include "cpfloat_binary64.h"
 
+typedef struct {
+  int drcheck;
+} state;
 static optstruct *fpopts;
-void clearfpopts() {
-  if (fpopts != NULL)
+static state *internal;
+void clearall() {
+  if (fpopts != NULL) {
     mxFree(fpopts);
+    mxFree(internal);
+  }
 }
 
 /********************
@@ -35,7 +41,7 @@ void mexFunction(int nlhs,
   if (fpopts == NULL) {
     fpopts = mxCalloc(1, sizeof(optstruct));
     mexMakeMemoryPersistent(fpopts);
-    mexAtExit(clearfpopts);
+    mexAtExit(clearall);
 
     strcpy(fpopts->format, "h");
     fpopts->precision = 11;
@@ -53,6 +59,12 @@ void mexFunction(int nlhs,
     fpopts->bitseed = NULL;
     fpopts->randseedf = NULL;
     fpopts->randseed = NULL;
+  }
+
+  if (internal == NULL) {
+    internal = mxCalloc(1, sizeof(state));
+    mexMakeMemoryPersistent(internal);
+    internal->drcheck = 1;
   }
 
   /* Parse second argument and populate fpopts structure. */
@@ -209,12 +221,21 @@ void mexFunction(int nlhs,
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->flip = *((double *)mxGetData(tmp));
       }
+
       tmp = mxGetField(prhs[1], 0, "p");
       if (tmp != NULL) {
         if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
           fpopts->p = 0.5;
         else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
           fpopts->p = *((double *)mxGetData(tmp));
+      }
+
+      tmp = mxGetField(prhs[1], 0, "drcheck");
+      if (tmp != NULL) {
+        if (mxGetM(tmp) == 0 && mxGetN(tmp) == 0)
+          internal->drcheck = 1;
+        else if (mxGetClassID(tmp) == mxDOUBLE_CLASS)
+          internal->drcheck = *((double *)mxGetData(tmp));
       }
     }
   }
@@ -264,11 +285,15 @@ void mexFunction(int nlhs,
       minexp = -1022;
       maxexp = 1023;
     }
-    if (fpopts->precision > maxfbits || fpopts->emin < minexp
-        ||fpopts->emax > maxexp)
-      if (!strcmp(fpopts->format, "c") || !strcmp(fpopts->format, "custom"))
-        mexErrMsgIdAndTxt("cpfloat:invalidparams",
-                          "Invalid floating-point parameters selected.");
+
+    if (!strcmp(fpopts->format, "c") || !strcmp(fpopts->format, "custom")) {
+      if (fpopts->emin < minexp || fpopts->emax > maxexp)
+        mexErrMsgIdAndTxt("cpfloat:invalidexponent",
+                          "Invalid exponent range selected.");
+      if (internal->drcheck && fpopts->precision > maxfbits)
+        mexErrMsgIdAndTxt("cpfloat:invalidexponent",
+                          "Selected precision may cause double rounding issues.");
+    }
 
     /* Allocate and compute first output. */
     mwSize m, n;
