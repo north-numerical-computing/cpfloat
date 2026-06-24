@@ -131,7 +131,12 @@ The latest versions of the library have a variety of subtle differences compared
 </pre></div>
 </div>
 <p>If the compilation is successful, the header and library files of CPFloat will be located in the <code class="docutils literal notranslate"><span class="pre">build/include</span></code> and <code class="docutils literal notranslate"><span class="pre">build/lib</span></code> directories, respectively.
-The library can be installed in <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code> with</p>
+By default, <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">lib</span></code> does not run autotuning.</p>
+<p>To rebuild the libraries after running autotuning explicitly, use</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make lib-autotuned</span>
+</pre></div>
+</div>
+<p>The library can be installed in <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;</span></code> with</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make install --prefix=&lt;path&gt;</span>
 </pre></div>
 </div>
@@ -166,7 +171,7 @@ If the chosen compiler does not support OpenMP, only the sequential version of t
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make autotune</span>
 </pre></div>
 </div>
-<p>which compiles the file <code class="docutils literal notranslate"><span class="pre">src/cpfloat_autotune.c</span></code>, runs it, and updates the files <code class="docutils literal notranslate"><span class="pre">src/cpfloat_threshold_binary32.h</span></code> and <code class="docutils literal notranslate"><span class="pre">src/cpfloat_threshold_binary64.h</span></code>. This procedure is run automatically when building the shared and static libraries.</p>
+<p>which compiles the file <code class="docutils literal notranslate"><span class="pre">src/cpfloat_autotune.c</span></code>, runs it, and updates the files <code class="docutils literal notranslate"><span class="pre">src/cpfloat_threshold_binary32.h</span></code> and <code class="docutils literal notranslate"><span class="pre">src/cpfloat_threshold_binary64.h</span></code>.</p>
 </section>
 <section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
