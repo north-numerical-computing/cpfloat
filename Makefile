@@ -37,13 +37,12 @@ OCTAVE:=octave
 WFLAGS=-Wall -Wextra -pedantic
 ARCHFLAGS=-march=native
 CFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=gnu99 -I $(SRCDIR) \
-	-I $(PREFIX)include -L $(PREFIX)lib
+	-I $(PREFIX)include $(PCG_INCLUDE)
 COPTIM=-O3
-CLIBS=-lm -fopenmp
+LDFLAGS=-L $(PREFIX)lib -L $(DEPSDIR)pcg-c/src
+LDLIBS=-lm -fopenmp -lpcg_random
 CHECKLIBS=-lcheck -lpthread -lsubunit
 PCG_INCLUDE=-include $(PCG_HEADER)
-PCG_LIB=-L $(DEPSDIR)pcg-c/src -lpcg_random
-PCG_FLAGS=$(PCG_INCLUDE) $(PCG_LIB)
 
 .PRECIOUS: %.o
 
@@ -62,7 +61,7 @@ init(%):
 	$(GIT) submodule update --init deps/$%
 
 $(DEPSDIR)pcg-c/src/libpcg_random.a: init(pcg-c)
-	cd $(DEPSDIR)pcg-c; make
+	cd $(DEPSDIR)pcg-c; $(MAKE)
 
 .PHONY: libpcg
 libpcg: $(DEPSDIR)pcg-c/src/libpcg_random.a
@@ -71,7 +70,7 @@ $(ROOTDIR)%:
 	$(MKDIR) -p $@
 
  $(BINDIR)cpfloat_autotune: $(SRCDIR)cpfloat_autotune.c $(BINDIR) libpcg
-	$(CC) $(CFLAGS) $(COPTIM) -o $@ $< $(CLIBS) $(PCG_FLAGS)
+	$(CC) $(CFLAGS) $(COPTIM) -o $@ $< $(LDFLAGS) $(LDLIBS)
 
 .PHONY: autotune
 autotune: $(BINDIR)cpfloat_autotune
@@ -140,10 +139,10 @@ HEADER_DEPS=$(INCDIR)cpfloat_threshold_binary32.h \
 	$(DEPSDIR)pcg-c/include/pcg_variants.h
 
 $(BUILDDIR)cpfloat-shared.o: $(BUILDDIR)cpfloat.c $(HEADER_DEPS)
-	$(CC) $(CFLAGS) $(COPTIM) -fPIC -c $< $(PCG_INCLUDE) -o $@
+	$(CC) $(CFLAGS) $(COPTIM) -fPIC -c $< -o $@
 
 $(BUILDDIR)cpfloat-static.o: $(BUILDDIR)cpfloat.c $(HEADER_DEPS)
-	$(CC) $(CFLAGS) $(COPTIM) -c $< $(PCG_INCLUDE) -o $@
+	$(CC) $(CFLAGS) $(COPTIM) -c $< -o $@
 
 LIBPCG_OBJ=$(DEPSDIR)pcg-c/src/pcg-global-32.o \
 	$(DEPSDIR)pcg-c/src/pcg-advance-64.o \
@@ -151,7 +150,7 @@ LIBPCG_OBJ=$(DEPSDIR)pcg-c/src/pcg-global-32.o \
 	$(DEPSDIR)pcg-c/src/pcg-advance-128.o
 
 $(LIBDIR)libcpfloat.so: $(BUILDDIR)cpfloat-shared.o libpcg $(LIBDIR)
-	$(CC) -shared -o $@ $< $(LIBPCG_OBJ) $(CLIBS) $(PCG_LIB)
+	$(CC) -shared -o $@ $< $(LIBPCG_OBJ) $(LDLIBS) -L $(DEPSDIR)pcg-c/src
 
 $(LIBDIR)libcpfloat.a: $(BUILDDIR)cpfloat-static.o libpcg $(LIBDIR)
 	ar -cr $@ $< $(LIBPCG_OBJ)
@@ -206,7 +205,7 @@ $(TESTDIR)cpfloat_test.c: $(TESTDIR)cpfloat_test.ts
 
 $(BINDIR)cpfloat_test: $(TESTDIR)cpfloat_test.c libpcg $(BINDIR)
 	$(CC) $(CFLAGS) $(COPTIM) -fsanitize=undefined -o $@ $< \
-		$(CHECKLIBS) $(CLIBS) $(PCG_FLAGS)
+		$(CHECKLIBS) $(LDFLAGS) $(LDLIBS)
 
 .PHONY: ctest
 ctest: $(BINDIR)cpfloat_test
@@ -291,7 +290,7 @@ $(DOCDIR)html: $(DOCDIR)xml
 example: $(BINDIR)example_manuscript
 
 $(BINDIR)example_manuscript: $(EXAMPLEDIR)example_manuscript.c libpcg $(BINDIR)
-	$(CC) $(CFLAGS) $(COPTIM) -o $@ $< $(CLIBS) $(PCG_FLAGS)
+	$(CC) $(CFLAGS) $(COPTIM) -o $@ $< $(LDFLAGS) $(LDLIBS)
 
 
 
@@ -309,8 +308,8 @@ cleanlib:
 	$(RM) -r $(BUILDDIR)*
 
 .PHONY: cleandeps
-cleandep:
-	cd $(DEPSDIR)pcg-c; make clean
+cleandeps:
+	cd $(DEPSDIR)pcg-c; $(MAKE) clean
 
 .PHONY: cleantest
 cleantest:
