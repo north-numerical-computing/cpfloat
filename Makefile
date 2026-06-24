@@ -26,7 +26,6 @@ RM:=rm -f
 
 CHECKMK:=checkmk
 CC:=gcc
-CCOV:=gcov
 
 DOXYGEN:=doxygen
 SPHINXBUILD:=sphinx-build
@@ -40,7 +39,6 @@ ARCHFLAGS=-march=native
 CFLAGS=$(WFLAGS) $(ARCHFLAGS) -std=gnu99 -I $(SRCDIR) \
 	-I $(PREFIX)include -L $(PREFIX)lib
 COPTIM=-O3
-CCOVFLAGS=-Og -g --coverage
 CLIBS=-lm -fopenmp
 CHECKLIBS=-lcheck -lpthread -lsubunit
 PCG_INCLUDE=-include $(PCG_HEADER)
@@ -289,14 +287,6 @@ $(DOCDIR)xml: $(DOCDIR)Doxyfile $(DOCDIR)Doxyfile-project
 $(DOCDIR)html: $(DOCDIR)xml
 	$(SPHINXBUILD) -M html "$(DOCDIR)source" "$(DOCDIR)"
 
-.PHONY: coverage
-coverage: $(TESTDIR)cpfloat_test.c libpcg
-	$(CC) $(CFLAGS) $(CCOVFLAGS) -o $(TESTDIR)cpfloat_test $< \
-		$(CHECKLIBS) $(CLIBS) $(PCG_FLAGS)
-	$(TESTDIR)cpfloat_test
-	$(CP) $(TESTDIR)cpfloat_test.c .
-	$(CCOV) cpfloat_test.c
-
 .PHONY: example
 example: $(BINDIR)example_manuscript
 
@@ -308,7 +298,7 @@ $(BINDIR)example_manuscript: $(EXAMPLEDIR)example_manuscript.c libpcg $(BINDIR)
 
 
 .PHONY: cleanall
-cleanall: clean cleanlib cleandeps cleantest cleancoverage cleandocs
+cleanall: clean cleanlib cleandeps cleantest cleandocs
 
 .PHONY: clean
 clean:
@@ -325,10 +315,6 @@ cleandep:
 .PHONY: cleantest
 cleantest:
 	$(RM) $(TESTDIR)cpfloat_test $(TESTDIR)*.c $(TESTDIR)*.log
-
-.PHONY: cleancoverage
-cleancoverage:
-	$(RM) cpfloat_test.c cpfloat_test.log *.gcno *.gcda *.gcov
 
 .PHONY: cleandocs
 cleandocs:

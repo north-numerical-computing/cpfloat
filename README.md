@@ -115,7 +115,6 @@ for the header-only library or with
 make libtest
 ```
 for the shared and static libraries. The two commands use the same batch of unit tests, which is generated from the file `test/cpfloat_test.ts` using the `checkmk` script.
-The Makefile target `coverage` measures the code coverage using GNU `gcov` on the same set of tests.
 
 The MEX interface can be tested by using either
 ```console
