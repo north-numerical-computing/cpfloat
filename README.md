@@ -41,6 +41,13 @@ No installation is needed in order to use CPFloat as a header-only library. The 
 make lib
 ```
 If the compilation is successful, the header and library files of CPFloat will be located in the `build/include` and `build/lib` directories, respectively.
+By default, `make lib` does not run autotuning.
+
+To rebuild the libraries after running autotuning explicitly, use
+```console
+make lib-autotuned
+```
+
 The library can be installed in `<path>` with
 ```console
 make install --prefix=<path>
@@ -82,7 +89,7 @@ CPFloat provides a sequential and a parallel implementation of the rounding func
 ```console
 make autotune
 ```
-which compiles the file `src/cpfloat_autotune.c`, runs it, and updates the files `src/cpfloat_threshold_binary32.h` and `src/cpfloat_threshold_binary64.h`. This procedure is run automatically when building the shared and static libraries.
+which compiles the file `src/cpfloat_autotune.c`, runs it, and updates the files `src/cpfloat_threshold_binary32.h` and `src/cpfloat_threshold_binary64.h`.
 
 ## Documentation
 

@@ -85,11 +85,16 @@ install: lib
 	$(CP) $(INCDIR) $(PREFIX)include/
 	$(CP) $(LIBDIR) $(PREFIX)lib/
 
-lib: autotune $(INCDIR)cpfloat_definitions.h $(INCDIR)cpfloat_docmacros.h \
+LIB_TARGET_DEPS=$(INCDIR)cpfloat_definitions.h $(INCDIR)cpfloat_docmacros.h \
 	$(INCDIR)cpfloat.h \
 	$(INCDIR)cpfloat_threshold_binary32.h \
 	$(INCDIR)cpfloat_threshold_binary64.h \
 	$(LIBDIR)libcpfloat.so $(LIBDIR)libcpfloat.a
+
+lib: $(LIB_TARGET_DEPS)
+
+.PHONY: lib-autotuned
+lib-autotuned: autotune lib
 
 HEADERS=$(INCDIR)cpfloat_definitions.h $(INCDIR)cpfloat_docmacros.h \
 	$(INCDIR)cpfloat_threshold_binary32.h $(INCDIR)cpfloat_threshold_binary64.h
