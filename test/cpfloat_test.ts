@@ -910,6 +910,105 @@ void test_trivariate_arith_op_float(float* xd,
  *********/
 #suite cpfloat
 
+/* 0. Validation of the fpopt structure. */
+#tcase validation
+
+/* Validation of format string. */
+#test format_validation
+printf("0a. Validation of format strings\n");
+const char *valid_formats [] = {"",
+                                "q43", "fp8-e4m3", "E4M3",
+                                "q52", "fp8-e5m2", "E5M2",
+                                "b", "bf16", "bfloat16",
+                                "h", "fp16", "binary16", "half",
+                                "t", "tf32", "TensorFloat-32",
+                                "s", "fp32", "binary32", "single",
+                                "d", "fp64", "binary64", "double",
+                                "custom", "c"};
+const char *invalid_formats [] = {"no-such-format", "43", "52", "e4m3x", "B",
+                                  "binary", "fp8", "custom1", " ", "e4m3", "e5m2"};
+fpopts->precision = 11;
+fpopts->emin = -14;
+fpopts->emax = 15;
+fpopts->round = CPFLOAT_RND_NE;
+fpopts->flip = CPFLOAT_SOFTERR_NO;
+for (size_t j = 0; j < sizeof(valid_formats) / sizeof(*valid_formats); j++) {
+  strcpy(fpopts->format, valid_formats[j]);
+  if (cpfloat_validate_optstruct(fpopts) != 0)
+    printf("Valid format rejected: \"%s\"\n", valid_formats[j]);
+  ck_assert_int_eq(cpfloat_validate_optstruct(fpopts), 0);
+  const bool binary64 = j >= 21 && j <= 24;
+  ck_assert_int_eq(cpfloat_validate_optstructf(fpopts), binary64 ? -1 : 0);
+}
+for (size_t j = 0; j < sizeof(invalid_formats) / sizeof(*invalid_formats); j++) {
+  strcpy(fpopts->format, invalid_formats[j]);
+  if (cpfloat_validate_optstruct(fpopts) != -1)
+    printf("Invalid format accepted: \"%s\"\n", invalid_formats[j]);
+  ck_assert_int_eq(cpfloat_validate_optstruct(fpopts), -1);
+  ck_assert_int_eq(cpfloat_validate_optstructf(fpopts), -1);
+}
+
+/* Validation of numeric options. */
+#test options_validation
+printf("0b. Validation of numeric options and warning precedence\n");
+for (size_t storage = 0; storage < 2; storage++) {
+  const int maxprecision = storage ? FLT_MANT_DIG : DBL_MANT_DIG;
+  const int minexponent = (storage ? FLT_MIN_EXP : DBL_MIN_EXP) - 1;
+  const int maxexponent = (storage ? FLT_MAX_EXP : DBL_MAX_EXP) - 1;
+  int (*validate)(const optstruct *) = storage ?
+    cpfloat_validate_optstructf : cpfloat_validate_optstruct;
+  const struct {
+    const char *format;
+    cpfloat_precision_t precision;
+    cpfloat_exponent_t emin, emax;
+    cpfloat_rounding_t round;
+    cpfloat_softerr_t flip;
+    double p;
+    int expected;
+  } cases[] = {
+    {"custom", 1, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 0},
+    {"custom", 0, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 2},
+    {"custom", maxprecision + 1, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 2},
+    {"custom", (maxprecision - 2) / 2, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 0},
+    {"custom", (maxprecision - 2) / 2 + 1, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, -2},
+    {"custom", (maxprecision - 2) / 2 + 1, -1, 1, CPFLOAT_RND_NA, CPFLOAT_SOFTERR_NO, 0.5, -2},
+    {"custom", (maxprecision - 2) / 2 + 1, -1, 1, CPFLOAT_RND_NZ, CPFLOAT_SOFTERR_NO, 0.5, -2},
+    {"custom", maxprecision - 1, minexponent, maxexponent, CPFLOAT_RND_TP, CPFLOAT_SOFTERR_NO, 0.5, 0},
+    {"custom", maxprecision, -1, 1, CPFLOAT_RND_TP, CPFLOAT_SOFTERR_NO, 0.5, -2},
+    {"custom", 1, -1, 0, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 3},
+    {"custom", 1, -1, -1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 3},
+    {"custom", 1, -1, maxexponent + 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 3},
+    {"custom", 1, minexponent - 1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 3},
+    {"custom", 1, 0, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 3},
+    {"custom", 1, 1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, 3},
+    {"custom", 1, -1, 1, CPFLOAT_NO_RND, CPFLOAT_SOFTERR_NO, 0.5, -4},
+    {"custom", 1, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, -0.1, 0},
+    {"custom", 1, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 1.1, 0},
+    {"custom", 1, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_FRAC, 0, 0},
+    {"custom", 1, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_FP, 1, 0},
+    {"custom", 1, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_FRAC, -0.1, 5},
+    {"custom", 1, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_FP, 1.1, 5},
+    /* Later warnings replace earlier warnings; errors take precedence. */
+    {"invalid", maxprecision, -1, 1, CPFLOAT_RND_NE, CPFLOAT_SOFTERR_NO, 0.5, -2},
+    {"invalid", maxprecision, -1, 1, CPFLOAT_NO_RND, CPFLOAT_SOFTERR_NO, 0.5, -4},
+    {"invalid", 0, 0, 0, CPFLOAT_NO_RND, CPFLOAT_SOFTERR_FP, -0.1, 2},
+    {"invalid", maxprecision, 0, 0, CPFLOAT_NO_RND, CPFLOAT_SOFTERR_FP, -0.1, 3},
+    {"invalid", maxprecision, -1, 1, CPFLOAT_NO_RND, CPFLOAT_SOFTERR_FP, -0.1, 5},
+  };
+  for (size_t j = 0; j < sizeof(cases) / sizeof(*cases); j++) {
+    strcpy(fpopts->format, cases[j].format);
+    fpopts->precision = cases[j].precision;
+    fpopts->emin = cases[j].emin;
+    fpopts->emax = cases[j].emax;
+    fpopts->round = cases[j].round;
+    fpopts->flip = cases[j].flip;
+    fpopts->p = cases[j].p;
+    ck_assert_msg(validate(fpopts) == cases[j].expected,
+                  "Storage %zu, case %zu: expected %d, got %d",
+                  storage, j, cases[j].expected, validate(fpopts));
+  }
+}
+
 /* 1. Values that do not need rounding. */
 #tcase no_rounding
 
@@ -3034,7 +3133,6 @@ check_equality_double_long(rd7, xl, n-3);
 cpf_llrint(xll, xi, ad, n-3, fpopts);
 check_equality_double_long_long(rd7, xll, n-3);
 
-
 #test arithmetic_operations_large
 printf("4f. Arithmetic operations on large arrays\n");
 size_t i = 0;
@@ -3096,10 +3194,12 @@ tcase_add_unchecked_fixture(tc1_1, fpopts_setup, fpopts_teardown);
 tcase_add_unchecked_fixture(tc1_2, fpopts_setup, fpopts_teardown);
 tcase_add_unchecked_fixture(tc1_3, fpopts_setup, fpopts_teardown);
 tcase_add_unchecked_fixture(tc1_4, fpopts_setup, fpopts_teardown);
+tcase_add_unchecked_fixture(tc1_5, fpopts_setup, fpopts_teardown);
 tcase_set_timeout(tc1_1, 1800);
 tcase_set_timeout(tc1_2, 1800);
 tcase_set_timeout(tc1_3, 1800);
 tcase_set_timeout(tc1_4, 1800);
+tcase_set_timeout(tc1_5, 1800);
 srunner_set_log(sr, "cpfloat_test.log");
 
 /*
