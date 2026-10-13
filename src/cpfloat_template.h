@@ -298,9 +298,9 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
 
   /* Set retval to -1 if format is not valid. */
   const char *valid_formats [] = {"",
-                                  "43", "fp8-e4m3", "E4M3",
-                                  "52", "fp8-e5m2", "E5M2",
-                                  "bfloat", "bf16", "b",
+                                  "q43", "fp8-e4m3", "E4M3",
+                                  "q52", "fp8-e5m2", "E5M2",
+                                  "bfloat16", "bf16", "b",
                                   "binary16", "fp16", "half", "h",
                                   "TensorFloat-32", "tf32", "t",
                                   "binary32", "fp32", "single", "s",
@@ -309,14 +309,16 @@ static inline int VALIDATE_INPUT(const optstruct *fpopts) {
                                   #endif /* #if DEFPREC >= 53 */
                                   "custom", "c"};
   #if DEFPREC >= 53
-  size_t nformats = 21;
+  size_t nformats = 27;
   #else /* #if DEFPREC >= 53 */
-  size_t nformats = 17;
+  size_t nformats = 23;
   #endif /* #if DEFPREC >= 53 */
   retval = -1;
   for (size_t i=0; i<nformats; i++) {
-    if (strcmp(fpopts->format, valid_formats[i]))
+    if (strcmp(fpopts->format, valid_formats[i]) == 0) {
       retval = 0;
+      break;
+    }
   }
 
   /* Return 2 if precision is invalid (either nonpositive or too large). */
