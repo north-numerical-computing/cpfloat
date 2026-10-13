@@ -302,12 +302,12 @@ void invprob_array_double(double *x, size_t n) {
 /* Comparison with DWIM for NaN values. */
 static inline
 int nan_safe_compare_double(double a, double b) {
-  return a == b || (isnan(a) && isnan(b));
+  return INTOFd(a) == INTOFd(b) || (isnan(a) && isnan(b));
 }
 
 static inline
 int nan_safe_compare_float(float a, float b) {
-  return a == b || (isnan(a) && isnan(b));
+  return INTOFf(a) == INTOFf(b) || (isnan(a) && isnan(b));
 }
 
 
@@ -334,36 +334,36 @@ void check_equality_double(double *x, double *y, size_t n) {
 static inline
 void check_equality_double_int(double *x, int *y, size_t n) {
   for (size_t j = 0; j < n; j++) {
-    if (!nan_safe_compare_double(x[j], y[j])) {
+    if (x[j] != (double)y[j]) {
       printf("DOUBLE\n");
       printf("***\nj = %ld\nx = %23.15e [%" PRIu64 "]\ny = %23.15e\n",
              j, x[j], *(uint64_t *)(x + j), (double)y[j]);
     }
-    ck_assert(nan_safe_compare_double(x[j], (double)y[j]));
+    ck_assert(x[j] == (double)y[j]);
   }
 }
 
 static inline
 void check_equality_double_long(double *x, long *y, size_t n) {
   for (size_t j = 0; j < n; j++) {
-    if (!nan_safe_compare_double(x[j], y[j])) {
+    if (x[j] != (double)y[j]) {
       printf("DOUBLE\n");
       printf("***\nj = %ld\nx  = %23.15e [%" PRIu64 "]\ny = %23.15e\n",
              j, x[j], *(uint64_t *)(x + j), (double)y[j]);
     }
-    ck_assert(nan_safe_compare_double(x[j], (double)y[j]));
+    ck_assert(x[j] == (double)y[j]);
   }
 }
 
 static inline
 void check_equality_double_long_long(double *x, long long *y, size_t n) {
   for (size_t j = 0; j < n; j++) {
-    if (!nan_safe_compare_double(x[j], y[j])) {
+    if (x[j] != (double)y[j]) {
       printf("DOUBLE\n");
       printf("***\nj = %ld\nx  = %23.15e [%" PRIu64 "]\ny = %23.15e\n",
              j, x[j], *(uint64_t *)(x + j), (double)y[j]);
     }
-    ck_assert(nan_safe_compare_double(x[j], (double)y[j]));
+    ck_assert(x[j] == (double)y[j]);
   }
 }
 
@@ -1055,7 +1055,7 @@ for (size_t mode = 1; mode < 3; mode++) {
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, 0, 1);
-    refd[5] = 0;
+    refd[5] = 0.0;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, 0, 1);
@@ -1077,11 +1077,12 @@ for (size_t mode = 1; mode < 3; mode++) {
     csign_intarray_double((uint64_t *)xd_imm, n);
     csign_intarray_double((uint64_t *)refd, n);
     csign_intarray_double((uint64_t *)refxmind, n);
+    csign_intarray_double((uint64_t *)refzerod, n);
     refd[5] = -xmin;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, 0, 1);
-    refd[5] = 0;
+    refd[5] = -0.0;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, 0, 1);
@@ -1100,6 +1101,7 @@ for (size_t mode = 1; mode < 3; mode++) {
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refxmind, n, fpopts, 7, 7, i, i, 0, 1);
+    csign_intarray_double((uint64_t *)refzerod, n);
 
     float xf_imm [] = {nextafterf(0, INFINITY),
                        nextafterf(snxmin, 0),
@@ -1115,7 +1117,7 @@ for (size_t mode = 1; mode < 3; mode++) {
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, 0, 1);
-    reff[5] = 0;
+    reff[5] = 0.0f;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, 0, 1);
@@ -1137,11 +1139,12 @@ for (size_t mode = 1; mode < 3; mode++) {
     csign_intarray_float((uint32_t *)xf_imm, n);
     csign_intarray_float((uint32_t *)reff, n);
     csign_intarray_float((uint32_t *)refxminf, n);
+    csign_intarray_float((uint32_t *)refzerof, n);
     reff[5] = -xmin;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, 0, 1);
-    reff[5] = 0;
+    reff[5] = -0.0f;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, 0, 1);
@@ -1160,6 +1163,7 @@ for (size_t mode = 1; mode < 3; mode++) {
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, refxminf, n, fpopts, 7, 7, i, i, 0, 1);
+    csign_intarray_float((uint32_t *)refzerof, n);
   }
   free_array_double(yd, mode);
   free_array_float(yf, mode);
@@ -1202,7 +1206,7 @@ for (size_t mode = 1; mode < 3; mode++) {
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, 1, 1);
-    refd[2] = 0;
+    refd[2] = 0.0;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, 1, 1);
@@ -1224,11 +1228,12 @@ for (size_t mode = 1; mode < 3; mode++) {
     csign_intarray_double((uint64_t *)xd_imm, n);
     csign_intarray_double((uint64_t *)refd, n);
     csign_intarray_double((uint64_t *)refxmind, n);
+    csign_intarray_double((uint64_t *)refzerod, n);
     refd[2] = -xmin;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refd, n, fpopts, -1, -1, i, i, 1, 1);
-    refd[2] = 0;
+    refd[2] = -0.0;
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refd, n, fpopts, 0, 0, i, i, 1, 1);
@@ -1247,6 +1252,7 @@ for (size_t mode = 1; mode < 3; mode++) {
     reset_array_double(yd, n, mode);
     copy_array_double(xd, (double *)&xd_imm, n);
     select_tests_det_double(yd, xd, refxmind, n, fpopts, 7, 7, i, i, 1, 1);
+    csign_intarray_double((uint64_t *)refzerod, n);
 
     float xf_imm [] = {nextafterf(0, INFINITY),
                        nextafterf(halfxmin, 0),
@@ -1259,7 +1265,7 @@ for (size_t mode = 1; mode < 3; mode++) {
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, 1, 1);
-    reff[2] = 0;
+    reff[2] = 0.0f;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, 1, 1);
@@ -1283,11 +1289,12 @@ for (size_t mode = 1; mode < 3; mode++) {
     csign_intarray_float((uint32_t *)xf_imm, n);
     csign_intarray_float((uint32_t *)reff, n);
     csign_intarray_float((uint32_t *)refxminf, n);
+    csign_intarray_float((uint32_t *)refzerof, n);
     reff[2] = -xmin;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, reff, n, fpopts, -1, -1, i, i, 1, 1);
-    reff[2] = 0;
+    reff[2] = -0.0f;
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, reff, n, fpopts, 0, 0, i, i, 1, 1);
@@ -1306,6 +1313,7 @@ for (size_t mode = 1; mode < 3; mode++) {
     reset_array_float(yf, n, mode);
     copy_array_float(xf, (float *)&xf_imm, n);
     select_tests_det_float(yf, xf, refxminf, n, fpopts, 7, 7, i, i, 1, 1);
+    csign_intarray_float((uint32_t *)refzerof, n);
   }
   free_array_double(yd, mode);
   free_array_float(yf, mode);
