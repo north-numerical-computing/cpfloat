@@ -1467,13 +1467,13 @@ for (size_t infinity = 0; infinity < 2; infinity++) {
       free_array_float(yf, mode);
     }
   }
-  free(xd);
-  free(refxmaxd);
-  free(refinfd);
-  free(xf);
-  free(refxmaxf);
-  free(refinff);
- }
+}
+free(xd);
+free(refxmaxd);
+free(refinfd);
+free(xf);
+free(refxmaxf);
+free(refinff);
 fpopts->saturation = CPFLOAT_SAT_NO;
 fpopts->infinity = CPFLOAT_INF_USE;
 
