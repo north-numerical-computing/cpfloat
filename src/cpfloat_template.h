@@ -543,7 +543,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 #define RD_TWD_PINF_SCALAR_OTHER_EXP(x, y, p, lp)                              \
   if (ABS(y) < p->ftzthreshold) { /* Underflow */                              \
-    *(x) = *(y) > 0 ? p->ftzthreshold : 0;                                     \
+    *(x) = *(y) > 0 ? p->ftzthreshold : FPOF(SIGN(y));                         \
   } else if (ABS(y) > p->xmax) { /* Overflow */                                \
     if (*(y) > p->xmax)                                                        \
       *(x) = p->ofvalue;                                                       \
@@ -575,7 +575,7 @@ static inline void UPDATE_LOCAL_PARAMS(const FPTYPE *A,
 
 #define RD_TWD_NINF_SCALAR_OTHER_EXP(x, y, p, lp)                              \
   if (ABS(y) < p->ftzthreshold) { /* Underflow */                              \
-    *(x) = *(y) >= 0 ? 0 : -p->ftzthreshold;                                   \
+    *(x) = *(y) >= 0 ? FPOF(SIGN(y)) : -p->ftzthreshold;                       \
   } else if (ABS(y) > p->xmax) { /* Overflow */                                \
     if (*(y) < -p->xmax)                                                       \
       *(x) = -p->ofvalue;                                                      \
