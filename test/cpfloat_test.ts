@@ -3188,6 +3188,34 @@ free(cf);
 free(reff);
 free(xf);
 
+#test scaling_target_rounding
+printf("4g. Scaling with target rounding\n");
+strcpy(fpopts->format, "binary16");
+cpfloat_populate_optstruct_from_format(fpopts);
+size_t n = 8;
+const int exp[] = {-1, -1, -1, -1, 1, 1, 1, -1};
+long int lexp[8];
+const double ad[] = {0x1p-24, -0x1p-24, 0x1.8p-23, -0x1.8p-23,
+                     0x1p15, -0x1p15, 0x1p-25, 0x1p16};
+double refd[] = {0., -0., 0x1p-23, -0x1p-23,
+                 inf_double(), -inf_double(), 0x1p-24, 0x1p15};
+double xd[8];
+float af[8], reff[8], xf[8];
+for (size_t j = 0; j < n; j++) {
+  lexp[j] = exp[j];
+  af[j] = ad[j];
+  reff[j] = refd[j];
+}
+
+cpf_scalbn(xd, ad, exp, n, fpopts);
+check_equality_double(xd, refd, n);
+cpf_scalbln(xd, ad, lexp, n, fpopts);
+check_equality_double(xd, refd, n);
+cpf_scalbnf(xf, af, exp, n, fpopts);
+check_equality_float(xf, reff, n);
+cpf_scalblnf(xf, af, lexp, n, fpopts);
+check_equality_float(xf, reff, n);
+
 #main-pre
 putenv("CK_VERBOSITY=verbose");
 tcase_add_unchecked_fixture(tc1_1, fpopts_setup, fpopts_teardown);
