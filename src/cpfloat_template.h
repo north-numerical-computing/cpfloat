@@ -1251,16 +1251,16 @@ GENERATE_INTERFACE(logb,
                    NOOP, *(X+i) = ADDSUFFIXTO(logb)(*(X+i));)
 GENERATE_INTERFACE(scalbn,
                    FPTYPE *X, (const FPTYPE *A, const int *exp),
-                   X+i, A+i,
+                   X+i, X+i,
                    X, (A, exp),
                    NOOP, INTRODUCE_BITFLIP,
-                   NOOP, *(X+i) = ADDSUFFIXTO(scalbn)(*(X+i), *(exp+i));)
+                   *(X+i) = ADDSUFFIXTO(scalbn)(*(A+i), *(exp+i));, NOOP)
 GENERATE_INTERFACE(scalbln,
                    FPTYPE *X, (const FPTYPE *A, const long int *exp),
-                   X+i, A+i,
+                   X+i, X+i,
                    X, (A, exp),
                    NOOP, INTRODUCE_BITFLIP,
-                   NOOP, *(X+i) = ADDSUFFIXTO(scalbln)(*(X+i), *(exp+i));)
+                   *(X+i) = ADDSUFFIXTO(scalbln)(*(A+i), *(exp+i));, NOOP)
 
 /* Power functions. */
 GENERATE_BIVARIATE_PREFIX_MATH_H(pow, pow)
